@@ -1,0 +1,61 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-heading: 'Exo 2', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  --color-primary-orange: #FF7A00;
+  --color-primary-orange-hover: #E66E00;
+  --color-primary-orange-active: #CC6200;
+  --color-primary-orange-light: #FFF4EB;
+  --color-primary-orange-subtle: #FFE7D1;
+  
+  --color-tech-dark: #121826;
+  --color-tech-card: #FFFFFF;
+  --color-tech-border: #E2E8F0;
+  --color-tech-muted: #64748B;
+}
+
+:root {
+  font-family: var(--font-body);
+  --font-display: var(--font-heading);
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-heading);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Smooth transitions */
+.transition-card {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.85);
+}

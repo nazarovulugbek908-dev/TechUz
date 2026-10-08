@@ -29,7 +29,9 @@
     "services_help": "Услуги и Помощь",
     "user_menu": "Меню пользователя",
     "my_device": "Мое устройство:",
-    "lang_label": "Русский"
+    "lang_label": "Русский",
+    "pwa_install_app": "Установить приложение",
+    "pwa_install_desc": "Мобильное приложение TechUz"
   },
   "announcement": {
     "fast_delivery": "Быстрая доставка по всему Узбекистану",

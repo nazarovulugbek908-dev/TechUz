@@ -29,7 +29,9 @@
     "services_help": "Xizmatlar & Yordam",
     "user_menu": "Foydalanuvchi menyusi",
     "my_device": "Mening qurilmam:",
-    "lang_label": "O'zbekcha"
+    "lang_label": "O'zbekcha",
+    "pwa_install_app": "Ilovani o'rnatish",
+    "pwa_install_desc": "TechUz mobil ilovasi"
   },
   "announcement": {
     "fast_delivery": "O'zbekiston bo'ylab tezkor yetkazib berish",

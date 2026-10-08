@@ -22,8 +22,10 @@ import {
   Sun,
   Moon,
   Layers,
-  LogOut
+  LogOut,
+  Download
 } from 'lucide-react';
+import { usePWAInstall } from '../../hooks/usePWAInstall';
 import { cn } from '../../utils/cn';
 
 export function MobileDrawer({ isOpen, onClose }) {
@@ -35,6 +37,8 @@ export function MobileDrawer({ isOpen, onClose }) {
   const [activeTab, setActiveTab] = useState('menu'); // 'menu' | 'account'
 
   if (!isOpen) return null;
+
+  const { isInstallable, installPWA } = usePWAInstall();
 
   const categories = [
     { to: '/shop?category=smartphones', label: t('nav.smartphones'), icon: Smartphone, count: '24+' },
@@ -195,6 +199,28 @@ export function MobileDrawer({ isOpen, onClose }) {
                     <span>{t('announcement.warranty_badge')}</span>
                   </div>
                 </div>
+
+                {isInstallable && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      installPWA();
+                      onClose();
+                    }}
+                    className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold text-xs shadow-md shadow-orange-500/20 active:scale-[0.98] transition-all cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center">
+                        <Download className="w-4 h-4 text-white" />
+                      </div>
+                      <div className="text-left">
+                        <p className="leading-tight">{t('nav.pwa_install_app')}</p>
+                        <p className="text-[10px] text-orange-100 font-normal">{t('nav.pwa_install_desc')}</p>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-white/80" />
+                  </button>
+                )}
               </div>
             </>
           ) : (

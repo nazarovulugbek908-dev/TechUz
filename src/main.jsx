@@ -10,6 +10,8 @@ import { PhoneModelProvider } from './context/PhoneModelContext';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 
+import { registerServiceWorker } from './serviceWorkerRegistration';
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <LanguageProvider>
@@ -25,3 +27,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </LanguageProvider>
   </React.StrictMode>
 );
+
+// Register PWA Service Worker
+registerServiceWorker();

@@ -92,16 +92,16 @@ export function PhoneModelSelector({
           type="button"
           onClick={handleOpenModal}
           className={cn(
-            'inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer shadow-xs',
+            'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer shadow-xs max-w-full overflow-hidden',
             hasSelectedModel
               ? 'bg-[#FF7A00] text-white'
               : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-orange-300',
             className
           )}
         >
-          <Smartphone className="w-3.5 h-3.5" />
-          <span>{selectedModel ? selectedModel.name : t('phone_model.select_device')}</span>
-          {hasSelectedModel && <Check className="w-3.5 h-3.5" />}
+          <Smartphone className="w-3.5 h-3.5 shrink-0" />
+          <span className="truncate max-w-[140px] sm:max-w-none">{selectedModel ? selectedModel.name : t('phone_model.select_device')}</span>
+          {hasSelectedModel && <Check className="w-3.5 h-3.5 shrink-0" />}
         </button>
       )}
 

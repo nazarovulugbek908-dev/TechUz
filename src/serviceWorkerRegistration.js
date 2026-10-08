@@ -1,27 +1,25 @@
-// PWA Service Worker Registration
+// Service Worker Unregister & Cache Cleaner
+// Ensures the web app does not cache offline and always loads fresh updates from the live server.
 export function registerServiceWorker() {
   if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then((registration) => {
-          console.log('[PWA] ServiceWorker registered with scope:', registration.scope);
-
-          // Check for service worker updates
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            if (newWorker) {
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  console.log('[PWA] New content is available; please refresh.');
-                }
-              });
-            }
-          });
-        })
-        .catch((error) => {
-          console.error('[PWA] ServiceWorker registration failed:', error);
+    // Unregister all existing service workers to ensure live internet updates
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (const registration of registrations) {
+        registration.unregister().then((success) => {
+          if (success) {
+            console.log('[PWA] Service worker unregistered successfully');
+          }
         });
+      }
     });
+
+    // Clear all existing caches
+    if ('caches' in window) {
+      caches.keys().then((names) => {
+        for (const name of names) {
+          caches.delete(name);
+        }
+      });
+    }
   }
 }

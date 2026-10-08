@@ -95,9 +95,11 @@ export function MobileHeader({ onOpenDrawer, onOpenCart }) {
       )}
 
       {/* Quick "My phone model" strip on mobile */}
-      <div className="px-4 py-2 bg-slate-50 dark:bg-slate-950/70 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-        <span className="text-[11px] font-semibold text-slate-500">{t('nav.my_device')}</span>
-        <PhoneModelSelector variant="badge" />
+      <div className="px-3.5 py-2 bg-slate-50 dark:bg-slate-950/70 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2 overflow-hidden">
+        <span className="text-[11px] font-semibold text-slate-500 shrink-0">{t('nav.my_device')}</span>
+        <div className="min-w-0 max-w-[62%] sm:max-w-[70%]">
+          <PhoneModelSelector variant="badge" />
+        </div>
       </div>
     </header>
   );

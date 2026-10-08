@@ -37,7 +37,7 @@ export const Select = forwardRef(function Select(
           id={selectId}
           disabled={disabled}
           className={cn(
-            'w-full appearance-none bg-white dark:bg-slate-900 border text-slate-900 dark:text-slate-100 rounded-xl text-sm transition-all duration-150 cursor-pointer',
+            'w-full bg-white dark:bg-slate-900 border text-slate-900 dark:text-slate-100 rounded-xl text-sm transition-all duration-150 cursor-pointer',
             'pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2',
             error
               ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-200'
@@ -47,16 +47,24 @@ export const Select = forwardRef(function Select(
           )}
           {...props}
         >
-          {children
-            ? children
-            : options.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
+          {options && options.length > 0
+            ? options.map((opt, idx) => {
+                const val = typeof opt === 'object' && opt !== null ? opt.value : opt;
+                const lbl = typeof opt === 'object' && opt !== null ? opt.label : opt;
+                return (
+                  <option
+                    key={idx}
+                    value={val}
+                    className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 py-1"
+                  >
+                    {lbl}
+                  </option>
+                );
+              })
+            : children}
         </select>
 
-        <div className="absolute right-3.5 pointer-events-none text-slate-400">
+        <div className="absolute right-3.5 pointer-events-none text-slate-400 flex items-center">
           <ChevronDown className="w-4 h-4" />
         </div>
       </div>

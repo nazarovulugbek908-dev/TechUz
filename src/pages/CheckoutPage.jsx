@@ -32,13 +32,13 @@ const REGIONS_UZ = [
   'Toshkent viloyati',
   'Andijon viloyati',
   'Buxoro viloyati',
-  'Fargʻona viloyati',
+  "Farg'ona viloyati",
   'Jizzax viloyati',
   'Xorazm viloyati',
   'Namangan viloyati',
   'Navoiy viloyati',
   'Qashqadaryo viloyati',
-  'Qoraqalpogʻiston Respublikasi',
+  "Qoraqalpog'iston Respublikasi",
   'Samarqand viloyati',
   'Sirdaryo viloyati',
   'Surxondaryo viloyati'
@@ -60,9 +60,9 @@ export function CheckoutPage() {
   const [formData, setFormData] = useState({
     fullName: user ? (user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim()) : 'Ulugbek Nazarov',
     phone: user?.phone || '+998 94 587-64-72',
-    region: user?.region || 'Fargʻona viloyati',
+    region: user?.region || "Farg'ona viloyati",
     cityDistrict: user?.cityDistrict || 'Quvasoy shahri',
-    streetAddress: user?.streetAddress || 'Markaziy ko\'cha, 1-uy',
+    streetAddress: user?.streetAddress || "Markaziy ko'cha, 1-uy",
     notes: ''
   });
 
@@ -70,6 +70,19 @@ export function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [completedOrder, setCompletedOrder] = useState(null);
+
+  React.useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        fullName: user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim() || prev.fullName,
+        phone: user.phone || prev.phone,
+        region: user.region || prev.region || "Farg'ona viloyati",
+        cityDistrict: user.cityDistrict || prev.cityDistrict || 'Quvasoy shahri',
+        streetAddress: user.streetAddress || prev.streetAddress || "Markaziy ko'cha, 1-uy"
+      }));
+    }
+  }, [user]);
 
   if (completedOrder) {
     return (
@@ -311,14 +324,8 @@ export function CheckoutPage() {
                   <Select
                     value={formData.region}
                     onChange={(e) => setFormData({ ...formData, region: e.target.value })}
-                    options={REGIONS_UZ.map((reg) => ({ value: reg, label: reg }))}
-                  >
-                    {REGIONS_UZ.map((reg) => (
-                      <option key={reg} value={reg}>
-                        {reg}
-                      </option>
-                    ))}
-                  </Select>
+                    options={REGIONS_UZ}
+                  />
                 </div>
 
                 <div>

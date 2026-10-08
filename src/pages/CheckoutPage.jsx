@@ -311,6 +311,7 @@ export function CheckoutPage() {
                   <Select
                     value={formData.region}
                     onChange={(e) => setFormData({ ...formData, region: e.target.value })}
+                    options={REGIONS_UZ.map((reg) => ({ value: reg, label: reg }))}
                   >
                     {REGIONS_UZ.map((reg) => (
                       <option key={reg} value={reg}>

@@ -6,6 +6,7 @@ export const Select = forwardRef(function Select(
   {
     label,
     options = [],
+    children,
     error,
     helperText,
     className = '',
@@ -36,7 +37,7 @@ export const Select = forwardRef(function Select(
           id={selectId}
           disabled={disabled}
           className={cn(
-            'w-full appearance-none bg-white dark:bg-slate-900 border text-slate-900 dark:text-slate-100 rounded-xl text-sm transition-all duration-150',
+            'w-full appearance-none bg-white dark:bg-slate-900 border text-slate-900 dark:text-slate-100 rounded-xl text-sm transition-all duration-150 cursor-pointer',
             'pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2',
             error
               ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-200'
@@ -46,11 +47,13 @@ export const Select = forwardRef(function Select(
           )}
           {...props}
         >
-          {options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
+          {children
+            ? children
+            : options.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
         </select>
 
         <div className="absolute right-3.5 pointer-events-none text-slate-400">

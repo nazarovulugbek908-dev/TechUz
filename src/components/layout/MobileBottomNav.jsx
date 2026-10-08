@@ -14,7 +14,7 @@ export function MobileBottomNav({ onOpenCart, onOpenModelSelector }) {
   const { hasSelectedModel } = usePhoneModel();
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200/80 dark:border-slate-800 safe-area-pb">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200/80 dark:border-slate-800 pb-[env(safe-area-inset-bottom,0px)]">
       <div className="grid grid-cols-5 h-16 max-w-lg mx-auto">
         {/* 1. Home - Bosh sahifa */}
         <NavLink

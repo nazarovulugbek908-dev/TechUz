@@ -441,7 +441,15 @@ export function ShopPage() {
           {categoryParam !== 'all' && (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 text-[#FF7A00] border border-orange-200 dark:border-orange-900 font-bold">
               {currentCategoryName}
-              <button onClick={() => updateFilter('category', 'all')}>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  updateFilter('category', 'all');
+                }}
+                className="hover:opacity-75 cursor-pointer"
+                aria-label="Remove category filter"
+              >
                 <X className="w-3 h-3" />
               </button>
             </span>
@@ -449,7 +457,15 @@ export function ShopPage() {
           {brandParam !== 'all' && (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 text-[#FF7A00] border border-orange-200 dark:border-orange-900 font-bold">
               {brandParam}
-              <button onClick={() => updateFilter('brand', 'all')}>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  updateFilter('brand', 'all');
+                }}
+                className="hover:opacity-75 cursor-pointer"
+                aria-label="Remove brand filter"
+              >
                 <X className="w-3 h-3" />
               </button>
             </span>
@@ -457,7 +473,15 @@ export function ShopPage() {
           {searchParam && (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 text-[#FF7A00] border border-orange-200 dark:border-orange-900 font-bold">
               "{searchParam}"
-              <button onClick={() => updateFilter('search', '')}>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  updateFilter('search', '');
+                }}
+                className="hover:opacity-75 cursor-pointer"
+                aria-label="Remove search filter"
+              >
                 <X className="w-3 h-3" />
               </button>
             </span>
@@ -465,7 +489,15 @@ export function ShopPage() {
           {inStockParam && (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 text-[#FF7A00] border border-orange-200 dark:border-orange-900 font-bold">
               {t('catalog.in_stock')}
-              <button onClick={() => updateFilter('inStock', false)}>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  updateFilter('inStock', false);
+                }}
+                className="hover:opacity-75 cursor-pointer"
+                aria-label="Remove inStock filter"
+              >
                 <X className="w-3 h-3" />
               </button>
             </span>
@@ -473,14 +505,26 @@ export function ShopPage() {
           {onSaleParam && (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 text-[#FF7A00] border border-orange-200 dark:border-orange-900 font-bold">
               {t('nav.sales_deals')}
-              <button onClick={() => updateFilter('onSale', false)}>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  updateFilter('onSale', false);
+                }}
+                className="hover:opacity-75 cursor-pointer"
+                aria-label="Remove onSale filter"
+              >
                 <X className="w-3 h-3" />
               </button>
             </span>
           )}
           <button
-            onClick={handleResetFilters}
-            className="text-xs text-slate-500 hover:text-[#FF7A00] underline font-bold ml-1"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              handleResetFilters();
+            }}
+            className="text-xs text-slate-500 hover:text-[#FF7A00] underline font-bold ml-1 cursor-pointer"
           >
             {t('catalog.clear_filters')}
           </button>
@@ -510,15 +554,15 @@ export function ShopPage() {
         {/* Right Product Grid Area */}
         <div className="lg:col-span-3 space-y-6">
           {/* Top Controls Toolbar */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-3 sm:p-4 border border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
             <div className="text-xs text-slate-500 font-bold">
               {products.length} {t('catalog.products_found')}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
               {/* Sort Select */}
-              <div className="flex items-center gap-2 text-xs">
-                <span className="text-slate-400 hidden sm:inline">{t('catalog.sort_by')}:</span>
+              <div className="flex items-center gap-2 text-xs flex-1 sm:flex-initial">
+                <span className="text-slate-400 hidden md:inline">{t('catalog.sort_by')}:</span>
                 <Select
                   value={sortParam}
                   onChange={(e) => updateFilter('sort', e.target.value)}
@@ -528,17 +572,17 @@ export function ShopPage() {
                     { value: 'price_asc', label: t('catalog.sort_price_asc') },
                     { value: 'price_desc', label: t('catalog.sort_price_desc') }
                   ]}
-                  className="w-48 text-xs font-bold"
+                  className="w-full sm:w-44 text-xs font-bold"
                 />
               </div>
 
               {/* View Toggle (Grid / List) */}
-              <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl p-0.5">
+              <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl p-0.5 shrink-0">
                 <button
                   type="button"
                   onClick={() => setViewMode('grid')}
                   className={clsx(
-                    'p-1.5 rounded-lg transition-colors',
+                    'p-1.5 rounded-lg transition-colors cursor-pointer',
                     viewMode === 'grid'
                       ? 'bg-white dark:bg-slate-700 text-[#FF7A00] shadow-xs'
                       : 'text-slate-400 hover:text-slate-600'
@@ -551,7 +595,7 @@ export function ShopPage() {
                   type="button"
                   onClick={() => setViewMode('list')}
                   className={clsx(
-                    'p-1.5 rounded-lg transition-colors',
+                    'p-1.5 rounded-lg transition-colors cursor-pointer',
                     viewMode === 'list'
                       ? 'bg-white dark:bg-slate-700 text-[#FF7A00] shadow-xs'
                       : 'text-slate-400 hover:text-slate-600'
@@ -583,7 +627,7 @@ export function ShopPage() {
             <div
               className={clsx(
                 viewMode === 'grid'
-                  ? 'grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
+                  ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
                   : 'space-y-4'
               )}
             >

@@ -7,11 +7,30 @@ import { Button } from './Button';
 import { Smartphone, Check, Search, X, ChevronRight } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
-export function PhoneModelSelector({ variant = 'badge', className = '' }) {
+export function PhoneModelSelector({
+  variant = 'badge',
+  className = '',
+  isOpen: externalIsOpen,
+  onClose: externalOnClose
+}) {
   const { selectedModel, selectedModelId, selectModel, clearModel, hasSelectedModel } = usePhoneModel();
   const { t } = useLanguage();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const isModalOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+
+  const handleOpenModal = () => {
+    setInternalIsOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    if (externalOnClose) {
+      externalOnClose();
+    } else {
+      setInternalIsOpen(false);
+    }
+  };
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('all');
   const [models, setModels] = useState([]);
@@ -32,12 +51,12 @@ export function PhoneModelSelector({ variant = 'badge', className = '' }) {
 
   const handleSelect = (modelId) => {
     selectModel(modelId);
-    setIsOpen(false);
+    handleCloseModal();
   };
 
   const handleClear = () => {
     clearModel();
-    setIsOpen(false);
+    handleCloseModal();
   };
 
   return (
@@ -46,7 +65,7 @@ export function PhoneModelSelector({ variant = 'badge', className = '' }) {
       {variant === 'header' && (
         <button
           type="button"
-          onClick={() => setIsOpen(true)}
+          onClick={handleOpenModal}
           className={cn(
             'flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer',
             hasSelectedModel
@@ -71,7 +90,7 @@ export function PhoneModelSelector({ variant = 'badge', className = '' }) {
       {variant === 'badge' && (
         <button
           type="button"
-          onClick={() => setIsOpen(true)}
+          onClick={handleOpenModal}
           className={cn(
             'inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer shadow-xs',
             hasSelectedModel
@@ -120,7 +139,7 @@ export function PhoneModelSelector({ variant = 'badge', className = '' }) {
             <Button
               variant={hasSelectedModel ? 'outline' : 'primary'}
               size="sm"
-              onClick={() => setIsOpen(true)}
+              onClick={handleOpenModal}
               className="w-full sm:w-auto"
             >
               {hasSelectedModel ? t('phone_model.change_model') : t('phone_model.select_device')}
@@ -131,28 +150,28 @@ export function PhoneModelSelector({ variant = 'badge', className = '' }) {
 
       {/* Model Selection Modal */}
       <Modal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
         title={t('phone_model.select_device')}
         maxWidth="max-w-xl"
       >
         <div className="flex flex-col gap-4">
           {/* Search Box */}
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('phone_model.search_model_placeholder')}
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-[#FF7A00]"
-              autoFocus
+              className="w-full pl-10 pr-10 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-[#FF7A00]"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                aria-label={t('catalog.clear_filters')}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -240,7 +259,7 @@ export function PhoneModelSelector({ variant = 'badge', className = '' }) {
             ) : (
               <span className="text-xs text-slate-400">{models.length} {t('phone_model.available_models_count')}</span>
             )}
-            <Button variant="secondary" size="sm" onClick={() => setIsOpen(false)}>
+            <Button variant="secondary" size="sm" onClick={handleCloseModal}>
               {t('common.close')}
             </Button>
           </div>

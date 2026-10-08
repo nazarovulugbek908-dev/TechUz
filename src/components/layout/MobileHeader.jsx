@@ -82,7 +82,6 @@ export function MobileHeader({ onOpenDrawer, onOpenCart }) {
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('nav.search_placeholder')}
               className="w-full pl-10 pr-12 py-2.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-[#FF7A00]"
-              autoFocus
             />
             <Search className="w-4 h-4 absolute left-3.5 text-slate-400 pointer-events-none" />
             <button

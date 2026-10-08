@@ -211,7 +211,7 @@ export function ProductCard({
               type="button"
               onClick={handleAddToCart}
               className={cn(
-                'flex-1 h-8 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs',
+                'flex-1 h-8 px-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs whitespace-nowrap overflow-hidden',
                 isAddedAnim
                   ? 'bg-emerald-600 text-white'
                   : 'bg-[#FF7A00] hover:bg-[#E66E00] text-white active:scale-95'
@@ -220,13 +220,13 @@ export function ProductCard({
             >
               {isAddedAnim ? (
                 <>
-                  <Check className="w-3.5 h-3.5 stroke-[3]" />
-                  <span>{t('product.added_to_cart')}</span>
+                  <Check className="w-3.5 h-3.5 stroke-[3] shrink-0" />
+                  <span className="truncate">{t('product.added_to_cart')}</span>
                 </>
               ) : (
                 <>
-                  <ShoppingBag className="w-3.5 h-3.5" />
-                  <span>{t('product.add_to_cart')}</span>
+                  <ShoppingBag className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">{t('product.add_to_cart')}</span>
                 </>
               )}
             </button>

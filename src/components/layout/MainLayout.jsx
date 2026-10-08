@@ -38,12 +38,14 @@ export function MainLayout() {
       />
 
       {/* 5. Main Routed Content */}
-      <main className="flex-1">
+      <main className="flex-1 pb-24 lg:pb-0">
         <Outlet />
       </main>
 
       {/* 6. Footer */}
-      <Footer />
+      <div className="pb-16 lg:pb-0">
+        <Footer />
+      </div>
 
       {/* 7. Mobile App-like Bottom Navigation */}
       <MobileBottomNav
@@ -57,12 +59,12 @@ export function MainLayout() {
         onClose={closeCart}
       />
 
-      {/* Hidden triggered model selector for mobile bottom nav */}
-      {isModelSelectorModalOpen && (
-        <div className="hidden">
-          <PhoneModelSelector variant="badge" />
-        </div>
-      )}
+      {/* Triggered model selector modal for mobile bottom nav */}
+      <PhoneModelSelector
+        variant="modal-only"
+        isOpen={isModelSelectorModalOpen}
+        onClose={() => setIsModelSelectorModalOpen(false)}
+      />
     </div>
   );
 }

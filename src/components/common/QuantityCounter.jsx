@@ -24,7 +24,11 @@ export function QuantityCounter({
       <button
         type="button"
         disabled={quantity <= min}
-        onClick={onDecrement}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onDecrement && onDecrement(e);
+        }}
         className={cn(
           'flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors disabled:opacity-40 disabled:pointer-events-none cursor-pointer',
           isSm ? 'w-6 h-6' : 'w-7 h-7'
@@ -46,7 +50,11 @@ export function QuantityCounter({
       <button
         type="button"
         disabled={quantity >= max}
-        onClick={onIncrement}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onIncrement && onIncrement(e);
+        }}
         className={cn(
           'flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors disabled:opacity-40 disabled:pointer-events-none cursor-pointer',
           isSm ? 'w-6 h-6' : 'w-7 h-7'

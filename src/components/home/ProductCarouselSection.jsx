@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import { usePhoneModel } from '../../context/PhoneModelContext';
 import { productService } from '../../services/productService';
 import { ProductCard } from '../product/ProductCard';
@@ -20,7 +20,7 @@ export function ProductCarouselSection({
   const { t } = useLanguage();
   const { selectedModelId, selectedModel, hasSelectedModel } = usePhoneModel();
 
-  const [activeFilter, setActiveFilter] = useState('popular'); // popular | newest | price_asc | in_stock
+  const [activeFilter, setActiveFilter] = useState('popular');
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const scrollContainerRef = useRef(null);
@@ -49,7 +49,7 @@ export function ProductCarouselSection({
 
   const scroll = (direction) => {
     if (scrollContainerRef.current) {
-      const offset = direction === 'left' ? -320 : 320;
+      const offset = direction === 'left' ? -300 : 300;
       scrollContainerRef.current.scrollBy({ left: offset, behavior: 'smooth' });
     }
   };
@@ -62,39 +62,39 @@ export function ProductCarouselSection({
   ];
 
   return (
-    <section className={cn('max-w-7xl mx-auto px-4 sm:px-6 space-y-5', className)}>
+    <section className={cn('max-w-7xl mx-auto px-4 sm:px-6 space-y-4', className)}>
       {/* Header Row */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
         <div>
-          <div className="flex items-center gap-3">
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-black font-heading text-slate-900 dark:text-white">
+          <div className="flex items-center gap-2.5">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#17191F] dark:text-[#F4F7FC]">
               {title}
             </h2>
             {category && category !== 'smartphones' && hasSelectedModel && (
-              <span className="hidden sm:inline-flex items-center text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-orange-100 dark:bg-orange-950/60 text-[#FF7A00]">
+              <span className="hidden sm:inline-flex items-center text-[11px] font-semibold px-2 py-0.5 rounded bg-[#EEEEFF] dark:bg-[#5B5BD6]/15 text-[#5B5BD6] dark:text-[#A5A5F5]">
                 {selectedModel.name}
               </span>
             )}
           </div>
           {subtitle && (
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">{subtitle}</p>
+            <p className="text-xs text-[#737985] dark:text-[#9CA3AF] mt-0.5">{subtitle}</p>
           )}
         </div>
 
         {/* Tabs & View All & Carousel Controls */}
         <div className="flex items-center justify-between md:justify-end gap-3 flex-wrap">
           {showTabs && (
-            <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl">
+            <div className="flex items-center gap-1 p-0.5 bg-[#F7F8FA] dark:bg-[#1D2028] border border-[#E6E8EE] dark:border-[#2A2E3B] rounded-lg">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveFilter(tab.id)}
                   className={cn(
-                    'px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none',
+                    'px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer select-none',
                     activeFilter === tab.id
-                      ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-white dark:bg-[#15171D] text-[#17191F] dark:text-white shadow-xs'
+                      : 'text-[#737985] hover:text-[#17191F] dark:text-[#9CA3AF] dark:hover:text-white'
                   )}
                 >
                   {tab.label}
@@ -106,55 +106,55 @@ export function ProductCarouselSection({
           <div className="flex items-center gap-2">
             <Link
               to={viewAllLink}
-              className="text-xs font-bold text-[#FF7A00] hover:underline flex items-center gap-1 shrink-0"
+              className="text-xs font-semibold text-[#5B5BD6] hover:text-[#4949BC] flex items-center gap-1 shrink-0"
             >
               <span>{t('home.view_all')}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
 
             {/* Carousel Arrow Buttons */}
-            <div className="hidden sm:flex items-center gap-1 ml-2">
+            <div className="hidden sm:flex items-center gap-1 ml-1">
               <button
                 type="button"
                 onClick={() => scroll('left')}
-                className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 transition-colors cursor-pointer"
-                aria-label="Oldingi mahsulotlar"
+                className="w-7 h-7 rounded-md border border-[#E6E8EE] dark:border-[#2A2E3B] bg-white dark:bg-[#1D2028] flex items-center justify-center text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-white hover:bg-[#F7F8FA] transition-colors cursor-pointer"
+                aria-label="Oldingi"
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-3.5 h-3.5" />
               </button>
               <button
                 type="button"
                 onClick={() => scroll('right')}
-                className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 transition-colors cursor-pointer"
-                aria-label="Keyingi mahsulotlar"
+                className="w-7 h-7 rounded-md border border-[#E6E8EE] dark:border-[#2A2E3B] bg-white dark:bg-[#1D2028] flex items-center justify-center text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-white hover:bg-[#F7F8FA] transition-colors cursor-pointer"
+                aria-label="Keyingi"
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Horizontal Carousel Container */}
+      {/* Horizontal Carousel */}
       <div
         ref={scrollContainerRef}
-        className="flex items-stretch gap-4 sm:gap-5 overflow-x-auto pb-4 pt-1 no-scrollbar snap-x snap-mandatory"
+        className="flex items-stretch gap-3.5 sm:gap-4 overflow-x-auto pb-3 pt-1 no-scrollbar snap-x snap-mandatory"
       >
         {loading ? (
-          Array.from({ length: 5 }).map((_, idx) => (
-            <div key={idx} className="w-[220px] sm:w-[260px] shrink-0 snap-start">
+          Array.from({ length: 4 }).map((_, idx) => (
+            <div key={idx} className="w-[210px] sm:w-[240px] shrink-0 snap-start">
               <SkeletonCard />
             </div>
           ))
         ) : products.length === 0 ? (
-          <div className="w-full py-8 text-center text-xs text-slate-400">
+          <div className="w-full py-8 text-center text-xs text-[#737985]">
             {t('catalog.no_products')}
           </div>
         ) : (
           products.map((product) => (
             <div
               key={product.id}
-              className="w-[220px] sm:w-[260px] lg:w-[280px] shrink-0 snap-start flex flex-col"
+              className="w-[210px] sm:w-[240px] lg:w-[260px] shrink-0 snap-start flex flex-col"
             >
               <ProductCard
                 product={product}

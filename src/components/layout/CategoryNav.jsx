@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import {
   Menu,
   Smartphone,
@@ -8,8 +8,7 @@ import {
   Zap,
   Headphones,
   SmartphoneNfc,
-  Percent,
-  Sparkles
+  Percent
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
@@ -31,27 +30,27 @@ export function CategoryNav() {
   ];
 
   return (
-    <nav className="hidden lg:block bg-white dark:bg-slate-900/90 border-b border-slate-200/80 dark:border-slate-800 backdrop-blur-md">
+    <nav className="hidden lg:block bg-white dark:bg-[#15171D] border-b border-[#E6E8EE] dark:border-[#2A2E3B] transition-colors relative z-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between">
-          {/* All Categories Pill Button */}
-          <div className="flex items-center gap-1 py-2">
+          <div className="flex items-center gap-2 py-2">
+            {/* All Categories Button */}
             <NavLink
               to="/shop"
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all',
+                  'flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors select-none cursor-pointer border',
                   isActive
-                    ? 'bg-[#FF7A00] text-white shadow-sm'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200/80'
+                    ? 'bg-[#5B5BD6] text-white border-[#5B5BD6]'
+                    : 'bg-[#F7F8FA] dark:bg-[#1D2028] text-[#17191F] dark:text-[#F4F7FC] border-[#E6E8EE] dark:border-[#2A2E3B] hover:border-[#D1D5DB]'
                 )
               }
             >
-              <Menu className="w-4 h-4" />
+              <Menu className="w-3.5 h-3.5" />
               <span>{t('nav.all_categories')}</span>
             </NavLink>
 
-            <div className="h-5 w-px bg-slate-200 dark:bg-slate-800 mx-2" />
+            <div className="h-4 w-px bg-[#E6E8EE] dark:bg-[#2A2E3B] mx-2" />
 
             {/* Category Nav Links */}
             <div className="flex items-center gap-1">
@@ -63,27 +62,21 @@ export function CategoryNav() {
                     to={item.to}
                     className={({ isActive }) =>
                       cn(
-                        'flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all',
+                        'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors select-none cursor-pointer',
                         item.highlight
-                          ? 'text-rose-600 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 border border-rose-200/60 dark:border-rose-900/40'
+                          ? 'text-[#D64545] hover:bg-[#FDF2F2] dark:hover:bg-[#D64545]/10 font-semibold'
                           : isActive
-                          ? 'bg-orange-50 text-[#FF7A00] dark:bg-orange-950/40'
-                          : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                          ? 'text-[#5B5BD6] bg-[#EEEEFF] dark:bg-[#5B5BD6]/15 font-semibold'
+                          : 'text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-[#F4F7FC] hover:bg-[#F7F8FA] dark:hover:bg-[#1D2028]'
                       )
                     }
                   >
-                    <Icon className={cn('w-3.5 h-3.5', item.highlight ? 'text-rose-500' : 'text-slate-400')} />
+                    <Icon className="w-3.5 h-3.5 opacity-80" />
                     <span>{item.label}</span>
                   </NavLink>
                 );
               })}
             </div>
-          </div>
-
-          {/* Quick Right Perks */}
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
-            <Sparkles className="w-3.5 h-3.5 text-[#FF7A00]" />
-            <span className="hidden xl:inline">{t('home.weekly_new')}</span>
           </div>
         </div>
       </div>

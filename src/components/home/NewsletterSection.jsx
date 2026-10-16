@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import { Send, CheckCircle2, MessageCircle } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
@@ -18,20 +18,20 @@ export function NewsletterSection({ className = '' }) {
 
   return (
     <section className={cn('max-w-7xl mx-auto px-4 sm:px-6', className)}>
-      <div className="bg-linear-to-r from-zinc-900 via-zinc-850 to-slate-900 text-white rounded-3xl p-6 sm:p-10 border border-zinc-800 shadow-lg">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div className="bg-white dark:bg-[#1D2028] text-[#17191F] dark:text-[#F4F7FC] rounded-xl p-6 sm:p-8 border border-[#E6E8EE] dark:border-[#2A2E3B] shadow-xs">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           {/* Left Text */}
-          <div className="lg:col-span-7 space-y-2">
-            <h3 className="text-xl sm:text-2xl font-black font-heading leading-tight">
+          <div className="lg:col-span-7 space-y-1.5">
+            <h3 className="text-lg sm:text-xl font-bold tracking-tight">
               {t('home.newsletter_title')}
             </h3>
-            <p className="text-xs sm:text-sm text-slate-400">
+            <p className="text-xs sm:text-sm text-[#737985] dark:text-[#9CA3AF]">
               {t('home.newsletter_desc')}
             </p>
 
             {/* Telegram Channel Link */}
-            <div className="pt-2 flex items-center gap-2 text-xs font-bold text-orange-400">
-              <MessageCircle className="w-4 h-4 text-cyan-400" />
+            <div className="pt-1 flex items-center gap-1.5 text-xs font-semibold text-[#5B5BD6]">
+              <MessageCircle className="w-4 h-4" />
               <span>{t('home.telegram_channel')}: @TechUzOfficial</span>
             </div>
           </div>
@@ -39,8 +39,8 @@ export function NewsletterSection({ className = '' }) {
           {/* Right Input Form */}
           <div className="lg:col-span-5">
             {isSubscribed ? (
-              <div className="p-4 bg-emerald-950/60 border border-emerald-800 rounded-2xl flex items-center gap-3 text-emerald-300 text-xs font-bold">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+              <div className="p-3 bg-[#EAF6F0] border border-[#CFEBDD] rounded-lg flex items-center gap-2 text-[#16845B] text-xs font-semibold">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
                 <span>{t('home.newsletter_success')}</span>
               </div>
             ) : (
@@ -51,13 +51,13 @@ export function NewsletterSection({ className = '' }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t('footer.newsletter_placeholder')}
-                  className="flex-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-2xl text-xs sm:text-sm text-white placeholder:text-zinc-500 outline-none focus:border-[#FF7A00] transition-colors"
+                  className="flex-1 px-3 py-2 bg-[#F7F8FA] dark:bg-[#15171D] border border-[#E6E8EE] dark:border-[#2A2E3B] rounded-lg text-xs sm:text-sm text-[#17191F] dark:text-white placeholder:text-[#737985]/60 outline-none focus:border-[#5B5BD6] transition-colors"
                 />
                 <button
                   type="submit"
-                  className="px-5 py-3 bg-[#FF7A00] hover:bg-[#E66E00] text-white font-bold text-xs sm:text-sm rounded-2xl flex items-center gap-1.5 transition-colors cursor-pointer shrink-0 shadow-md"
+                  className="px-4 py-2 bg-[#5B5BD6] hover:bg-[#4949BC] active:bg-[#3C3CA8] text-white font-semibold text-xs sm:text-sm rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer shrink-0 shadow-xs"
                 >
-                  <Send className="w-4 h-4" />
+                  <Send className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">{t('home.newsletter_btn')}</span>
                 </button>
               </form>

@@ -14,6 +14,58 @@ let hasErrors = false;
 
 console.log('🔍 Checking TechUz i18n consistency...\n');
 
+function findDuplicatesInRawJson(filePath) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const lines = content.split('\n');
+  const duplicates = [];
+  const stack = [new Map()];
+
+  lines.forEach((line, lineIdx) => {
+    const trimmed = line.trim();
+    const lineNum = lineIdx + 1;
+    const match = trimmed.match(/^"([^"]+)"\s*:\s*(.*)$/);
+    if (match) {
+      const key = match[1];
+      const rest = match[2];
+      const currentScope = stack[stack.length - 1];
+
+      if (currentScope.has(key)) {
+        duplicates.push({ key, line: lineNum, prevLine: currentScope.get(key) });
+      } else {
+        currentScope.set(key, lineNum);
+      }
+
+      if (rest.startsWith('{')) {
+        stack.push(new Map());
+      }
+    } else if (trimmed.startsWith('{')) {
+      stack.push(new Map());
+    }
+
+    if (trimmed.endsWith('},') || trimmed.endsWith('}') || trimmed === '},' || trimmed === '}') {
+      if (stack.length > 1) {
+        stack.pop();
+      }
+    }
+  });
+
+  return duplicates;
+}
+
+// 0. Check for Duplicate Keys
+[uzPath, ruPath].forEach((file) => {
+  const rel = path.basename(file);
+  const dups = findDuplicatesInRawJson(file);
+  if (dups.length > 0) {
+    console.error(`❌ Duplicate keys found in ${rel}:`);
+    dups.forEach((d) => console.error(`   - Key "${d.key}" at line ${d.line} (previously defined at line ${d.prevLine})`));
+    hasErrors = true;
+  }
+});
+if (!hasErrors) {
+  console.log('✅ No duplicate keys found in any translation files.');
+}
+
 // 1. Load Dictionaries
 const uz = JSON.parse(fs.readFileSync(uzPath, 'utf8'));
 const ru = JSON.parse(fs.readFileSync(ruPath, 'utf8'));

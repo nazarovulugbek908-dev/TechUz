@@ -8,7 +8,8 @@ export const dictionaries = {
 
 export function getTranslation(key, lang = 'uz') {
   const dictionary = dictionaries[lang] || dictionaries.uz;
-  const keys = key.split('.');
+  const normalizedKey = key.startsWith('katalog.') ? key.replace(/^katalog\./, 'catalog.') : key;
+  const keys = normalizedKey.split('.');
   
   let result = dictionary;
   for (const k of keys) {

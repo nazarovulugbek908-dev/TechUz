@@ -1,228 +1,279 @@
-import { storage } from '../utils/storage';
-import { generateOrderId } from '../utils/formatters';
+import { supabase } from '../lib/supabase';
+import { authService } from './authService';
+import { adminAuthService } from './adminAuthService';
 
-const ORDERS_STORAGE_KEY = 'techuz_mock_orders';
+export function normalizeOrder(o) {
+  if (!o) return null;
+  const items = Array.isArray(o.items)
+    ? o.items
+    : typeof o.items === 'string'
+    ? (() => { try { return JSON.parse(o.items); } catch { return []; } })()
+    : [];
 
-const DEFAULT_ORDERS = [
-  {
-    id: 'ord-1710001001',
-    orderNumber: 'UZ-849201',
-    userId: 'usr-default-01',
-    isGuest: false,
+  return {
+    id: o.id,
+    orderNumber: o.order_number || o.orderNumber,
+    order_number: o.order_number || o.orderNumber,
+    userId: o.user_id || o.userId,
+    user_id: o.user_id || o.userId,
+    customerName: o.customer_name || o.customerName || o.customer?.fullName || '',
+    customer_name: o.customer_name || o.customerName || o.customer?.fullName || '',
+    customerPhone: o.customer_phone || o.customerPhone || o.customer?.phone || '',
+    customer_phone: o.customer_phone || o.customerPhone || o.customer?.phone || '',
+    customerRegion: o.customer_region || o.customerRegion || o.customer?.region || '',
+    customerCity: o.customer_city || o.customerCity || o.customer?.city || '',
+    customerStreet: o.customer_street || o.customerStreet || o.customer?.address || '',
+    customerNotes: o.customer_notes || o.customerNotes || '',
     customer: {
-      fullName: 'Ulugbek Nazarov',
-      phone: '+998 94 587-64-72',
-      region: 'Fargʻona viloyati',
-      cityDistrict: 'Quvasoy shahri',
-      streetAddress: 'Quvasoy shahri, Markaziy ko\'cha, 1-uy',
-      notes: 'Iltimos, soat 18:00 dan keyin yetkazing'
+      fullName: o.customer_name || o.customerName || o.customer?.fullName || '',
+      phone: o.customer_phone || o.customerPhone || o.customer?.phone || '',
+      region: o.customer_region || o.customerRegion || o.customer?.region || '',
+      city: o.customer_city || o.customerCity || o.customer?.city || '',
+      streetAddress: o.customer_street || o.customerStreet || o.customer?.address || ''
     },
-    items: [
-      {
-        id: 'iphone-15-pro-max',
-        name_uz: 'iPhone 15 Pro Max',
-        name_ru: 'iPhone 15 Pro Max',
-        price: 15450000,
-        quantity: 1,
-        color: 'Natural Titanium',
-        image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80'
-      },
-      {
-        id: 'ugreen-gan-65w',
-        name_uz: 'Ugreen Nexode 65W GaN Quvvatlagich',
-        name_ru: 'Зарядное устройство Ugreen Nexode 65W GaN',
-        price: 345000,
-        quantity: 1,
-        color: 'Space Gray',
-        image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=800&q=80'
-      }
-    ],
-    subtotal: 15795000,
-    deliveryFee: 0,
-    total: 15795000,
-    paymentMethod: 'cash',
-    status: 'pending', // pending | confirmed | shipped | completed | cancelled
-    createdAt: new Date(Date.now() - 3600000 * 2).toISOString()
-  },
-  {
-    id: 'ord-1710001002',
-    orderNumber: 'UZ-732910',
-    userId: null,
-    isGuest: true,
-    customer: {
-      fullName: 'Ulugbek Nazarov',
-      phone: '+998 94 587-64-72',
-      region: 'Fargʻona viloyati',
-      cityDistrict: 'Quvasoy shahri',
-      streetAddress: 'Quvasoy shahri, Mustaqillik ko\'chasi, 24-uy',
-      notes: ''
-    },
-    items: [
-      {
-        id: 'samsung-s24-ultra',
-        name_uz: 'Samsung Galaxy S24 Ultra',
-        name_ru: 'Samsung Galaxy S24 Ultra',
-        price: 14200000,
-        quantity: 1,
-        color: 'Titanium Black',
-        image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800&q=80'
-      }
-    ],
-    subtotal: 14200000,
-    deliveryFee: 0,
-    total: 14200000,
-    paymentMethod: 'cash',
-    status: 'shipped',
-    createdAt: new Date(Date.now() - 3600000 * 24).toISOString()
-  }
-];
-
-function getStoredOrders() {
-  const orders = storage.get(ORDERS_STORAGE_KEY, null);
-  if (!orders || !Array.isArray(orders) || orders.length === 0) {
-    storage.set(ORDERS_STORAGE_KEY, DEFAULT_ORDERS);
-    return DEFAULT_ORDERS;
-  }
-  const updated = orders.map((o) => {
-    if (o.customer) {
-      return {
-        ...o,
-        customer: {
-          ...o.customer,
-          fullName: 'Ulugbek Nazarov',
-          phone: '+998 94 587-64-72',
-          region: 'Fargʻona viloyati',
-          cityDistrict: 'Quvasoy shahri',
-          streetAddress: o.customer.streetAddress?.includes('Quvasoy') ? o.customer.streetAddress : 'Quvasoy shahri, Markaziy ko\'cha, 1-uy'
-        }
-      };
-    }
-    return o;
-  });
-  storage.set(ORDERS_STORAGE_KEY, updated);
-  return updated;
+    subtotal: Number(o.subtotal) || 0,
+    deliveryFee: Number(o.delivery_fee ?? o.deliveryFee ?? 0),
+    delivery_fee: Number(o.delivery_fee ?? o.deliveryFee ?? 0),
+    discount: Number(o.discount ?? 0),
+    total: Number(o.total) || 0,
+    paymentMethod: o.payment_method || o.paymentMethod || 'cash',
+    payment_method: o.payment_method || o.paymentMethod || 'cash',
+    paymentStatus: o.payment_status || o.paymentStatus || 'pending',
+    payment_status: o.payment_status || o.paymentStatus || 'pending',
+    status: o.status || 'pending',
+    items,
+    createdAt: o.created_at || o.createdAt,
+    created_at: o.created_at || o.createdAt,
+    updatedAt: o.updated_at || o.updatedAt,
+    updated_at: o.updated_at || o.updatedAt
+  };
 }
 
-/**
- * Order placement and retrieval service (Frontend-Only Mock)
- */
 export const orderService = {
   /**
-   * Create new order (supports both guest and authenticated users)
+   * Order Creation: Supabase first with fallback to local API
    */
-  async createOrder({
-    customer,
-    items,
-    subtotal,
-    deliveryFee = 0,
-    total,
-    paymentMethod = 'cash',
-    notes = '',
-    userId = null
-  }) {
-    if (!items || items.length === 0) {
-      return {
-        data: null,
-        error: { message: 'cart.empty_error' }
-      };
-    }
+  async createOrder({ customer, items, subtotal, deliveryFee, total, paymentMethod = 'cash', notes = '', userId = null }) {
+    const orderId = `ord-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+    const orderNumber = `ORD-${Date.now().toString().slice(-6)}-${Math.floor(100 + Math.random() * 900)}`;
 
-    if (!customer || !customer.fullName || !customer.phone || !customer.streetAddress) {
-      return {
-        data: null,
-        error: { message: 'checkout.error_missing_fields' }
-      };
-    }
+    const currentCustomer = authService.getCurrentUserSync();
+    const effectiveUserId = userId || currentCustomer?.id || null;
 
-    const orderNumber = generateOrderId();
-    const newOrder = {
-      id: `ord-${Date.now()}`,
-      orderNumber,
-      userId: userId || null,
-      isGuest: !userId,
-      customer: {
-        fullName: customer.fullName,
-        phone: customer.phone,
-        region: customer.region || 'Toshkent shahri',
-        cityDistrict: customer.cityDistrict || '',
-        streetAddress: customer.streetAddress,
-        notes: notes || ''
-      },
-      items: items.map((item) => ({
-        id: item.id,
-        name_uz: item.name_uz || item.nameUz || item.name,
-        name_ru: item.name_ru || item.nameRu || item.name,
-        price: item.price,
-        quantity: item.quantity,
-        color: item.selectedColor || null,
-        image: item.images?.[0] || item.image || 'https://placehold.co/600x600/f8fafc/0f172a?text=Product'
-      })),
-      subtotal: Math.round(subtotal),
-      deliveryFee: Math.round(deliveryFee),
-      total: Math.round(total),
-      paymentMethod,
-      status: 'pending', // pending, confirmed, shipped, completed, cancelled
-      createdAt: new Date().toISOString()
+    const payload = {
+      id: orderId,
+      order_number: orderNumber,
+      user_id: effectiveUserId,
+      customer_name: customer.fullName || customer.customer_name || customer.name || '',
+      customer_phone: customer.phone || '',
+      customer_region: customer.region || 'Toshkent viloyati',
+      customer_city: customer.city || 'Toshkent',
+      customer_street: customer.address || customer.streetAddress || '',
+      customer_notes: notes || '',
+      subtotal: Number(subtotal) || 0,
+      delivery_fee: Number(deliveryFee) || 0,
+      discount: 0,
+      total: Number(total) || 0,
+      payment_method: paymentMethod,
+      payment_status: paymentMethod === 'cash' ? 'pending' : 'paid',
+      status: 'pending',
+      items: items || []
     };
 
-    const existingOrders = getStoredOrders();
-    const updatedOrders = [newOrder, ...existingOrders];
-    storage.set(ORDERS_STORAGE_KEY, updatedOrders);
+    // 1. Try Supabase insert
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .insert([payload])
+        .select()
+        .single();
 
-    return {
-      data: newOrder,
-      orderNumber,
-      error: null
-    };
+      if (!error && data) {
+        return { data: normalizeOrder(data), error: null };
+      }
+    } catch (err) {
+      console.warn('Supabase createOrder fallback:', err);
+    }
+
+    // 2. Fallback to API
+    const token = authService.getToken();
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({
+          customer,
+          items,
+          paymentMethod,
+          notes,
+          userId: effectiveUserId
+        })
+      });
+
+      const json = await res.json();
+      if (!res.ok) {
+        return { data: null, error: { message: json.error || 'Buyurtma rasmiylashtirishda xatolik yuz berdi' } };
+      }
+
+      return { data: normalizeOrder(json.data), error: null };
+    } catch (err) {
+      console.error('Order creation failed:', err);
+      return { data: null, error: { message: 'Serverga ulanib bo‘lmadi. Qaytadan urinib ko‘ring.' } };
+    }
   },
 
   /**
-   * Get orders for current user or all orders
+   * Order History for customer or admin
    */
-  async getOrders(userId = null) {
-    const orders = getStoredOrders();
-    if (userId) {
-      return {
-        data: orders.filter((o) => o.userId === userId),
-        error: null
-      };
+  async getOrders(userId = null, { status = 'all', search = '', limit = 50, offset = 0 } = {}) {
+    const adminToken = adminAuthService.getToken();
+    const customer = authService.getCurrentUserSync();
+    const effectiveUserId = userId || customer?.id;
+
+    // 1. Try Supabase
+    try {
+      let query = supabase.from('orders').select('*', { count: 'exact' });
+
+      // If customer and not admin
+      if (!adminToken && effectiveUserId) {
+        query = query.eq('user_id', effectiveUserId);
+      }
+
+      if (status && status !== 'all') {
+        query = query.eq('status', status);
+      }
+
+      if (search && search.trim()) {
+        const s = search.trim();
+        query = query.or(`order_number.ilike.%${s}%,customer_name.ilike.%${s}%,customer_phone.ilike.%${s}%`);
+      }
+
+      query = query.order('created_at', { ascending: false });
+
+      if (limit) {
+        query = query.range(offset, offset + Number(limit) - 1);
+      }
+
+      const { data, error, count } = await query;
+      if (!error && Array.isArray(data) && data.length > 0) {
+        return {
+          data: data.map(normalizeOrder),
+          total: count != null ? count : data.length,
+          error: null
+        };
+      }
+    } catch (err) {
+      console.warn('Supabase getOrders fallback:', err);
     }
-    return {
-      data: orders,
-      error: null
-    };
+
+    // 2. Fallback to API
+    const customerToken = authService.getToken();
+    try {
+      if (adminToken) {
+        const params = new URLSearchParams();
+        if (status && status !== 'all') params.append('status', status);
+        if (search) params.append('search', search);
+        params.append('limit', String(limit));
+        params.append('offset', String(offset));
+
+        const res = await fetch(`/api/orders?${params.toString()}`, {
+          headers: { 'Authorization': `Bearer ${adminToken}` }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          const list = (json.data || []).map(normalizeOrder);
+          return { data: list, total: json.total || list.length, error: null };
+        }
+      }
+
+      if (customerToken) {
+        const res = await fetch('/api/orders/my-orders', {
+          headers: { 'Authorization': `Bearer ${customerToken}` }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          const list = (json.data || []).map(normalizeOrder);
+          return { data: list, total: list.length, error: null };
+        }
+      }
+
+      return { data: [], total: 0, error: null };
+    } catch (err) {
+      console.error('Fetch orders error:', err);
+      return { data: [], total: 0, error: err };
+    }
+  },
+
+  async getOrderById(id) {
+    // 1. Try Supabase
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .or(`id.eq.${id},order_number.eq.${id}`)
+        .single();
+      if (!error && data) {
+        return { data: normalizeOrder(data), error: null };
+      }
+    } catch (err) {}
+
+    // 2. Fallback to API
+    const adminToken = adminAuthService.getToken();
+    const customerToken = authService.getToken();
+    const token = adminToken || customerToken;
+
+    try {
+      const res = await fetch(`/api/orders/${encodeURIComponent(id)}`, {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+      });
+      if (!res.ok) return { data: null, error: 'Buyurtma topilmadi' };
+      const json = await res.json();
+      return { data: normalizeOrder(json.data), error: null };
+    } catch (err) {
+      return { data: null, error: err };
+    }
   },
 
   /**
-   * Get single order by orderNumber or ID
+   * Admin Update Order Status
    */
-  async getOrderByNumber(orderNumber) {
-    const orders = getStoredOrders();
-    const order = orders.find(
-      (o) => o.orderNumber === orderNumber || o.id === orderNumber
-    );
-    if (!order) {
-      return { data: null, error: { message: 'order.not_found' } };
-    }
-    return { data: order, error: null };
-  },
-
-  /**
-   * Update order status (Admin CRUD)
-   */
-  async updateOrderStatus(idOrNumber, status) {
-    const orders = getStoredOrders();
-    const idx = orders.findIndex(
-      (o) => o.id === idOrNumber || o.orderNumber === idOrNumber
-    );
-    if (idx === -1) {
-      return { data: null, error: { message: 'order.not_found' } };
+  async updateOrderStatus(id, newStatus) {
+    // 1. Try Supabase
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .update({ status: newStatus, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select()
+        .single();
+      if (!error && data) {
+        return { data: normalizeOrder(data), error: null };
+      }
+    } catch (err) {
+      console.warn('Supabase updateOrderStatus fallback:', err);
     }
 
-    orders[idx].status = status;
-    orders[idx].updatedAt = new Date().toISOString();
-    storage.set(ORDERS_STORAGE_KEY, orders);
-
-    return { data: orders[idx], error: null };
+    // 2. Fallback to API
+    const adminToken = adminAuthService.getToken();
+    try {
+      const res = await fetch(`/api/orders/${encodeURIComponent(id)}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        return { data: null, error: { message: json.error || 'Holatni yangilab bo‘lmadi' } };
+      }
+      return { data: normalizeOrder(json.data), error: null };
+    } catch (err) {
+      return { data: null, error: { message: 'Serverga ulanib bo‘lmadi' } };
+    }
   }
 };

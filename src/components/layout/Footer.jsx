@@ -1,230 +1,216 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import {
-  Zap,
   Phone,
   Mail,
   MapPin,
   ShieldCheck,
   Truck,
   RotateCcw,
-  Clock,
-  Send
+  Clock
 } from 'lucide-react';
 
 export function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-slate-900 text-slate-400 border-t border-slate-800 transition-colors pt-12 pb-24 lg:pb-12">
-      {/* 1. Value Proposition Banner */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 border-b border-slate-800">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-800/60 border border-slate-750">
-            <div className="w-11 h-11 rounded-xl bg-orange-500/10 text-[#FF7A00] flex items-center justify-center shrink-0">
-              <Truck className="w-6 h-6" />
+    <footer className="bg-white dark:bg-[#15171D] text-[#737985] dark:text-[#9CA3AF] border-t border-[#E6E8EE] dark:border-[#2A2E3B] transition-colors pt-10 pb-20 lg:pb-10">
+      {/* 1. Value Proposition Row */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8 border-b border-[#E6E8EE] dark:border-[#2A2E3B]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-[#F7F8FA] dark:bg-[#1D2028] border border-[#E6E8EE] dark:border-[#2A2E3B]">
+            <div className="w-9 h-9 rounded-md bg-[#EEEEFF] dark:bg-[#5B5BD6]/15 text-[#5B5BD6] flex items-center justify-center shrink-0">
+              <Truck className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-white">{t('footer.delivery_title')}</h4>
-              <p className="text-xs text-slate-400 mt-0.5">{t('footer.delivery_desc')}</p>
+              <h4 className="text-xs sm:text-sm font-semibold text-[#17191F] dark:text-[#F4F7FC]">
+                {t('footer.delivery_title')}
+              </h4>
+              <p className="text-[11px] text-[#737985] dark:text-[#9CA3AF]">
+                {t('footer.delivery_desc')}
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-800/60 border border-slate-750">
-            <div className="w-11 h-11 rounded-xl bg-orange-500/10 text-[#FF7A00] flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-6 h-6" />
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-[#F7F8FA] dark:bg-[#1D2028] border border-[#E6E8EE] dark:border-[#2A2E3B]">
+            <div className="w-9 h-9 rounded-md bg-[#EEEEFF] dark:bg-[#5B5BD6]/15 text-[#5B5BD6] flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-white">{t('footer.warranty_title')}</h4>
-              <p className="text-xs text-slate-400 mt-0.5">{t('footer.warranty_desc')}</p>
+              <h4 className="text-xs sm:text-sm font-semibold text-[#17191F] dark:text-[#F4F7FC]">
+                {t('footer.warranty_title')}
+              </h4>
+              <p className="text-[11px] text-[#737985] dark:text-[#9CA3AF]">
+                {t('footer.warranty_desc')}
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-800/60 border border-slate-750">
-            <div className="w-11 h-11 rounded-xl bg-orange-500/10 text-[#FF7A00] flex items-center justify-center shrink-0">
-              <RotateCcw className="w-6 h-6" />
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-[#F7F8FA] dark:bg-[#1D2028] border border-[#E6E8EE] dark:border-[#2A2E3B]">
+            <div className="w-9 h-9 rounded-md bg-[#EEEEFF] dark:bg-[#5B5BD6]/15 text-[#5B5BD6] flex items-center justify-center shrink-0">
+              <RotateCcw className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-white">{t('footer.returns_title')}</h4>
-              <p className="text-xs text-slate-400 mt-0.5">{t('footer.returns_desc')}</p>
+              <h4 className="text-xs sm:text-sm font-semibold text-[#17191F] dark:text-[#F4F7FC]">
+                {t('footer.returns_title')}
+              </h4>
+              <p className="text-[11px] text-[#737985] dark:text-[#9CA3AF]">
+                {t('footer.returns_desc')}
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-800/60 border border-slate-750">
-            <div className="w-11 h-11 rounded-xl bg-orange-500/10 text-[#FF7A00] flex items-center justify-center shrink-0">
-              <Clock className="w-6 h-6" />
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-[#F7F8FA] dark:bg-[#1D2028] border border-[#E6E8EE] dark:border-[#2A2E3B]">
+            <div className="w-9 h-9 rounded-md bg-[#EEEEFF] dark:bg-[#5B5BD6]/15 text-[#5B5BD6] flex items-center justify-center shrink-0">
+              <Clock className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-white">{t('footer.support_title')}</h4>
-              <p className="text-xs text-slate-400 mt-0.5">{t('footer.support_desc')}</p>
+              <h4 className="text-xs sm:text-sm font-semibold text-[#17191F] dark:text-[#F4F7FC]">
+                {t('footer.support_title')}
+              </h4>
+              <p className="text-[11px] text-[#737985] dark:text-[#9CA3AF]">
+                {t('footer.support_desc')}
+              </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 2. Main Footer Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+      {/* 2. Main Footer Navigation Columns */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Col 1: Brand & Bio */}
-          <div className="lg:col-span-2 space-y-4">
-            <Link to="/" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-[#FF7A00] flex items-center justify-center text-white shadow-md">
-                <Zap className="w-5 h-5 fill-white" />
+          <div className="space-y-3">
+            <Link to="/" className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-md bg-[#5B5BD6] text-white flex items-center justify-center font-bold text-xs">
+                T
               </div>
-              <span className="text-2xl font-black font-heading tracking-tight text-white">
-                Tech<span className="text-[#FF7A00]">Uz</span>
+              <span className="text-lg font-bold tracking-tight text-[#17191F] dark:text-[#F4F7FC]">
+                Tech<span className="text-[#5B5BD6]">Uz</span>
               </span>
             </Link>
-
-            <p className="text-sm text-slate-400 max-w-sm">
-              {t('footer.about_bio')}
+            <p className="text-xs text-[#737985] dark:text-[#9CA3AF] leading-relaxed">
+              {t('footer.about_text')}
             </p>
-
-            {/* Newsletter Mini Form */}
-            <div className="pt-2">
-              <span className="text-xs font-bold text-white block mb-2">{t('footer.newsletter_title')}</span>
-              <div className="flex max-w-sm">
-                <input
-                  type="email"
-                  placeholder={t('footer.newsletter_placeholder')}
-                  className="flex-1 px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-l-xl text-xs text-white placeholder:text-slate-500 outline-none focus:border-[#FF7A00]"
-                />
-                <button
-                  type="button"
-                  className="px-4 py-2.5 bg-[#FF7A00] hover:bg-[#E66E00] text-white font-bold text-xs rounded-r-xl transition-colors cursor-pointer"
-                  aria-label="Submit newsletter"
-                >
-                  <Send className="w-3.5 h-3.5" />
-                </button>
+            <div className="pt-1 text-xs space-y-1.5">
+              <div className="flex items-center gap-2 text-[#737985] dark:text-[#9CA3AF]">
+                <Phone className="w-3.5 h-3.5 text-[#5B5BD6]" />
+                <a href="tel:+998945876472" className="hover:text-[#17191F] dark:hover:text-white font-medium">
+                  +998 (94) 587-64-72
+                </a>
+              </div>
+              <div className="flex items-center gap-2 text-[#737985] dark:text-[#9CA3AF]">
+                <Mail className="w-3.5 h-3.5 text-[#5B5BD6]" />
+                <a href="mailto:support@techuz.uz" className="hover:text-[#17191F] dark:hover:text-white font-medium">
+                  support@techuz.uz
+                </a>
+              </div>
+              <div className="flex items-center gap-2 text-[#737985] dark:text-[#9CA3AF]">
+                <MapPin className="w-3.5 h-3.5 text-[#5B5BD6]" />
+                <span>Toshkent shahri, O'zbekiston</span>
               </div>
             </div>
           </div>
 
-          {/* Col 2: Categories */}
+          {/* Col 2: Catalog Links */}
           <div>
-            <h4 className="text-sm font-bold font-heading text-white uppercase tracking-wider mb-4">
-              {t('footer.categories_title')}
-            </h4>
-            <ul className="space-y-2.5 text-xs">
+            <h5 className="text-xs font-bold uppercase tracking-wider text-[#17191F] dark:text-[#F4F7FC] mb-3">
+              {t('catalog.title')}
+            </h5>
+            <ul className="space-y-2 text-xs">
               <li>
-                <Link to="/shop?category=smartphones" className="hover:text-white transition-colors">
+                <Link to="/shop?category=smartphones" className="hover:text-[#5B5BD6] transition-colors">
                   {t('nav.smartphones')}
                 </Link>
               </li>
               <li>
-                <Link to="/shop?category=cases" className="hover:text-white transition-colors">
+                <Link to="/shop?category=cases" className="hover:text-[#5B5BD6] transition-colors">
                   {t('nav.cases')}
                 </Link>
               </li>
               <li>
-                <Link to="/shop?category=chargers" className="hover:text-white transition-colors">
+                <Link to="/shop?category=chargers" className="hover:text-[#5B5BD6] transition-colors">
                   {t('nav.chargers')}
                 </Link>
               </li>
               <li>
-                <Link to="/shop?category=headphones" className="hover:text-white transition-colors">
+                <Link to="/shop?category=headphones" className="hover:text-[#5B5BD6] transition-colors">
                   {t('nav.headphones')}
                 </Link>
               </li>
               <li>
-                <Link to="/shop?category=screen_protectors" className="hover:text-white transition-colors">
+                <Link to="/shop?category=screen_protectors" className="hover:text-[#5B5BD6] transition-colors">
                   {t('nav.screen_protectors')}
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          {/* Col 3: Customer Care */}
+          <div>
+            <h5 className="text-xs font-bold uppercase tracking-wider text-[#17191F] dark:text-[#F4F7FC] mb-3">
+              {t('footer.customer_help')}
+            </h5>
+            <ul className="space-y-2 text-xs">
               <li>
-                <Link to="/shop?category=cables" className="hover:text-white transition-colors">
-                  {t('nav.cables')}
+                <Link to="/shop" className="hover:text-[#5B5BD6] transition-colors">
+                  {t('footer.how_to_order')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/cart" className="hover:text-[#5B5BD6] transition-colors">
+                  {t('nav.cart')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/favorites" className="hover:text-[#5B5BD6] transition-colors">
+                  {t('nav.favorites')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/account" className="hover:text-[#5B5BD6] transition-colors">
+                  {t('nav.account')}
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Customer Service */}
+          {/* Col 4: Legal & Information */}
           <div>
-            <h4 className="text-sm font-bold font-heading text-white uppercase tracking-wider mb-4">
-              {t('footer.customer_service')}
-            </h4>
-            <ul className="space-y-2.5 text-xs">
+            <h5 className="text-xs font-bold uppercase tracking-wider text-[#17191F] dark:text-[#F4F7FC] mb-3">
+              {t('footer.legal')}
+            </h5>
+            <ul className="space-y-2 text-xs">
               <li>
-                <Link to="/shop" className="hover:text-white transition-colors">
-                  {t('footer.track_order')}
-                </Link>
-              </li>
-              <li>
-                <Link to="/shop" className="hover:text-white transition-colors">
-                  {t('footer.delivery_terms')}
-                </Link>
+                <span className="hover:text-[#5B5BD6] transition-colors cursor-pointer">
+                  {t('footer.terms')}
+                </span>
               </li>
               <li>
-                <Link to="/shop" className="hover:text-white transition-colors">
-                  {t('footer.payment_methods')}
-                </Link>
+                <span className="hover:text-[#5B5BD6] transition-colors cursor-pointer">
+                  {t('footer.privacy')}
+                </span>
               </li>
               <li>
-                <Link to="/shop" className="hover:text-white transition-colors">
-                  {t('footer.warranty_service')}
+                <Link to="/admin/login" className="hover:text-[#5B5BD6] transition-colors text-[#737985]">
+                  {t('nav.admin_panel')}
                 </Link>
-              </li>
-              <li>
-                <Link to="/shop" className="hover:text-white transition-colors">
-                  {t('footer.returns_exchange')}
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Col 4: Contact & Tashkent Location */}
-          <div>
-            <h4 className="text-sm font-bold font-heading text-white uppercase tracking-wider mb-4">
-              {t('footer.contacts')}
-            </h4>
-            <ul className="space-y-3 text-xs">
-              <li className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-[#FF7A00] shrink-0 mt-0.5" />
-                <span>{t('footer.address')}</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-[#FF7A00] shrink-0" />
-                <a href="tel:+998945876472" className="hover:text-white font-bold">
-                  +998 (94) 587-64-72
-                </a>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-[#FF7A00] shrink-0" />
-                <a href="mailto:info@techuz.uz" className="hover:text-white">
-                  info@techuz.uz
-                </a>
               </li>
             </ul>
           </div>
         </div>
       </div>
 
-      {/* 3. Bottom Payment Bar & Copyright */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-        <p className="text-slate-500">
-          © {new Date().getFullYear()} TechUz. {t('footer.all_rights_reserved')}
-        </p>
-
-        {/* Uzbek payment systems badges */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-[10px] text-slate-500 font-semibold mr-1">{t('footer.payment_types')}</span>
-          <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded-md text-[10px] font-bold text-white">
-            UZCARD
-          </span>
-          <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded-md text-[10px] font-bold text-orange-400">
-            HUMO
-          </span>
-          <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded-md text-[10px] font-bold text-cyan-400">
-            PAYME
-          </span>
-          <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded-md text-[10px] font-bold text-blue-400">
-            CLICK
-          </span>
-          <span className="px-2 py-1 bg-slate-800 border border-slate-700 rounded-md text-[10px] font-bold text-emerald-400">
-            UZUM
-          </span>
+      {/* 3. Bottom Bar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 border-t border-[#E6E8EE] dark:border-[#2A2E3B] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#737985] dark:text-[#9CA3AF]">
+        <div>
+          &copy; {new Date().getFullYear()} TechUz Store. {t('footer.all_rights_reserved')}.
+        </div>
+        <div className="flex items-center gap-4 text-[11px]">
+          <span>Uzbekistan E-Commerce</span>
+          <span>&bull;</span>
+          <span>Toshkent</span>
         </div>
       </div>
     </footer>

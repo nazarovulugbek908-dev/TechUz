@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '../hooks/useLanguage';
 import { HeroCarousel } from '../components/home/HeroCarousel';
 import { CategoryPillsBar } from '../components/home/CategoryPillsBar';
 import { PromoBentoGrid } from '../components/home/PromoBentoGrid';

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '../hooks/useLanguage';
 import { useCart } from '../context/CartContext';
 import { usePhoneModel } from '../context/PhoneModelContext';
 import { productService } from '../services/productService';
@@ -11,6 +11,7 @@ import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
 import { RatingStars } from '../components/common/RatingStars';
 import { QuantityCounter } from '../components/common/QuantityCounter';
+import { useFavorites } from '../context/FavoritesContext';
 import { LoadingSpinner } from '../components/feedback/LoadingSpinner';
 import {
   ShoppingBag,
@@ -22,7 +23,8 @@ import {
   Zap,
   ArrowLeft,
   Share2,
-  CheckCircle2
+  CheckCircle2,
+  Heart
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -31,6 +33,7 @@ export function ProductDetailPage() {
   const navigate = useNavigate();
   const { t, language, isUz } = useLanguage();
   const { addToCart } = useCart();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const { checkCompatibility, hasSelectedModel, selectedModel } = usePhoneModel();
 
   const [product, setProduct] = useState(null);
@@ -143,7 +146,7 @@ export function ProductDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         {/* Left: Image Gallery */}
         <div className="space-y-4">
-          <div className="aspect-square bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center justify-center overflow-hidden">
+          <div className="aspect-square bg-white dark:bg-slate-900 rounded-2xl p-6 border border-[#E6E8EE] dark:border-slate-800 shadow-sm flex items-center justify-center overflow-hidden">
             <img
               src={currentImage}
               alt={productName}
@@ -157,17 +160,17 @@ export function ProductDetailPage() {
 
           {/* Thumbnails */}
           {images.length > 1 && (
-            <div className="flex gap-3 overflow-x-auto pb-2">
+            <div className="flex gap-2.5 overflow-x-auto pb-1">
               {images.map((img, idx) => (
                 <button
                   type="button"
                   key={idx}
                   onClick={() => setSelectedImageIndex(idx)}
                   className={clsx(
-                    'w-16 h-16 rounded-2xl bg-white dark:bg-slate-900 border p-1.5 shrink-0 transition-all',
+                    'w-16 h-16 rounded-xl bg-white dark:bg-slate-900 border p-1.5 shrink-0 transition-all cursor-pointer',
                     selectedImageIndex === idx
-                      ? 'border-[#FF7A00] ring-2 ring-orange-500/20 shadow-sm'
-                      : 'border-slate-200 dark:border-slate-800 hover:border-slate-300'
+                      ? 'border-[#5B5BD6] ring-2 ring-[#5B5BD6]/20 shadow-sm'
+                      : 'border-[#E6E8EE] dark:border-slate-800 hover:border-slate-300'
                   )}
                 >
                   <img
@@ -189,7 +192,7 @@ export function ProductDetailPage() {
         <div className="space-y-6">
           {/* Brand & Badges */}
           <div className="flex items-center justify-between gap-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-orange-600 dark:text-orange-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#5B5BD6]">
               {product.brand}
             </span>
             <div className="flex items-center gap-2">
@@ -199,7 +202,7 @@ export function ProductDetailPage() {
             </div>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-black font-heading text-slate-900 dark:text-white leading-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#17191F] dark:text-white leading-tight">
             {productName}
           </h1>
 
@@ -207,30 +210,30 @@ export function ProductDetailPage() {
           <div className="flex items-center gap-4 text-xs">
             <div className="flex items-center gap-1.5">
               <RatingStars rating={product.rating || 5.0} />
-              <span className="font-bold text-slate-700 dark:text-slate-300">
+              <span className="font-bold text-[#17191F] dark:text-slate-300">
                 {product.rating || 5.0}
               </span>
-              <span className="text-slate-400">({product.reviewsCount || 1})</span>
+              <span className="text-[#737985]">({product.reviewsCount || 1})</span>
             </div>
             <span className="text-slate-300">•</span>
-            <span className="text-slate-400 font-mono">
+            <span className="text-[#737985] font-mono">
               SKU: {product.sku || product.id}
             </span>
           </div>
 
           {/* Pricing */}
-          <div className="p-5 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 space-y-1">
+          <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-[#E6E8EE] dark:border-slate-800 space-y-1 shadow-sm">
             <div className="flex items-baseline gap-3">
-              <span className="text-3xl font-black font-heading text-[#FF7A00]">
+              <span className="text-3xl font-extrabold text-[#5B5BD6]">
                 {formatUzbekCurrency(product.price, language)}
               </span>
               {product.oldPrice && product.oldPrice > product.price && (
-                <span className="text-sm text-slate-400 line-through">
+                <span className="text-sm text-[#737985] line-through">
                   {formatUzbekCurrency(product.oldPrice, language)}
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-emerald-600 font-bold">
+            <p className="text-[11px] text-[#16845B] font-bold">
               {product.stock > 0 ? t('product.in_stock') : t('product.out_of_stock')} ({product.stock} {t('common.piece_short')})
             </p>
           </div>
@@ -239,7 +242,7 @@ export function ProductDetailPage() {
           {isChecked && (
             <div
               className={clsx(
-                'p-4 rounded-2xl border flex items-center gap-3 text-xs',
+                'p-3.5 rounded-xl border flex items-center gap-3 text-xs',
                 isCompatible
                   ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300'
                   : 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300'
@@ -259,8 +262,8 @@ export function ProductDetailPage() {
           {/* Color Selector */}
           {product.colors && product.colors.length > 0 && (
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
-                {t('product.color')}: <span className="text-[#FF7A00]">{selectedColor}</span>
+              <label className="text-xs font-bold text-[#17191F] dark:text-slate-300 block">
+                {t('product.color')}: <span className="text-[#5B5BD6] font-semibold">{selectedColor}</span>
               </label>
               <div className="flex items-center gap-2 flex-wrap">
                 {product.colors.map((c, idx) => {
@@ -272,10 +275,10 @@ export function ProductDetailPage() {
                       key={idx}
                       onClick={() => setSelectedColor(cName)}
                       className={clsx(
-                        'px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all',
+                        'px-3.5 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer',
                         isSelected
-                          ? 'bg-[#FF7A00] text-white border-[#FF7A00] shadow-sm'
-                          : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-400'
+                          ? 'bg-[#5B5BD6] text-white border-[#5B5BD6] shadow-sm'
+                          : 'bg-white dark:bg-slate-900 border-[#E6E8EE] dark:border-slate-800 text-[#17191F] dark:text-slate-300 hover:border-slate-400'
                       )}
                     >
                       {cName}
@@ -289,8 +292,8 @@ export function ProductDetailPage() {
           {/* Storage Selector */}
           {product.storageOptions && product.storageOptions.length > 0 && (
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
-                {t('product.storage')}: <span className="text-[#FF7A00]">{selectedStorage}</span>
+              <label className="text-xs font-bold text-[#17191F] dark:text-slate-300 block">
+                {t('product.storage')}: <span className="text-[#5B5BD6] font-semibold">{selectedStorage}</span>
               </label>
               <div className="flex items-center gap-2 flex-wrap">
                 {product.storageOptions.map((s, idx) => {
@@ -301,10 +304,10 @@ export function ProductDetailPage() {
                       key={idx}
                       onClick={() => setSelectedStorage(s)}
                       className={clsx(
-                        'px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all',
+                        'px-3.5 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer',
                         isSelected
-                          ? 'bg-[#FF7A00] text-white border-[#FF7A00] shadow-sm'
-                          : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-400'
+                          ? 'bg-[#5B5BD6] text-white border-[#5B5BD6] shadow-sm'
+                          : 'bg-white dark:bg-slate-900 border-[#E6E8EE] dark:border-slate-800 text-[#17191F] dark:text-slate-300 hover:border-slate-400'
                       )}
                     >
                       {s}
@@ -323,55 +326,72 @@ export function ProductDetailPage() {
                 onQuantityChange={setQuantity}
                 max={product.stock}
               />
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-[#737985]">
                 {product.warrantyMonths || 12} {t('product.warranty_months')}
               </span>
             </div>
 
             {addedSuccess && (
-              <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center gap-2">
+              <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-[#16845B] dark:text-emerald-300 text-xs font-bold flex items-center gap-2 border border-emerald-200 dark:border-emerald-800">
                 <CheckCircle2 className="w-4 h-4" />
                 {t('product.added_to_cart')}
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Button
-                variant="primary"
-                size="lg"
-                icon={ShoppingBag}
-                disabled={isOutOfStock}
-                onClick={handleAddToCart}
-                className="font-bold shadow-lg shadow-orange-500/20"
-              >
-                {t('product.add_to_cart')}
-              </Button>
+            <div className="flex items-center gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  icon={ShoppingBag}
+                  disabled={isOutOfStock}
+                  onClick={handleAddToCart}
+                  className="font-bold cursor-pointer"
+                >
+                  {t('product.add_to_cart')}
+                </Button>
 
-              <Button
-                variant="outline"
-                size="lg"
-                icon={Zap}
-                disabled={isOutOfStock}
-                onClick={handleBuyNow}
-                className="font-bold"
+                <Button
+                  variant="outline"
+                  size="lg"
+                  icon={Zap}
+                  disabled={isOutOfStock}
+                  onClick={handleBuyNow}
+                  className="font-bold cursor-pointer"
+                >
+                  {t('cart.checkout_button')}
+                </Button>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => toggleFavorite(product)}
+                className={clsx(
+                  "p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-center shrink-0 h-11 w-11",
+                  isFavorite(product?.id)
+                    ? "bg-rose-50 border-rose-200 text-rose-500 dark:bg-rose-950/40 dark:border-rose-900 shadow-sm"
+                    : "border-[#E6E8EE] dark:border-slate-800 text-[#737985] hover:text-rose-500 hover:border-rose-200 bg-white dark:bg-slate-900"
+                )}
+                title="Sevimlilarga saqlash"
+                aria-label="Sevimlilarga saqlash"
               >
-                {t('cart.checkout_button')}
-              </Button>
+                <Heart className={clsx("w-5 h-5", isFavorite(product?.id) && "fill-current text-rose-500")} />
+              </button>
             </div>
           </div>
 
           {/* Value Props Strip */}
-          <div className="grid grid-cols-3 gap-2 pt-4 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-500">
+          <div className="grid grid-cols-3 gap-2 pt-4 border-t border-[#E6E8EE] dark:border-slate-800 text-[11px] text-[#737985]">
             <div className="flex items-center gap-2">
-              <Truck className="w-4 h-4 text-[#FF7A00] shrink-0" />
+              <Truck className="w-4 h-4 text-[#5B5BD6] shrink-0" />
               <span>{t('benefits.delivery_title')}</span>
             </div>
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
+              <ShieldCheck className="w-4 h-4 text-[#16845B] shrink-0" />
               <span>{t('benefits.warranty_title')}</span>
             </div>
             <div className="flex items-center gap-2">
-              <RotateCcw className="w-4 h-4 text-blue-500 shrink-0" />
+              <RotateCcw className="w-4 h-4 text-[#5B5BD6] shrink-0" />
               <span>{t('benefits.returns_title')}</span>
             </div>
           </div>
@@ -379,16 +399,16 @@ export function ProductDetailPage() {
       </div>
 
       {/* Tabs: Description, Specifications, Delivery */}
-      <Card className="p-6 sm:p-8 border-slate-200/80 dark:border-slate-800 space-y-6">
-        <div className="flex items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-3">
+      <Card className="p-6 sm:p-8 space-y-6">
+        <div className="flex items-center gap-6 border-b border-[#E6E8EE] dark:border-slate-800 pb-3">
           <button
             type="button"
             onClick={() => setActiveTab('description')}
             className={clsx(
-              'font-heading font-bold text-sm pb-2 border-b-2 -mb-3.5 transition-colors',
+              'font-semibold text-sm pb-2.5 border-b-2 -mb-3.5 transition-colors cursor-pointer',
               activeTab === 'description'
-                ? 'border-[#FF7A00] text-[#FF7A00]'
-                : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white'
+                ? 'border-[#5B5BD6] text-[#5B5BD6]'
+                : 'border-transparent text-[#737985] hover:text-[#17191F] dark:hover:text-white'
             )}
           >
             {t('product.description')}
@@ -397,30 +417,30 @@ export function ProductDetailPage() {
             type="button"
             onClick={() => setActiveTab('specifications')}
             className={clsx(
-              'font-heading font-bold text-sm pb-2 border-b-2 -mb-3.5 transition-colors',
+              'font-semibold text-sm pb-2.5 border-b-2 -mb-3.5 transition-colors cursor-pointer',
               activeTab === 'specifications'
-                ? 'border-[#FF7A00] text-[#FF7A00]'
-                : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-white'
+                ? 'border-[#5B5BD6] text-[#5B5BD6]'
+                : 'border-transparent text-[#737985] hover:text-[#17191F] dark:hover:text-white'
             )}
           >
             {t('product.specifications')}
           </button>
         </div>
 
-        <div className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+        <div className="text-xs text-[#737985] dark:text-slate-300 leading-relaxed">
           {activeTab === 'description' ? (
             <div className="space-y-4 max-w-3xl">
-              <p>{productDesc || 'Ushbu mahsulot haqida to\'liq ma\'lumot tez orada taqdim etiladi.'}</p>
+              <p className="text-sm text-[#17191F] dark:text-slate-200 leading-relaxed">{productDesc || 'Ushbu mahsulot haqida to\'liq ma\'lumot tez orada taqdim etiladi.'}</p>
               {product.compatibleModels && product.compatibleModels.length > 0 && (
-                <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl space-y-2">
-                  <h4 className="font-bold text-slate-900 dark:text-white">
+                <div className="p-4 bg-[#F7F8FA] dark:bg-slate-800/50 rounded-xl space-y-2 border border-[#E6E8EE] dark:border-slate-800">
+                  <h4 className="font-bold text-[#17191F] dark:text-white">
                     {t('phone_model.compatible_with')}
                   </h4>
                   <div className="flex flex-wrap gap-1.5">
                     {product.compatibleModels.map((m, idx) => (
                       <span
                         key={idx}
-                        className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-[11px]"
+                        className="px-2.5 py-1 rounded-md bg-white dark:bg-slate-900 border border-[#E6E8EE] dark:border-slate-700 text-[#17191F] dark:text-slate-300 font-semibold text-[11px]"
                       >
                         {m}
                       </span>
@@ -431,21 +451,21 @@ export function ProductDetailPage() {
             </div>
           ) : (
             <div className="max-w-xl space-y-3">
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
-                <span className="text-slate-400">{t('admin.brand_col')}</span>
-                <span className="font-bold text-slate-900 dark:text-white">{product.brand}</span>
+              <div className="flex justify-between py-2.5 border-b border-[#E6E8EE] dark:border-slate-800">
+                <span className="text-[#737985]">{t('admin.brand_col')}</span>
+                <span className="font-semibold text-[#17191F] dark:text-white">{product.brand}</span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
-                <span className="text-slate-400">{t('admin.category_col')}</span>
-                <span className="font-bold text-slate-900 dark:text-white capitalize">{product.category}</span>
+              <div className="flex justify-between py-2.5 border-b border-[#E6E8EE] dark:border-slate-800">
+                <span className="text-[#737985]">{t('admin.category_col')}</span>
+                <span className="font-semibold text-[#17191F] dark:text-white capitalize">{product.category}</span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
-                <span className="text-slate-400">SKU</span>
-                <span className="font-bold text-slate-900 dark:text-white font-mono">{product.sku || product.id}</span>
+              <div className="flex justify-between py-2.5 border-b border-[#E6E8EE] dark:border-slate-800">
+                <span className="text-[#737985]">SKU</span>
+                <span className="font-semibold text-[#17191F] dark:text-white font-mono">{product.sku || product.id}</span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
-                <span className="text-slate-400">{t('benefits.warranty_title')}</span>
-                <span className="font-bold text-slate-900 dark:text-white">{product.warrantyMonths || 12} {t('product.warranty_months')}</span>
+              <div className="flex justify-between py-2.5 border-b border-[#E6E8EE] dark:border-slate-800">
+                <span className="text-[#737985]">{t('benefits.warranty_title')}</span>
+                <span className="font-semibold text-[#17191F] dark:text-white">{product.warrantyMonths || 12} {t('product.warranty_months')}</span>
               </div>
             </div>
           )}
@@ -455,7 +475,7 @@ export function ProductDetailPage() {
       {/* Related Products */}
       {relatedProducts.length > 0 && (
         <div className="space-y-6">
-          <h2 className="text-xl font-black font-heading text-slate-900 dark:text-white">
+          <h2 className="text-xl font-extrabold text-[#17191F] dark:text-white">
             {t('home.deals_title')}
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">

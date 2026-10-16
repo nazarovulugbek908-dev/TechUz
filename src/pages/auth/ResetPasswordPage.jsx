@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { useLanguage } from '../../context/LanguageContext';
-import { Card } from '../../components/common/Card';
+import { useLanguage } from '../../hooks/useLanguage';
+import { AuthLayout } from '../../components/auth/AuthLayout';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
 import { Alert } from '../../components/feedback/Alert';
-import { Lock, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Lock, Eye, EyeOff, CheckCircle2, ArrowRight } from 'lucide-react';
 
 export function ResetPasswordPage() {
   const { t } = useLanguage();
   const { resetPassword } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const emailParam = searchParams.get('email') || '';
+  const resetToken = searchParams.get('token') || searchParams.get('resetToken') || '';
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -41,42 +42,31 @@ export function ResetPasswordPage() {
     }
 
     setLoading(true);
-    const { error } = await resetPassword({ email: emailParam, newPassword: password });
+    const { error } = await resetPassword({ resetToken, newPassword: password });
     setLoading(false);
 
     if (error) {
-      setErrorMsg(t(error.message) || error.message);
+      setErrorMsg(error.message || t('common.error_occurred'));
     } else {
       setSuccess(true);
       setTimeout(() => {
-        navigate('/login');
-      }, 2500);
+        navigate('/login', { replace: true });
+      }, 2000);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-12 sm:py-16">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-xs text-slate-500 mb-6">
-        <Link to="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">
-          {t('nav.home')}
-        </Link>
-        <span>/</span>
-        <span className="text-slate-900 dark:text-white font-bold">
-          {t('auth.reset_password_title')}
-        </span>
-      </div>
-
-      <Card className="p-6 sm:p-8 space-y-6 shadow-xl border-slate-200/80 dark:border-slate-800">
+    <AuthLayout>
+      <div className="max-w-md w-full mx-auto space-y-6">
         {success ? (
           <div className="text-center space-y-4 py-4">
-            <div className="w-14 h-14 rounded-2xl bg-green-50 dark:bg-green-950/50 text-green-600 flex items-center justify-center mx-auto shadow-sm">
+            <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-[#16845B] flex items-center justify-center mx-auto shadow-xs border border-emerald-500/20">
               <CheckCircle2 className="w-7 h-7" />
             </div>
-            <h2 className="text-xl font-black font-heading text-slate-900 dark:text-white">
+            <h2 className="text-xl font-extrabold text-white">
               {t('auth.password_updated_success')}
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-[#737985]">
               {t('auth.redirecting_to_login')}
             </p>
             <div className="pt-2">
@@ -90,14 +80,11 @@ export function ResetPasswordPage() {
           </div>
         ) : (
           <>
-            <div className="text-center space-y-2">
-              <div className="w-12 h-12 rounded-2xl bg-orange-50 dark:bg-orange-950/50 text-[#FF7A00] flex items-center justify-center mx-auto shadow-sm">
-                <Lock className="w-6 h-6" />
-              </div>
-              <h1 className="text-2xl font-black font-heading text-slate-900 dark:text-white">
+            <div className="text-left space-y-1.5">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
                 {t('auth.reset_password_title')}
               </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs sm:text-sm text-[#737985] font-medium leading-relaxed">
                 {t('auth.reset_password_subtitle')}
               </p>
             </div>
@@ -110,30 +97,41 @@ export function ResetPasswordPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
                   {t('auth.new_password_label')}
                 </label>
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  icon={Lock}
-                  required
-                />
+                <div className="relative">
+                  <Input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    icon={Lock}
+                    required
+                    disabled={loading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1 cursor-pointer transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
                   {t('auth.confirm_password_label')}
                 </label>
                 <Input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
                   icon={Lock}
                   required
+                  disabled={loading}
                 />
               </div>
 
@@ -141,15 +139,24 @@ export function ResetPasswordPage() {
                 type="submit"
                 variant="primary"
                 size="lg"
-                className="w-full mt-2 font-bold shadow-lg shadow-orange-500/20"
-                disabled={loading}
+                className="w-full mt-2 font-bold cursor-pointer shadow-lg shadow-[#5B5BD6]/20 transition-all"
+                disabled={loading || !password || !confirmPassword || password.length < 6 || password !== confirmPassword}
               >
                 {loading ? t('common.loading') : t('auth.reset_submit')}
               </Button>
             </form>
+
+            <div className="pt-2 text-center text-xs text-[#737985] border-t border-[#2A2E3B]">
+              <Link
+                to="/login"
+                className="font-bold text-[#5B5BD6] hover:text-[#4949BC] hover:underline inline-flex items-center gap-1 transition-colors"
+              >
+                <span>{t('auth.back_to_login')}</span>
+              </Link>
+            </div>
           </>
         )}
-      </Card>
-    </div>
+      </div>
+    </AuthLayout>
   );
 }

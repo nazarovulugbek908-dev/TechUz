@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { getTranslation } from '../i18n';
 import { storage } from '../utils/storage';
 
-const LanguageContext = createContext();
+export const LanguageContext = createContext();
 
 const LANGUAGE_STORAGE_KEY = 'techuz_language';
 
@@ -46,10 +46,4 @@ export function LanguageProvider({ children }) {
   );
 }
 
-export function useLanguage() {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
-  return context;
-}
+export default LanguageProvider;

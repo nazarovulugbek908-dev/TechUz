@@ -25,9 +25,9 @@ export const Select = forwardRef(function Select(
       {label && (
         <label
           htmlFor={selectId}
-          className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300"
+          className="text-xs sm:text-sm font-medium text-[#17191F] dark:text-[#F4F7FC]"
         >
-          {label} {required && <span className="text-rose-500">*</span>}
+          {label} {required && <span className="text-[#D64545]">*</span>}
         </label>
       )}
 
@@ -37,12 +37,12 @@ export const Select = forwardRef(function Select(
           id={selectId}
           disabled={disabled}
           className={cn(
-            'w-full bg-white dark:bg-slate-900 border text-slate-900 dark:text-slate-100 rounded-xl text-sm transition-all duration-150 cursor-pointer',
-            'pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2',
+            'w-full bg-white dark:bg-[#15171D] border text-[#17191F] dark:text-[#F4F7FC] rounded-lg text-sm transition-all duration-150 cursor-pointer appearance-none',
+            'pl-3 pr-9 py-2 focus:outline-none focus:ring-2',
             error
-              ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-200'
-              : 'border-slate-200 hover:border-slate-300 focus:border-[#FF7A00] focus:ring-orange-500/20 dark:border-slate-700 dark:focus:border-[#FF7A00]',
-            disabled && 'opacity-60 bg-slate-50 cursor-not-allowed',
+              ? 'border-[#D64545] focus:border-[#D64545] focus:ring-[#D64545]/15'
+              : 'border-[#E6E8EE] hover:border-[#D1D5DB] focus:border-[#5B5BD6] focus:ring-[#5B5BD6]/15 dark:border-[#2A2E3B] dark:hover:border-[#3B4254] dark:focus:border-[#5B5BD6]',
+            disabled && 'opacity-60 bg-[#F7F8FA] dark:bg-[#1D2028] cursor-not-allowed',
             className
           )}
           {...props}
@@ -55,7 +55,7 @@ export const Select = forwardRef(function Select(
                   <option
                     key={idx}
                     value={val}
-                    className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 py-1"
+                    className="bg-white dark:bg-[#1D2028] text-[#17191F] dark:text-[#F4F7FC] py-1"
                   >
                     {lbl}
                   </option>
@@ -64,15 +64,15 @@ export const Select = forwardRef(function Select(
             : children}
         </select>
 
-        <div className="absolute right-3.5 pointer-events-none text-slate-400 flex items-center">
+        <div className="absolute right-3 pointer-events-none text-[#737985] dark:text-[#9CA3AF] flex items-center">
           <ChevronDown className="w-4 h-4" />
         </div>
       </div>
 
       {error ? (
-        <span className="text-xs text-rose-500 mt-0.5">{error}</span>
+        <span className="text-xs text-[#D64545] mt-0.5">{error}</span>
       ) : helperText ? (
-        <span className="text-xs text-slate-500 mt-0.5">{helperText}</span>
+        <span className="text-xs text-[#737985] mt-0.5">{helperText}</span>
       ) : null}
     </div>
   );

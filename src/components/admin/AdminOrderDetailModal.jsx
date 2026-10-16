@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import { orderService } from '../../services/orderService';
 import { formatUzbekCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/formatters';
@@ -97,33 +97,33 @@ export function AdminOrderDetailModal({ order, isOpen, onClose, onStatusUpdated 
         </div>
 
         {/* Customer Information Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40">
           <div className="space-y-2">
-            <h3 className="font-bold font-heading text-slate-900 dark:text-white flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-[#FF7A00]" />
+            <h3 className="font-bold font-heading text-neutral-900 dark:text-white flex items-center gap-1.5">
+              <User className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
               {t('admin.customer_info_title')}
             </h3>
-            <p className="font-bold text-slate-800 dark:text-slate-200">{order.customer?.fullName}</p>
-            <p className="text-slate-500 flex items-center gap-1">
-              <Phone className="w-3 h-3 text-slate-400" />
+            <p className="font-bold text-neutral-900 dark:text-white">{order.customer?.fullName}</p>
+            <p className="text-neutral-500 flex items-center gap-1">
+              <Phone className="w-3 h-3 text-neutral-400" />
               {order.customer?.phone}
             </p>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-neutral-400">
               {order.isGuest ? t('checkout.guest_order') : t('checkout.registered_customer')}
             </p>
           </div>
 
           <div className="space-y-2">
-            <h3 className="font-bold font-heading text-slate-900 dark:text-white flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-[#FF7A00]" />
+            <h3 className="font-bold font-heading text-neutral-900 dark:text-white flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
               {t('admin.delivery_address_title')}
             </h3>
-            <p className="text-slate-700 dark:text-slate-300">
+            <p className="text-neutral-700 dark:text-neutral-300">
               {order.customer?.region}, {order.customer?.cityDistrict ? `${order.customer?.cityDistrict}, ` : ''}{order.customer?.streetAddress}
             </p>
-            {order.customer?.notes && (
+            {(order.customerNotes || order.customer?.notes) && (
               <p className="text-[11px] text-amber-600 dark:text-amber-400 italic">
-                "{order.customer.notes}"
+                "{order.customerNotes || order.customer?.notes}"
               </p>
             )}
           </div>
@@ -131,32 +131,32 @@ export function AdminOrderDetailModal({ order, isOpen, onClose, onStatusUpdated 
 
         {/* Ordered Items List */}
         <div className="space-y-3">
-          <h3 className="font-bold font-heading text-slate-900 dark:text-white flex items-center gap-1.5">
-            <Package className="w-3.5 h-3.5 text-[#FF7A00]" />
+          <h3 className="font-bold font-heading text-neutral-900 dark:text-white flex items-center gap-1.5">
+            <Package className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
             {t('cart.items_title')} ({order.items?.length || 0})
           </h3>
 
-          <div className="divide-y divide-slate-100 dark:divide-slate-800 border border-slate-100 dark:border-slate-800 rounded-2xl overflow-hidden">
+          <div className="divide-y divide-neutral-100 dark:divide-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden">
             {order.items?.map((item, idx) => (
-              <div key={idx} className="p-3 bg-white dark:bg-slate-900 flex items-center justify-between gap-3">
+              <div key={idx} className="p-3 bg-white dark:bg-neutral-900 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <img
                     src={item.image || 'https://placehold.co/80x80?text=Prod'}
                     alt=""
-                    className="w-10 h-10 rounded-lg object-contain bg-slate-50 dark:bg-slate-800 p-1 border border-slate-200 dark:border-slate-700 shrink-0"
+                    className="w-10 h-10 rounded-lg object-contain bg-neutral-50 dark:bg-neutral-800 p-1 border border-neutral-200 dark:border-neutral-700 shrink-0"
                   />
                   <div>
-                    <p className="font-bold text-slate-900 dark:text-white">
+                    <p className="font-bold text-neutral-900 dark:text-white">
                       {language === 'ru' ? item.name_ru : item.name_uz}
                     </p>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-neutral-400">
                       {item.color && <span>{item.color} • </span>}
                       {item.quantity} {t('common.piece_short')} × {formatUzbekCurrency(item.price, language)}
                     </p>
                   </div>
                 </div>
 
-                <div className="font-bold text-slate-900 dark:text-white">
+                <div className="font-bold text-neutral-900 dark:text-white">
                   {formatUzbekCurrency(item.price * item.quantity, language)}
                 </div>
               </div>
@@ -165,22 +165,22 @@ export function AdminOrderDetailModal({ order, isOpen, onClose, onStatusUpdated 
         </div>
 
         {/* Financial Totals */}
-        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 space-y-2">
-          <div className="flex justify-between text-slate-500">
+        <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200 dark:border-neutral-800 space-y-2">
+          <div className="flex justify-between text-neutral-500">
             <span>{t('cart.subtotal')}:</span>
-            <span className="font-bold text-slate-800 dark:text-slate-200">
+            <span className="font-bold text-neutral-800 dark:text-neutral-200">
               {formatUzbekCurrency(order.subtotal, language)}
             </span>
           </div>
-          <div className="flex justify-between text-slate-500">
+          <div className="flex justify-between text-neutral-500">
             <span>{t('cart.delivery')}:</span>
             <span className="font-bold text-emerald-600">
               {order.deliveryFee === 0 ? t('cart.free_delivery') : formatUzbekCurrency(order.deliveryFee, language)}
             </span>
           </div>
-          <div className="flex justify-between text-base font-black text-slate-900 dark:text-white pt-2 border-t border-slate-200 dark:border-slate-700">
+          <div className="flex justify-between text-base font-extrabold text-neutral-900 dark:text-white pt-2 border-t border-neutral-200 dark:border-neutral-700">
             <span>{t('cart.total')}:</span>
-            <span className="text-[#FF7A00] font-heading">
+            <span className="text-brand-600 dark:text-brand-400 font-heading">
               {formatUzbekCurrency(order.total, language)}
             </span>
           </div>

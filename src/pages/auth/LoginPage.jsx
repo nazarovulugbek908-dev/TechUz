@@ -1,98 +1,152 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useAdminAuth } from '../../context/AdminAuthContext';
-import { useLanguage } from '../../context/LanguageContext';
-import { Card } from '../../components/common/Card';
+import { useLanguage } from '../../hooks/useLanguage';
+import { AuthLayout } from '../../components/auth/AuthLayout';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
 import { Alert } from '../../components/feedback/Alert';
-import { Mail, Lock, LogIn, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  ArrowRight,
+  Sparkles
+} from 'lucide-react';
+
+const REMEMBER_IDENTIFIER_KEY = 'techuz_remembered_identifier';
 
 export function LoginPage() {
-  const { t } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const { login, isAuthenticated } = useAuth();
   const { loginAdmin, isAdminAuthenticated } = useAdminAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState(() => {
+    return localStorage.getItem(REMEMBER_IDENTIFIER_KEY) || '';
+  });
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(() => {
+    return !!localStorage.getItem(REMEMBER_IDENTIFIER_KEY);
+  });
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const from = location.state?.from?.pathname || '/';
+  const from = location.state?.from?.pathname;
+  const destination = from && from !== '/login' && from !== '/register' ? from : '/';
 
-  // If already authenticated as customer, redirect to Home
-  // If already authenticated as admin, redirect to Admin Dashboard
-  React.useEffect(() => {
+  // If already authenticated, redirect
+  useEffect(() => {
     if (isAdminAuthenticated) {
       navigate('/admin', { replace: true });
     } else if (isAuthenticated) {
-      navigate('/', { replace: true });
+      navigate(destination, { replace: true });
     }
-  }, [isAuthenticated, isAdminAuthenticated, navigate]);
+  }, [isAuthenticated, isAdminAuthenticated, navigate, destination]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
 
-    if (!email.trim() || !password) {
+    const cleanIdentifier = identifier.trim();
+    if (!cleanIdentifier || !password) {
       setErrorMsg(t('auth.error_fill_required'));
       return;
     }
 
     setLoading(true);
-    const cleanedEmail = email.trim().toLowerCase();
+    const cleaned = cleanIdentifier.toLowerCase();
+
+    // Handle Remember Me identifier storage
+    if (rememberMe) {
+      localStorage.setItem(REMEMBER_IDENTIFIER_KEY, cleanIdentifier);
+    } else {
+      localStorage.removeItem(REMEMBER_IDENTIFIER_KEY);
+    }
 
     // Check if input is Admin credentials
-    if (cleanedEmail === 'admin@gmail.com' || cleanedEmail === 'admin@techuz.uz' || cleanedEmail === 'admin@gamail.com') {
-      const { data, error } = await loginAdmin(cleanedEmail, password);
+    if (
+      cleaned === 'admin@gmail.com' ||
+      cleaned === 'admin@techuz.uz' ||
+      cleaned === 'admin'
+    ) {
+      const { error } = await loginAdmin(cleaned, password);
       setLoading(false);
       if (error) {
-        setErrorMsg(t(error.message) || error.message);
+        setErrorMsg(error.message || t('auth.invalid_credentials'));
       } else {
         navigate('/admin', { replace: true });
       }
       return;
     }
 
-    // Otherwise handle regular Customer login
-    const { error } = await login(email, password);
+    // Customer login
+    const { data: authData, error } = await login(cleanIdentifier, password, rememberMe);
     setLoading(false);
 
     if (error) {
-      setErrorMsg(t(error.message) || error.message);
+      setErrorMsg(error.message || t('auth.invalid_credentials'));
     } else {
-      const destination = from && from !== '/login' && from !== '/register' ? from : '/';
-      navigate(destination, { replace: true });
+      if (authData?.user?.role === 'admin') {
+        await loginAdmin(cleaned, password);
+        navigate('/admin', { replace: true });
+      } else {
+        navigate(destination, { replace: true });
+      }
     }
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-12 sm:py-16">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-xs text-slate-500 mb-6">
-        <Link to="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">
-          {t('nav.home')}
-        </Link>
-        <span>/</span>
-        <span className="text-slate-900 dark:text-white font-bold">
-          {t('auth.login_title')}
-        </span>
-      </div>
-
-      <Card className="p-6 sm:p-8 space-y-6 shadow-xl border-slate-200/80 dark:border-slate-800">
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-orange-50 dark:bg-orange-950/50 text-[#FF7A00] flex items-center justify-center mx-auto shadow-sm">
-            <LogIn className="w-6 h-6" />
+    <AuthLayout>
+      <div className="max-w-md w-full mx-auto space-y-6">
+        {/* Mobile Header Logo & Language Switcher */}
+        <div className="lg:hidden flex items-center justify-between pb-4 border-b border-[#2A2E3B]">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[#5B5BD6] text-white flex items-center justify-center font-bold text-sm tracking-tight shadow-sm">
+              T
+            </div>
+            <div className="flex flex-col">
+              <span className="font-extrabold text-xl text-white leading-none">
+                Tech<span className="text-[#5B5BD6]">Uz</span>
+              </span>
+              <span className="text-[9px] font-semibold tracking-wider uppercase text-[#737985] mt-0.5">
+                Electronics
+              </span>
+            </div>
           </div>
-          <h1 className="text-2xl font-black font-heading text-slate-900 dark:text-white">
+
+          <div className="flex items-center bg-[#1D2028] border border-[#2A2E3B] rounded-lg p-0.5 text-[11px] font-bold">
+            <button
+              type="button"
+              onClick={() => setLanguage('uz')}
+              className={`px-2 py-0.5 rounded-md transition-colors ${
+                language === 'uz' ? 'bg-[#5B5BD6] text-white' : 'text-[#737985]'
+              }`}
+            >
+              UZ
+            </button>
+            <button
+              type="button"
+              onClick={() => setLanguage('ru')}
+              className={`px-2 py-0.5 rounded-md transition-colors ${
+                language === 'ru' ? 'bg-[#5B5BD6] text-white' : 'text-[#737985]'
+              }`}
+            >
+              RU
+            </button>
+          </div>
+        </div>
+
+        {/* Title & Subtitle */}
+        <div className="text-left space-y-1.5">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
             {t('auth.login_title')}
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs sm:text-sm text-[#737985] font-medium leading-relaxed">
             {t('auth.login_subtitle')}
           </p>
         </div>
@@ -103,29 +157,32 @@ export function LoginPage() {
           </Alert>
         )}
 
+        {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-              {t('auth.email_label')}
+            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              {t('auth.phone_or_email')}
             </label>
             <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="example@gmail.com"
+              type="text"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              placeholder={t('auth.phone_or_email_placeholder')}
               icon={Mail}
               required
+              disabled={loading}
+              autoComplete="username"
             />
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+              <label className="block text-xs font-semibold text-slate-300">
                 {t('auth.password_label')}
               </label>
               <Link
                 to="/forgot-password"
-                className="text-xs font-bold text-[#FF7A00] hover:underline"
+                className="text-xs font-semibold text-[#5B5BD6] hover:text-[#4949BC] hover:underline transition-colors"
               >
                 {t('auth.forgot_password_link')}
               </Link>
@@ -138,11 +195,13 @@ export function LoginPage() {
                 placeholder="••••••••"
                 icon={Lock}
                 required
+                disabled={loading}
+                autoComplete="current-password"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1 cursor-pointer transition-colors"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -150,28 +209,50 @@ export function LoginPage() {
             </div>
           </div>
 
+          {/* Remember Me */}
+          <div className="flex items-center justify-between text-xs pt-1">
+            <label className="flex items-center gap-2.5 cursor-pointer select-none text-slate-400 font-medium hover:text-slate-300 transition-colors">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 rounded border-[#2A2E3B] bg-[#1D2028] text-[#5B5BD6] focus:ring-[#5B5BD6] focus:ring-offset-0 cursor-pointer"
+              />
+              <span>{t('auth.remember_me')}</span>
+            </label>
+          </div>
+
+          {/* Primary Submit Button */}
           <Button
             type="submit"
             variant="primary"
             size="lg"
-            className="w-full mt-2 font-bold shadow-lg shadow-orange-500/20"
-            disabled={loading}
+            className="w-full font-bold cursor-pointer transition-all shadow-lg shadow-[#5B5BD6]/20"
+            disabled={loading || !identifier.trim() || !password}
           >
-            {loading ? t('common.loading') : t('auth.login_submit')}
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>{t('auth.logging_in')}</span>
+              </span>
+            ) : (
+              <span>{t('auth.login_submit')}</span>
+            )}
           </Button>
         </form>
 
-        <div className="pt-2 text-center text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800">
+        {/* Link to Register */}
+        <div className="pt-2 text-center text-xs text-[#737985] border-t border-[#2A2E3B]">
           <span>{t('auth.no_account')} </span>
           <Link
             to="/register"
-            className="font-bold text-[#FF7A00] hover:underline inline-flex items-center gap-1"
+            className="font-bold text-[#5B5BD6] hover:text-[#4949BC] hover:underline inline-flex items-center gap-1 transition-colors"
           >
-            {t('auth.register_title')}
+            <span>{t('auth.register_submit')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
-      </Card>
-    </div>
+      </div>
+    </AuthLayout>
   );
 }

@@ -1,30 +1,40 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { storage } from '../utils/storage';
-import { mockPhoneModels } from '../data/mockPhoneModels';
+import { phoneModelService } from '../services/phoneModelService';
 
 const PhoneModelContext = createContext();
 const PHONE_MODEL_STORAGE_KEY = 'techuz_selected_phone_model';
 
 export function PhoneModelProvider({ children }) {
+  const [phoneModels, setPhoneModels] = useState([]);
   const [selectedModelId, setSelectedModelId] = useState(() => {
     return storage.get(PHONE_MODEL_STORAGE_KEY, null);
   });
 
-  const [selectedModel, setSelectedModel] = useState(() => {
-    if (!selectedModelId) return null;
-    return mockPhoneModels.find((m) => m.id === selectedModelId) || null;
-  });
+  const [selectedModel, setSelectedModel] = useState(null);
+
+  useEffect(() => {
+    async function loadModels() {
+      const { data } = await phoneModelService.getPhoneModels();
+      const list = data || [];
+      setPhoneModels(list);
+      if (selectedModelId) {
+        setSelectedModel(list.find((m) => m.id === selectedModelId) || null);
+      }
+    }
+    loadModels();
+  }, []);
 
   useEffect(() => {
     if (selectedModelId) {
       storage.set(PHONE_MODEL_STORAGE_KEY, selectedModelId);
-      const found = mockPhoneModels.find((m) => m.id === selectedModelId) || null;
+      const found = phoneModels.find((m) => m.id === selectedModelId) || null;
       setSelectedModel(found);
     } else {
       storage.remove(PHONE_MODEL_STORAGE_KEY);
       setSelectedModel(null);
     }
-  }, [selectedModelId]);
+  }, [selectedModelId, phoneModels]);
 
   const selectModel = (modelId) => {
     setSelectedModelId(modelId);

@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import { orderService } from '../../services/orderService';
 import { formatUzbekCurrency } from '../../utils/currency';
 import { formatDate } from '../../utils/formatters';
 import { Card } from '../../components/common/Card';
 import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
-import { EmptyState } from '../../components/feedback/EmptyState';
 import { LoadingSpinner } from '../../components/feedback/LoadingSpinner';
-import { Package, ArrowLeft, Calendar, MapPin, CreditCard, ShoppingBag } from 'lucide-react';
+import { EmptyState } from '../../components/feedback/EmptyState';
+import { Package, ArrowLeft, Calendar, MapPin, CreditCard, ShoppingBag, Heart } from 'lucide-react';
 
 export function AccountOrdersPage() {
   const { t, language } = useLanguage();
@@ -57,16 +57,16 @@ export function AccountOrdersPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-8">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-xs text-slate-500">
-        <Link to="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">
+      <div className="flex items-center gap-2 text-xs text-[#737985]">
+        <Link to="/" className="hover:text-[#17191F] dark:hover:text-white transition-colors">
           {t('nav.home')}
         </Link>
         <span>/</span>
-        <Link to="/account" className="hover:text-slate-900 dark:hover:text-white transition-colors">
+        <Link to="/account" className="hover:text-[#17191F] dark:hover:text-white transition-colors">
           {t('account.profile_title')}
         </Link>
         <span>/</span>
-        <span className="text-slate-900 dark:text-white font-bold">
+        <span className="text-[#17191F] dark:text-white font-bold">
           {t('account.my_orders')}
         </span>
       </div>
@@ -74,19 +74,26 @@ export function AccountOrdersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black font-heading text-slate-900 dark:text-white flex items-center gap-3">
-            <Package className="w-8 h-8 text-[#FF7A00]" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#17191F] dark:text-white flex items-center gap-3">
+            <Package className="w-8 h-8 text-[#5B5BD6]" />
             {t('account.my_orders')}
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-[#737985] dark:text-slate-400 mt-1">
             {t('account.orders_subtitle')}
           </p>
         </div>
-        <Link to="/account">
-          <Button variant="outline" size="sm" icon={ArrowLeft}>
-            {t('account.back_to_profile')}
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link to="/favorites">
+            <Button variant="outline" size="sm" icon={Heart} className="text-rose-600 hover:text-rose-700 hover:border-rose-300">
+              {t('nav.favorites')}
+            </Button>
+          </Link>
+          <Link to="/account">
+            <Button variant="outline" size="sm" icon={ArrowLeft}>
+              {t('account.back_to_profile')}
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Order List */}
@@ -95,7 +102,7 @@ export function AccountOrdersPage() {
           <LoadingSpinner size="lg" />
         </div>
       ) : orders.length === 0 ? (
-        <Card className="p-8 border-slate-200/80 dark:border-slate-800">
+        <Card className="p-8 border border-[#E6E8EE] dark:border-slate-800">
           <EmptyState
             title={t('account.orders_empty_title')}
             description={t('account.orders_empty_desc')}
@@ -109,18 +116,18 @@ export function AccountOrdersPage() {
           {orders.map((order) => (
             <Card
               key={order.id || order.orderNumber}
-              className="p-6 sm:p-7 border-slate-200/80 dark:border-slate-800 space-y-6 hover:shadow-md transition-shadow"
+              className="p-6 sm:p-7 border border-[#E6E8EE] dark:border-slate-800 space-y-6 hover:shadow-sm transition-shadow"
             >
               {/* Order Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E6E8EE] dark:border-slate-800">
                 <div className="space-y-1">
                   <div className="flex items-center gap-3">
-                    <span className="font-mono font-black text-base text-slate-900 dark:text-white">
+                    <span className="font-mono font-extrabold text-base text-[#17191F] dark:text-white">
                       #{order.orderNumber}
                     </span>
                     {getStatusBadge(order.status)}
                   </div>
-                  <div className="flex items-center gap-3 text-xs text-slate-500">
+                  <div className="flex items-center gap-3 text-xs text-[#737985]">
                     <span className="flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5" />
                       {formatDate(order.createdAt, language)}
@@ -134,8 +141,8 @@ export function AccountOrdersPage() {
                 </div>
 
                 <div className="text-right sm:text-right">
-                  <span className="text-[11px] text-slate-400 block">{t('cart.total')}</span>
-                  <span className="text-lg font-black text-[#FF7A00] font-heading">
+                  <span className="text-[11px] text-[#737985] block">{t('cart.total')}</span>
+                  <span className="text-lg font-extrabold text-[#5B5BD6]">
                     {formatUzbekCurrency(order.total, language)}
                   </span>
                 </div>
@@ -146,10 +153,10 @@ export function AccountOrdersPage() {
                 {order.items?.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center justify-between gap-4 p-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40"
+                    className="flex items-center justify-between gap-4 p-3 rounded-xl bg-[#F7F8FA] dark:bg-slate-800/50 border border-[#E6E8EE] dark:border-slate-700/60"
                   >
                     <div className="flex items-center gap-3.5">
-                      <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-900 p-1 border border-slate-200/70 dark:border-slate-700/60 shrink-0 overflow-hidden">
+                      <div className="w-12 h-12 rounded-lg bg-white dark:bg-slate-900 p-1 border border-[#E6E8EE] dark:border-slate-800 shrink-0 overflow-hidden">
                         <img
                           src={item.image || 'https://placehold.co/100x100?text=Product'}
                           alt={language === 'ru' ? item.name_ru : item.name_uz}
@@ -157,17 +164,17 @@ export function AccountOrdersPage() {
                         />
                       </div>
                       <div>
-                        <p className="font-bold text-xs text-slate-900 dark:text-white line-clamp-1">
+                        <p className="font-semibold text-xs text-[#17191F] dark:text-white line-clamp-1">
                           {language === 'ru' ? item.name_ru : item.name_uz}
                         </p>
-                        <p className="text-[11px] text-slate-500">
+                        <p className="text-[11px] text-[#737985]">
                           {item.color && <span>{item.color} • </span>}
                           {item.quantity} {t('common.piece_short')} × {formatUzbekCurrency(item.price, language)}
                         </p>
                       </div>
                     </div>
 
-                    <div className="font-bold text-xs text-slate-900 dark:text-white whitespace-nowrap">
+                    <div className="font-bold text-xs text-[#17191F] dark:text-white whitespace-nowrap">
                       {formatUzbekCurrency(item.price * item.quantity, language)}
                     </div>
                   </div>

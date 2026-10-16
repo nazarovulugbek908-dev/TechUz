@@ -17,7 +17,7 @@ export function MainLayout() {
   const [isModelSelectorModalOpen, setIsModelSelectorModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
+    <div className="min-h-screen flex flex-col bg-[#F7F8FA] dark:bg-[#15171D] text-[#17191F] dark:text-[#F4F7FC] transition-colors duration-150 relative selection:bg-[#5B5BD6] selection:text-white">
       {/* 1. Top Announcement Bar */}
       <TopAnnouncementBar />
 
@@ -38,7 +38,7 @@ export function MainLayout() {
       />
 
       {/* 5. Main Routed Content */}
-      <main className="flex-1 pb-24 lg:pb-0">
+      <main className="flex-1 pb-20 lg:pb-0">
         <Outlet />
       </main>
 

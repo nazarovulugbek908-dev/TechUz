@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '../hooks/useLanguage';
 import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { ShoppingBag, ArrowLeft } from 'lucide-react';
@@ -35,7 +35,7 @@ export function ShopPagePlaceholder() {
       </div>
 
       <div className="p-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 text-center space-y-4">
-        <div className="w-14 h-14 rounded-2xl bg-orange-50 dark:bg-orange-950/40 text-[#FF7A00] flex items-center justify-center mx-auto">
+        <div className="w-14 h-14 rounded-2xl bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 flex items-center justify-center mx-auto">
           <ShoppingBag className="w-7 h-7" />
         </div>
         <h1 className="text-2xl font-black font-heading text-slate-900 dark:text-white">

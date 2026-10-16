@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '../hooks/useLanguage';
 import { useTheme } from '../context/ThemeContext';
 import { usePhoneModel } from '../context/PhoneModelContext';
 import { useCart } from '../context/CartContext';
@@ -87,24 +87,24 @@ export function ShowcasePage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
       {/* Header Bar */}
-      <div className="bg-linear-to-r from-orange-500/10 via-amber-500/5 to-transparent p-6 sm:p-8 rounded-3xl border border-orange-200/60 dark:border-orange-950/40">
+      <div className="bg-linear-to-r from-brand-500/10 via-brand-500/5 to-transparent p-6 sm:p-8 rounded-2xl border border-brand-200/60 dark:border-brand-950/40">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-slate-800 text-[#FF7A00] text-xs font-bold shadow-xs mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-neutral-800 text-brand-600 dark:text-brand-400 text-xs font-bold shadow-xs mb-3 border border-brand-200 dark:border-brand-900">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Design System & Testing Lab</span>
             </div>
-            <h1 className="text-2xl sm:text-4xl font-black font-heading text-slate-900 dark:text-white">
+            <h1 className="text-2xl sm:text-4xl font-extrabold font-heading text-neutral-900 dark:text-white">
               TechUz UI & Logic Verification Lab
             </h1>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 max-w-xl">
-              Inspect all primitives, integer UZS formatting, device compatibility state, and mock order/auth services.
+            <p className="text-sm text-neutral-600 dark:text-neutral-300 mt-2 max-w-xl">
+              Inspect all primitives, integer UZS formatting, device compatibility state, and backend database integrations.
             </p>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm text-right shrink-0">
-            <span className="text-xs text-slate-400 block font-medium">Integer Currency Formatter:</span>
-            <span className="text-xl font-extrabold font-heading text-[#FF7A00]">
+          <div className="bg-white dark:bg-neutral-900 p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xs text-right shrink-0">
+            <span className="text-xs text-neutral-400 block font-medium">Integer Currency Formatter:</span>
+            <span className="text-xl font-extrabold font-heading text-brand-600 dark:text-brand-400">
               {formatUzbekCurrency(3450000, language)}
             </span>
           </div>
@@ -119,7 +119,7 @@ export function ShowcasePage() {
           tabs={[
             { id: 'primitives', label: '1. UI Primitives & Design System', icon: Layers },
             { id: 'compatibility', label: '2. "My Phone Model" Feature', icon: Smartphone },
-            { id: 'services', label: '3. Mock Services & State', icon: ShieldCheck }
+            { id: 'services', label: '3. Backend Services & State', icon: ShieldCheck }
           ]}
         />
       </div>
@@ -245,8 +245,8 @@ export function ShowcasePage() {
                         </p>
                       </div>
 
-                      <div className="pt-3 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                        <span className="font-bold text-[#FF7A00]">
+                      <div className="pt-3 border-t border-neutral-200 dark:border-neutral-700 flex items-center justify-between">
+                        <span className="font-bold text-neutral-900 dark:text-white">
                           {formatUzbekCurrency(product.price, language)}
                         </span>
                         <Button
@@ -270,12 +270,12 @@ export function ShowcasePage() {
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
-              <h3 className="text-base font-bold font-heading mb-2 text-slate-900 dark:text-white flex items-center gap-2">
-                <Package className="w-4 h-4 text-[#FF7A00]" />
+              <h3 className="text-base font-bold font-heading mb-2 text-neutral-900 dark:text-white flex items-center gap-2">
+                <Package className="w-4 h-4 text-brand-600 dark:text-brand-400" />
                 Order Service Test
               </h3>
-              <p className="text-xs text-slate-500 mb-4">
-                Saves order in localStorage and returns UZ-XXXXXX order number.
+              <p className="text-xs text-neutral-500 mb-4">
+                Yuborilgan buyurtma server SQLite ma'lumotlar bazasiga yoziladi.
               </p>
               <Button variant="primary" size="sm" onClick={handleTestOrder}>
                 Sinov buyurtmasi yaratish
@@ -288,17 +288,19 @@ export function ShowcasePage() {
             </Card>
 
             <Card>
-              <h3 className="text-base font-bold font-heading mb-2 text-slate-900 dark:text-white flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#FF7A00]" />
+              <h3 className="text-base font-bold font-heading mb-2 text-neutral-900 dark:text-white flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-brand-600 dark:text-brand-400" />
                 Auth Service Test
               </h3>
               <p className="text-xs text-slate-500 mb-4">
                 Status: <strong>{isAuthenticated ? user.fullName : 'Guest'}</strong>
               </p>
               {!isAuthenticated ? (
-                <Button variant="secondary" size="sm" onClick={() => login('test@techuz.uz', 'password123')}>
-                  Sinov profiliga kirish
-                </Button>
+                <Link to="/login">
+                  <Button variant="secondary" size="sm">
+                    Kirish sahifasiga o'tish
+                  </Button>
+                </Link>
               ) : (
                 <Button variant="outline" size="sm" onClick={logout}>
                   Chiqish

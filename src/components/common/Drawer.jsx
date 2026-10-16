@@ -35,7 +35,7 @@ export function Drawer({
     <div className="fixed inset-0 z-50 overflow-hidden">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-[#17191F]/50 backdrop-blur-[2px] transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -48,7 +48,7 @@ export function Drawer({
       >
         <div
           className={cn(
-            'w-screen bg-white dark:bg-slate-900 shadow-2xl flex flex-col',
+            'w-screen bg-white dark:bg-[#15171D] shadow-xl border-l border-[#E6E8EE] dark:border-[#2A2E3B] flex flex-col',
             maxWidth,
             className
           )}
@@ -56,16 +56,16 @@ export function Drawer({
           aria-modal="true"
         >
           {/* Drawer Header */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800">
-            <h3 className="text-lg font-bold font-heading text-slate-900 dark:text-white">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-[#E6E8EE] dark:border-[#2A2E3B]">
+            <h3 className="text-base font-semibold text-[#17191F] dark:text-white">
               {title}
             </h3>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors"
+              className="p-1 rounded-md text-[#737985] hover:text-[#17191F] hover:bg-[#F7F8FA] dark:hover:bg-[#1D2028] dark:hover:text-white transition-colors"
               aria-label="Yopish"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
 

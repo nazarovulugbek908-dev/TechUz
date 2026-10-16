@@ -12,9 +12,9 @@ export function Card({
     <div
       onClick={onClick}
       className={cn(
-        'bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-5',
+        'bg-white dark:bg-[#1D2028] border border-[#E6E8EE] dark:border-[#2A2E3B] rounded-xl p-4 sm:p-5 shadow-xs transition-all duration-150',
         hoverEffect &&
-          'hover:shadow-lg hover:shadow-orange-500/10 hover:border-orange-200 dark:hover:border-orange-900/50 hover:-translate-y-0.5 transition-all duration-300',
+          'hover:border-[#D1D5DB] dark:hover:border-[#3B4254] hover:shadow-sm cursor-pointer',
         onClick && 'cursor-pointer',
         className
       )}

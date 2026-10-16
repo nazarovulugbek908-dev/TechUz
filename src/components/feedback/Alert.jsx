@@ -19,25 +19,25 @@ export function Alert({
   const Icon = icons[type] || Info;
 
   const styles = {
-    info: 'bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950/40 dark:border-blue-800 dark:text-blue-300',
-    success: 'bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-950/40 dark:border-emerald-800 dark:text-emerald-300',
-    warning: 'bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300',
-    error: 'bg-rose-50 border-rose-200 text-rose-800 dark:bg-rose-950/40 dark:border-rose-800 dark:text-rose-300'
+    info: 'bg-[#EEEEFF] border-[#DCDCFB] text-[#5B5BD6] dark:bg-[#5B5BD6]/15 dark:border-[#5B5BD6]/30 dark:text-[#A5A5F5]',
+    success: 'bg-[#EAF6F0] border-[#CFEBDD] text-[#16845B] dark:bg-[#16845B]/15 dark:border-[#16845B]/30 dark:text-[#4ADE80]',
+    warning: 'bg-[#FFFBEB] border-[#FDE68A] text-[#D97706] dark:bg-[#D97706]/15 dark:border-[#D97706]/30 dark:text-[#FBBF24]',
+    error: 'bg-[#FDF2F2] border-[#FCDADA] text-[#D64545] dark:bg-[#D64545]/15 dark:border-[#D64545]/30 dark:text-[#F87171]'
   };
 
   return (
     <div
       className={cn(
-        'flex items-start gap-3 p-4 rounded-xl border text-sm',
+        'flex items-start gap-3 p-3.5 rounded-lg border text-sm',
         styles[type],
         className
       )}
       role="alert"
     >
-      <Icon className="w-5 h-5 shrink-0 mt-0.5" />
+      <Icon className="w-4 h-4 shrink-0 mt-0.5" />
       <div className="flex-1">
-        {title && <h5 className="font-bold mb-0.5">{title}</h5>}
-        <div>{children}</div>
+        {title && <h5 className="font-semibold mb-0.5">{title}</h5>}
+        <div className="text-xs sm:text-sm leading-relaxed">{children}</div>
       </div>
       {onClose && (
         <button
@@ -46,7 +46,7 @@ export function Alert({
           className="p-1 rounded-md opacity-70 hover:opacity-100 transition-opacity cursor-pointer"
           aria-label="Yopish"
         >
-          <X className="w-4 h-4" />
+          <X className="w-3.5 h-3.5" />
         </button>
       )}
     </div>

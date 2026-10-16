@@ -1,231 +1,514 @@
-import { storage } from '../utils/storage';
+import { supabase } from '../lib/supabase';
 
-const AUTH_STORAGE_KEY = 'techuz_mock_auth_session';
-const USERS_STORAGE_KEY = 'techuz_mock_users';
+const TOKEN_KEY = 'techuz_jwt_token';
+const CURRENT_USER_KEY = 'techuz_current_user';
 
-const DEFAULT_USERS = [
-  {
-    id: 'usr-default-01',
-    email: 'test@techuz.uz',
-    fullName: 'Ulugbek Nazarov',
-    phone: '+998 94 587-64-72',
-    password: 'password123',
-    city: 'Quvasoy',
-    streetAddress: 'Quvasoy shahri, Markaziy ko\'cha, 1-uy',
-    createdAt: new Date().toISOString()
-  }
-];
-
-function getStoredUsers() {
-  const users = storage.get(USERS_STORAGE_KEY, null);
-  if (!users || !Array.isArray(users) || users.length === 0) {
-    storage.set(USERS_STORAGE_KEY, DEFAULT_USERS);
-    return DEFAULT_USERS;
-  }
-  // If stored user still has old mock name or city, update it to Ulugbek Nazarov / Quvasoy
-  const updated = users.map((u) => {
-    if (u.id === 'usr-default-01' || u.email === 'test@techuz.uz') {
-      return {
-        ...u,
-        fullName: 'Ulugbek Nazarov',
-        phone: '+998 94 587-64-72',
-        city: 'Quvasoy',
-        streetAddress: 'Quvasoy shahri, Markaziy ko\'cha, 1-uy'
-      };
-    }
-    return u;
-  });
-  storage.set(USERS_STORAGE_KEY, updated);
-  return updated;
-}
-
-/**
- * Customer Authentication & Profile Service (Frontend-Only Mock)
- */
 export const authService = {
+  getToken() {
+    return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY) || null;
+  },
+
+  setToken(token, remember = true) {
+    if (token) {
+      if (remember) {
+        localStorage.setItem(TOKEN_KEY, token);
+        sessionStorage.removeItem(TOKEN_KEY);
+      } else {
+        sessionStorage.setItem(TOKEN_KEY, token);
+        localStorage.removeItem(TOKEN_KEY);
+      }
+    } else {
+      localStorage.removeItem(TOKEN_KEY);
+      sessionStorage.removeItem(TOKEN_KEY);
+    }
+  },
+
   /**
-   * Get current session and user from localStorage
+   * Get current authenticated user session (Supabase first, fallback to local backend)
    */
   async getCurrentUser() {
-    const session = storage.get(AUTH_STORAGE_KEY, null);
-    if (!session || !session.user) {
+    // 1. Try Supabase active session
+    try {
+      const { data: supaSessionData, error: supaErr } = await supabase.auth.getSession();
+      if (!supaErr && supaSessionData?.session?.user) {
+        const supaUser = supaSessionData.session.user;
+        const user = {
+          id: supaUser.id,
+          email: supaUser.email,
+          fullName:
+            supaUser.user_metadata?.full_name ||
+            supaUser.user_metadata?.fullName ||
+            supaUser.email?.split('@')[0] ||
+            'Mijoz',
+          phone: supaUser.user_metadata?.phone || supaUser.phone || '',
+          role: supaUser.user_metadata?.role || 'customer',
+          city: supaUser.user_metadata?.city || 'Toshkent',
+          streetAddress:
+            supaUser.user_metadata?.street_address ||
+            supaUser.user_metadata?.streetAddress ||
+            ''
+        };
+
+        if (supaSessionData.session.access_token) {
+          this.setToken(supaSessionData.session.access_token, true);
+        }
+
+        return {
+          data: {
+            user,
+            session: {
+              accessToken: supaSessionData.session.access_token,
+              user
+            }
+          },
+          error: null
+        };
+      }
+    } catch (err) {
+      console.warn('Supabase getSession error:', err);
+    }
+
+    // 2. Check local stored user (e.g. from registration without email confirmation requirement)
+    const storedUserJson = localStorage.getItem(CURRENT_USER_KEY);
+    const token = this.getToken();
+    if (storedUserJson && token) {
+      try {
+        const storedUser = JSON.parse(storedUserJson);
+        if (storedUser && storedUser.email) {
+          return {
+            data: {
+              user: storedUser,
+              session: { accessToken: token, user: storedUser }
+            },
+            error: null
+          };
+        }
+      } catch (e) {
+        localStorage.removeItem(CURRENT_USER_KEY);
+      }
+    }
+
+    // 3. Fallback to local server /api/auth/me (for admin & local SQLite accounts)
+    if (!token) {
       return { data: { user: null, session: null }, error: null };
     }
-    if (session.user.id === 'usr-default-01' || session.user.fullName === 'Aziz Rahimov') {
-      session.user.fullName = 'Ulugbek Nazarov';
-      session.user.phone = '+998 94 587-64-72';
-      session.user.city = 'Quvasoy';
-      session.user.streetAddress = 'Quvasoy shahri, Markaziy ko\'cha, 1-uy';
-      storage.set(AUTH_STORAGE_KEY, session);
+
+    try {
+      const res = await fetch('/api/auth/me', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!res.ok) {
+        this.setToken(null);
+        localStorage.removeItem(CURRENT_USER_KEY);
+        return { data: { user: null, session: null }, error: null };
+      }
+
+      const json = await res.json();
+      return {
+        data: {
+          user: json.user,
+          session: { accessToken: token, user: json.user }
+        },
+        error: null
+      };
+    } catch (err) {
+      console.error('Failed to load current user:', err);
+      return { data: { user: null, session: null }, error: err };
     }
-    return { data: { user: session.user, session }, error: null };
   },
 
   /**
-   * Sign in with email and password
+   * Sign in with email/phone and password using Supabase with local fallback
    */
-  async signIn({ email, password }) {
-    if (!email || !password) {
-      return {
-        data: { user: null, session: null },
-        error: { message: 'auth.error_fill_required' }
-      };
+  async signIn({ email, password, remember = true }) {
+    const cleanedIdentifier = email.trim().toLowerCase();
+
+    // 1. Try Supabase Auth first (for valid emails)
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanedIdentifier);
+    if (isEmail) {
+      try {
+        const { data: supaData, error: supaError } = await supabase.auth.signInWithPassword({
+          email: cleanedIdentifier,
+          password
+        });
+
+        if (!supaError && supaData?.user) {
+          const supaUser = supaData.user;
+          const user = {
+            id: supaUser.id,
+            email: supaUser.email,
+            fullName:
+              supaUser.user_metadata?.full_name ||
+              supaUser.user_metadata?.fullName ||
+              supaUser.email?.split('@')[0] ||
+              'Mijoz',
+            phone: supaUser.user_metadata?.phone || supaUser.phone || '',
+            role: supaUser.user_metadata?.role || 'customer',
+            city: supaUser.user_metadata?.city || 'Toshkent',
+            streetAddress:
+              supaUser.user_metadata?.street_address ||
+              supaUser.user_metadata?.streetAddress ||
+              ''
+          };
+
+          const token = supaData.session?.access_token || `supa_token_${supaUser.id}`;
+          this.setToken(token, remember);
+          localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+
+          return {
+            data: {
+              user,
+              session: { accessToken: token, user }
+            },
+            error: null
+          };
+        }
+
+        // If email not confirmed in Supabase, check local server fallback or local storage
+        if (supaError && supaError.message?.toLowerCase().includes('email not confirmed')) {
+          console.info('Supabase email not confirmed, attempting direct sign-in fallback...');
+        }
+      } catch (err) {
+        console.warn('Supabase signIn error:', err);
+      }
     }
 
-    const users = getStoredUsers();
-    const user = users.find(
-      (u) => u.email.toLowerCase() === email.toLowerCase().trim()
-    );
+    // 2. Fallback to local SQLite API (handles phone identifiers, admin, and pre-existing local users)
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: email, password })
+      });
 
-    if (!user || user.password !== password) {
+      const json = await res.json();
+      if (!res.ok) {
+        return { data: null, error: { message: json.error || 'Kirishda xatolik yuz berdi' } };
+      }
+
+      this.setToken(json.token, remember);
+      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(json.user));
+
       return {
-        data: { user: null, session: null },
-        error: { message: 'auth.invalid_credentials' }
+        data: {
+          user: json.user,
+          session: { accessToken: json.token, user: json.user }
+        },
+        error: null
       };
+    } catch (err) {
+      console.error('Sign in error:', err);
+      return { data: null, error: { message: 'Serverga ulanib bo‘lmadi. Qaytadan urinib ko‘ring.' } };
+    }
+  },
+
+  /**
+   * Sign up (Customer registration) using Supabase WITHOUT email confirmation requirement
+   */
+  async signUp({ email, password, fullName, phone, city, streetAddress }) {
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanName = fullName.trim();
+    const cleanPhone = phone?.trim() || '';
+
+    // 1. Try Supabase Auth Sign Up
+    let supabaseSuccess = false;
+    let createdUser = null;
+
+    try {
+      const { data: supaData, error: supaError } = await supabase.auth.signUp({
+        email: cleanEmail,
+        password,
+        options: {
+          data: {
+            full_name: cleanName,
+            fullName: cleanName,
+            phone: cleanPhone,
+            city: city || 'Toshkent',
+            street_address: streetAddress || '',
+            role: 'customer'
+          }
+        }
+      });
+
+      if (supaError) {
+        // If duplicate email in Supabase
+        if (
+          supaError.message?.toLowerCase().includes('already registered') ||
+          supaError.status === 422
+        ) {
+          return {
+            data: null,
+            error: { message: 'Ushbu email manzili bilan allaqachon hisob ochilgan.' }
+          };
+        }
+        console.warn('Supabase signUp error, continuing with local fallback:', supaError.message);
+      } else if (supaData?.user) {
+        supabaseSuccess = true;
+        const supaUser = supaData.user;
+        createdUser = {
+          id: supaUser.id,
+          email: supaUser.email || cleanEmail,
+          fullName: cleanName,
+          phone: cleanPhone,
+          role: 'customer',
+          city: city || 'Toshkent',
+          streetAddress: streetAddress || ''
+        };
+
+        const token = supaData.session?.access_token || `supa_auth_${supaUser.id}`;
+        this.setToken(token, true);
+        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(createdUser));
+      }
+    } catch (err) {
+      console.warn('Supabase signUp network error:', err);
     }
 
-    const { password: _, ...userWithoutPassword } = user;
-    const session = {
-      accessToken: `mock-token-${Date.now()}`,
-      user: userWithoutPassword,
-      expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000
-    };
+    // 2. Also register in local SQLite DB in parallel for backend compatibility (orders, admin customers)
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: cleanEmail,
+          password,
+          fullName: cleanName,
+          phone: cleanPhone,
+          city: city || 'Toshkent',
+          streetAddress: streetAddress || ''
+        })
+      });
 
-    storage.set(AUTH_STORAGE_KEY, session);
+      const json = await res.json();
+      if (res.ok && json?.user) {
+        if (!createdUser) {
+          createdUser = json.user;
+          this.setToken(json.token, true);
+          localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(createdUser));
+        }
+      } else if (!supabaseSuccess && !res.ok) {
+        return { data: null, error: { message: json.error || 'Ro‘yxatdan o‘tishda xatolik yuz berdi' } };
+      }
+    } catch (err) {
+      if (!supabaseSuccess) {
+        return { data: null, error: { message: 'Serverga ulanib bo‘lmadi. Qaytadan urinib ko‘ring.' } };
+      }
+    }
+
+    if (createdUser) {
+      const token = this.getToken() || `token_${createdUser.id}`;
+      return {
+        data: {
+          user: createdUser,
+          session: { accessToken: token, user: createdUser }
+        },
+        error: null
+      };
+    }
 
     return {
-      data: { user: userWithoutPassword, session },
-      error: null
+      data: null,
+      error: { message: 'Ro‘yxatdan o‘tishda xatolik yuz berdi. Iltimos qaytadan urining.' }
     };
-  },
-
-  /**
-   * Sign up new customer
-   */
-  async signUp({ email, password, fullName, phone, city = '', streetAddress = '' }) {
-    if (!email || !password || !fullName || !phone) {
-      return {
-        data: { user: null, session: null },
-        error: { message: 'auth.error_fill_required' }
-      };
-    }
-
-    const users = getStoredUsers();
-    const existing = users.find(
-      (u) => u.email.toLowerCase() === email.toLowerCase().trim()
-    );
-
-    if (existing) {
-      return {
-        data: { user: null, session: null },
-        error: { message: 'auth.email_exists' }
-      };
-    }
-
-    const newUser = {
-      id: `usr-${Date.now()}`,
-      email: email.trim().toLowerCase(),
-      fullName: fullName.trim(),
-      phone: phone.trim(),
-      city: city.trim(),
-      streetAddress: streetAddress.trim(),
-      password: password,
-      createdAt: new Date().toISOString()
-    };
-
-    const updatedUsers = [...users, newUser];
-    storage.set(USERS_STORAGE_KEY, updatedUsers);
-
-    const { password: _, ...userWithoutPassword } = newUser;
-    const session = {
-      accessToken: `mock-token-${Date.now()}`,
-      user: userWithoutPassword,
-      expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000
-    };
-
-    storage.set(AUTH_STORAGE_KEY, session);
-
-    return {
-      data: { user: userWithoutPassword, session },
-      error: null
-    };
-  },
-
-  /**
-   * Request password reset (Simulated mock flow)
-   */
-  async forgotPassword(email) {
-    if (!email) {
-      return { error: { message: 'auth.error_fill_required' } };
-    }
-    const users = getStoredUsers();
-    const user = users.find((u) => u.email.toLowerCase() === email.toLowerCase().trim());
-    if (!user) {
-      return { error: { message: 'auth.email_not_found' } };
-    }
-    return { data: { success: true }, error: null };
-  },
-
-  /**
-   * Reset user password (Simulated mock flow)
-   */
-  async resetPassword({ email, newPassword }) {
-    if (!newPassword || newPassword.length < 6) {
-      return { error: { message: 'auth.password_min_length' } };
-    }
-    const users = getStoredUsers();
-    const targetEmail = (email || 'test@techuz.uz').toLowerCase().trim();
-    const idx = users.findIndex((u) => u.email.toLowerCase() === targetEmail);
-    if (idx === -1) {
-      return { error: { message: 'auth.email_not_found' } };
-    }
-    users[idx].password = newPassword;
-    storage.set(USERS_STORAGE_KEY, users);
-    return { data: { success: true }, error: null };
-  },
-
-  /**
-   * Sign out current user
-   */
-  async signOut() {
-    storage.remove(AUTH_STORAGE_KEY);
-    return { error: null };
   },
 
   /**
    * Update profile
    */
   async updateProfile(updates) {
-    const session = storage.get(AUTH_STORAGE_KEY, null);
-    if (!session || !session.user) {
-      return {
-        data: { user: null },
-        error: { message: 'auth.unauthorized' }
-      };
+    // 1. Update in Supabase
+    try {
+      await supabase.auth.updateUser({
+        data: {
+          full_name: updates.fullName,
+          fullName: updates.fullName,
+          phone: updates.phone,
+          city: updates.city,
+          street_address: updates.streetAddress
+        }
+      });
+    } catch (err) {
+      console.warn('Supabase profile update warning:', err);
     }
 
-    const updatedUser = { ...session.user, ...updates };
-    session.user = updatedUser;
-    storage.set(AUTH_STORAGE_KEY, session);
+    // 2. Update stored user
+    const storedUserJson = localStorage.getItem(CURRENT_USER_KEY);
+    if (storedUserJson) {
+      try {
+        const stored = JSON.parse(storedUserJson);
+        const updated = { ...stored, ...updates };
+        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updated));
+      } catch (e) {}
+    }
 
-    const users = getStoredUsers();
-    const idx = users.findIndex((u) => u.id === updatedUser.id);
-    if (idx !== -1) {
-      users[idx] = { ...users[idx], ...updates };
-      storage.set(USERS_STORAGE_KEY, users);
+    // 3. Update local server DB
+    const token = this.getToken();
+    if (token) {
+      try {
+        const res = await fetch('/api/auth/profile', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(updates)
+        });
+
+        const json = await res.json();
+        if (res.ok) {
+          return { data: { user: json.user }, error: null };
+        }
+      } catch (err) {}
     }
 
     return {
-      data: { user: updatedUser },
+      data: {
+        user: { ...updates }
+      },
       error: null
     };
   },
 
   /**
-   * Get all registered demo users count (for Admin dashboard stats)
+   * Forgot password request
    */
+  async forgotPassword(identifier) {
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier.trim());
+
+    if (isEmail) {
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(identifier.trim(), {
+          redirectTo: `${window.location.origin}/reset-password`
+        });
+        if (!error) {
+          return { data: { message: 'Tiklash xabari yuborildi' }, error: null };
+        }
+      } catch (err) {
+        console.warn('Supabase reset password warning:', err);
+      }
+    }
+
+    // Fallback to local server
+    try {
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier })
+      });
+
+      const json = await res.json();
+      if (!res.ok) {
+        return { data: null, error: { message: json.error || 'Foydalanuvchi topilmadi' } };
+      }
+
+      return { data: json, error: null };
+    } catch (err) {
+      return { data: null, error: { message: 'Serverga ulanib bo‘lmadi' } };
+    }
+  },
+
+  /**
+   * Reset password
+   */
+  async resetPassword({ resetToken, newPassword }) {
+    try {
+      const { data, error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+      if (!error && data?.user) {
+        return { data, error: null };
+      }
+    } catch (err) {}
+
+    // Fallback to local server
+    try {
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resetToken, newPassword })
+      });
+
+      const json = await res.json();
+      if (!res.ok) {
+        return { data: null, error: { message: json.error || 'Parolni tiklab bo‘lmadi' } };
+      }
+
+      return { data: json, error: null };
+    } catch (err) {
+      return { data: null, error: { message: 'Serverga ulanib bo‘lmadi' } };
+    }
+  },
+
+  /**
+   * Sign out
+   */
+  async signOut() {
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.warn('Supabase signOut error:', err);
+    }
+    this.setToken(null);
+    localStorage.removeItem(CURRENT_USER_KEY);
+    return { error: null };
+  },
+
+  /**
+   * Get all registered customers for admin
+   */
+  async getUsers(search = '') {
+    // 1. Try Supabase profiles
+    try {
+      let query = supabase.from('profiles').select('*');
+      if (search && search.trim()) {
+        const s = search.trim();
+        query = query.or(`full_name.ilike.%${s}%,email.ilike.%${s}%,phone.ilike.%${s}%,city.ilike.%${s}%`);
+      }
+      query = query.order('created_at', { ascending: false });
+
+      const { data, error } = await query;
+      if (!error && Array.isArray(data) && data.length > 0) {
+        return {
+          data: data.map((p) => ({
+            id: p.id,
+            email: p.email,
+            fullName: p.full_name,
+            full_name: p.full_name,
+            phone: p.phone,
+            role: p.role,
+            city: p.city,
+            streetAddress: p.street_address,
+            street_address: p.street_address,
+            createdAt: p.created_at,
+            created_at: p.created_at
+          })),
+          error: null
+        };
+      }
+    } catch (err) {
+      console.warn('Supabase getUsers fallback:', err);
+    }
+
+    // 2. Fallback to local server API
+    const adminToken = localStorage.getItem('techuz_admin_token') || this.getToken();
+    try {
+      const res = await fetch(`/api/admin/customers?search=${encodeURIComponent(search)}`, {
+        headers: adminToken ? { 'Authorization': `Bearer ${adminToken}` } : {}
+      });
+      if (res.ok) {
+        const json = await res.json();
+        return { data: json.data || [], error: null };
+      }
+      return { data: [], error: null };
+    } catch (err) {
+      return { data: [], error: err };
+    }
+  },
+
   async getUsersCount() {
-    const users = getStoredUsers();
-    return users.length;
+    const res = await this.getUsers();
+    return (res.data || []).length;
   }
 };

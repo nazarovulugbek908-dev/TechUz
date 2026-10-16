@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import { phoneModelService } from '../../services/phoneModelService';
 import { brandService } from '../../services/brandService';
 import { Card } from '../../components/common/Card';
@@ -134,11 +134,13 @@ export function AdminPhoneModelsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black font-heading text-slate-900 dark:text-white flex items-center gap-3">
-            <Smartphone className="w-8 h-8 text-[#FF7A00]" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold font-heading text-neutral-900 dark:text-white flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 flex items-center justify-center text-brand-600 dark:text-brand-400">
+              <Smartphone className="w-5 h-5" />
+            </div>
             {t('admin.phone_models_title')}
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
             {t('admin.phone_models_subtitle')} ({filteredModels.length})
           </p>
         </div>
@@ -148,7 +150,7 @@ export function AdminPhoneModelsPage() {
           size="md"
           icon={PlusCircle}
           onClick={openCreateModal}
-          className="font-bold shadow-lg shadow-orange-500/20"
+          className="font-bold shadow-sm shadow-brand-500/20"
         >
           {t('admin.add_model_btn')}
         </Button>
@@ -161,7 +163,7 @@ export function AdminPhoneModelsPage() {
       )}
 
       {/* Search & Filter */}
-      <Card className="p-4 sm:p-5 border-slate-200/80 dark:border-slate-800 space-y-4">
+      <Card className="p-4 sm:p-5 border-neutral-200/80 dark:border-neutral-800 space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Input
             placeholder={t('admin.search_models_placeholder')}
@@ -187,10 +189,10 @@ export function AdminPhoneModelsPage() {
           <LoadingSpinner size="lg" />
         </div>
       ) : (
-        <Card className="p-0 border-slate-200/80 dark:border-slate-800 overflow-hidden shadow-xs">
+        <Card className="p-0 border-neutral-200/80 dark:border-neutral-800 overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
+              <thead className="bg-neutral-50 dark:bg-neutral-800/60 text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-800">
                 <tr>
                   <th className="py-3.5 px-4 font-bold">{t('admin.brand_col')}</th>
                   <th className="py-3.5 px-4 font-bold">{t('admin.model_name_col')}</th>
@@ -200,19 +202,19 @@ export function AdminPhoneModelsPage() {
                   <th className="py-3.5 px-4 font-bold text-right">{t('admin.actions_col')}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+              <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800 font-medium">
                 {filteredModels.map((m) => (
-                  <tr key={m.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                    <td className="py-3 px-4 font-bold text-slate-900 dark:text-white">
+                  <tr key={m.id} className="hover:bg-neutral-50/80 dark:hover:bg-neutral-800/40">
+                    <td className="py-3 px-4 font-bold text-neutral-900 dark:text-white">
                       {m.brand}
                     </td>
-                    <td className="py-3 px-4 font-bold text-slate-800 dark:text-slate-200">
+                    <td className="py-3 px-4 font-bold text-neutral-800 dark:text-neutral-200">
                       {m.name}
                     </td>
-                    <td className="py-3 px-4 font-mono text-[11px] text-slate-400">
+                    <td className="py-3 px-4 font-mono text-[11px] text-neutral-400">
                       {m.id}
                     </td>
-                    <td className="py-3 px-4 text-slate-500">
+                    <td className="py-3 px-4 text-neutral-500">
                       {m.releaseYear || '—'}
                     </td>
                     <td className="py-3 px-4">
@@ -229,7 +231,7 @@ export function AdminPhoneModelsPage() {
                           size="xs"
                           icon={Edit2}
                           onClick={() => openEditModal(m)}
-                          className="text-slate-600 hover:text-[#FF7A00]"
+                          className="text-neutral-600 hover:text-brand-600 dark:hover:text-brand-400"
                         />
                         <Button
                           variant="ghost"
@@ -313,9 +315,9 @@ export function AdminPhoneModelsPage() {
                   type="checkbox"
                   checked={popular}
                   onChange={(e) => setPopular(e.target.checked)}
-                  className="rounded border-slate-300 text-[#FF7A00] focus:ring-[#FF7A00]"
+                  className="rounded border-neutral-300 text-brand-600 focus:ring-brand-500"
                 />
-                <span className="font-bold text-slate-700 dark:text-slate-300">{t('admin.popular_flag')}</span>
+                <span className="font-semibold text-neutral-700 dark:text-neutral-300">{t('admin.popular_flag')}</span>
               </label>
             </div>
           </div>

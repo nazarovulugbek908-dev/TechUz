@@ -1,33 +1,88 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
 
 @theme {
-  --font-heading: 'Exo 2', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   
-  --color-primary-orange: #FF7A00;
-  --color-primary-orange-hover: #E66E00;
-  --color-primary-orange-active: #CC6200;
-  --color-primary-orange-light: #FFF4EB;
-  --color-primary-orange-subtle: #FFE7D1;
+  /* Primary Redesign Brand Palette */
+  --color-brand: #5B5BD6;
+  --color-brand-hover: #4949BC;
+  --color-brand-active: #3C3CA8;
+  --color-brand-soft: #EEEEFF;
+  --color-brand-subtle: #F6F6FD;
+
+  --color-bg-primary: #F7F8FA;
+  --color-surface: #FFFFFF;
+  --color-surface-subtle: #FAFBFC;
   
-  --color-tech-dark: #121826;
+  --color-text-main: #17191F;
+  --color-text-secondary: #737985;
+  --color-text-tertiary: #9CA3AF;
+  
+  --color-border-subtle: #E6E8EE;
+  --color-border-strong: #D1D5DB;
+
+  --color-state-success: #16845B;
+  --color-state-success-bg: #EAF6F0;
+  --color-state-error: #D64545;
+  --color-state-error-bg: #FDF2F2;
+  --color-state-warning: #D97706;
+  --color-state-warning-bg: #FFFBEB;
+
+  --color-dashboard-dark: #15171D;
+  --color-dashboard-card: #1D2028;
+  --color-dashboard-border: #2A2E3B;
+
+  /* Backwards-compatibility Bridge Tokens */
+  --color-primary-orange: #5B5BD6;
+  --color-primary-orange-hover: #4949BC;
+  --color-primary-orange-active: #3C3CA8;
+  --color-primary-orange-light: #EEEEFF;
+  --color-primary-orange-subtle: #F6F6FD;
+
+  --color-main-bg: #F7F8FA;
+  --color-nav-surface: #FFFFFF;
+  --color-card-surface: #FFFFFF;
+  --color-text-primary: #17191F;
+
+  --color-navy-primary: #15171D;
+  --color-navy-deep: #0E1015;
+  --color-midnight-base: #15171D;
+  --color-midnight-card: #1D2028;
+  --color-midnight-elevated: #191C24;
+  --color-midnight-border: #2A2E3B;
+  --color-tech-bg: #F7F8FA;
   --color-tech-card: #FFFFFF;
-  --color-tech-border: #E2E8F0;
-  --color-tech-muted: #64748B;
+  --color-tech-text-primary: #17191F;
+  --color-tech-text-secondary: #737985;
+  --color-tech-border: #E6E8EE;
+  --color-tech-success: #16845B;
+  
+  --color-tech-dark: #15171D;
+  --color-tech-muted: #737985;
 }
 
 :root {
   font-family: var(--font-body);
   --font-display: var(--font-heading);
+  background-color: #F7F8FA;
+  color: #17191F;
 }
 
 html, body {
   max-width: 100vw;
   overflow-x: hidden;
   position: relative;
+  background-color: #F7F8FA;
+  color: #17191F;
+}
+
+html.dark, html.dark body, body.dark {
+  background-color: #15171D;
+  color: #F4F7FC;
 }
 
 #root {
@@ -38,36 +93,45 @@ html, body {
 
 h1, h2, h3, h4, h5, h6, .font-heading {
   font-family: var(--font-heading);
+  letter-spacing: -0.015em;
 }
 
-/* Custom scrollbar */
+/* Subtle, refined scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 9999px;
+  background: #D1D5DB;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #9CA3AF;
 }
 
-/* Smooth transitions */
+.dark ::-webkit-scrollbar-thumb {
+  background: #2A2E3B;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #3B4254;
+}
+
+/* Clean, restrained transition */
 .transition-card {
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Glassmorphism utility */
+/* Restrained panel */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: #FFFFFF;
+  border: 1px solid #E6E8EE;
 }
 
 .dark .glass-panel {
-  background: rgba(15, 23, 42, 0.85);
+  background: #1D2028;
+  border: 1px solid #2A2E3B;
 }

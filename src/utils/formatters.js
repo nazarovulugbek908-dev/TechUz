@@ -47,14 +47,24 @@ export function generateOrderId() {
 /**
  * Formats Date string to readable local format
  */
+/**
+ * Formats Date string to readable local format
+ */
 export function formatDate(dateString, language = 'uz') {
   if (!dateString) return '';
   const date = new Date(dateString);
-  return date.toLocaleDateString(language === 'ru' ? 'ru-RU' : 'uz-UZ', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
+  if (isNaN(date.getTime())) return '';
+
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  if (language === 'ru') {
+    const monthsRu = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+    return `${day} ${monthsRu[date.getMonth()]} ${year}, ${hours}:${minutes}`;
+  }
+
+  const monthsUz = ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyun', 'Iyul', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek'];
+  return `${day}-${monthsUz[date.getMonth()]}, ${year} ${hours}:${minutes}`;
 }

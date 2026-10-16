@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '../hooks/useLanguage';
 import { useAuth } from '../context/AuthContext';
 import { orderService } from '../services/orderService';
 import { formatUzbekCurrency } from '../utils/currency';
@@ -58,11 +58,11 @@ export function CheckoutPage() {
 
   // Form State
   const [formData, setFormData] = useState({
-    fullName: user ? (user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim()) : 'Ulugbek Nazarov',
-    phone: user?.phone || '+998 94 587-64-72',
-    region: user?.region || "Farg'ona viloyati",
-    cityDistrict: user?.cityDistrict || 'Quvasoy shahri',
-    streetAddress: user?.streetAddress || "Markaziy ko'cha, 1-uy",
+    fullName: user ? (user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim()) : '',
+    phone: user?.phone || '',
+    region: user?.region || 'Toshkent shahri',
+    cityDistrict: user?.city || user?.cityDistrict || '',
+    streetAddress: user?.streetAddress || '',
     notes: ''
   });
 
@@ -77,9 +77,9 @@ export function CheckoutPage() {
         ...prev,
         fullName: user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim() || prev.fullName,
         phone: user.phone || prev.phone,
-        region: user.region || prev.region || "Farg'ona viloyati",
-        cityDistrict: user.cityDistrict || prev.cityDistrict || 'Quvasoy shahri',
-        streetAddress: user.streetAddress || prev.streetAddress || "Markaziy ko'cha, 1-uy"
+        region: user.region || prev.region || 'Toshkent shahri',
+        cityDistrict: user.city || user.cityDistrict || prev.cityDistrict,
+        streetAddress: user.streetAddress || prev.streetAddress
       }));
     }
   }, [user]);
@@ -92,54 +92,54 @@ export function CheckoutPage() {
         </div>
 
         <span className="text-xs font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 dark:bg-emerald-950/50 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
-          {t('checkout.order_success_title') || 'Buyurtma muvaffaqiyatli qabul qilindi!'}
+          {t('checkout.success_title')}
         </span>
 
         <h1 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white mt-4">
-          Rahmat, buyurtmangiz rasmiylashtirildi!
+          {t('checkout.success_thank_you')}
         </h1>
 
         <p className="text-sm sm:text-base text-slate-500 mt-2">
-          Buyurtma raqamingiz: <strong className="text-slate-900 dark:text-white font-mono text-lg">{completedOrder.orderNumber}</strong>
+          {t('checkout.order_number_label')} <strong className="text-slate-900 dark:text-white font-mono text-lg">{completedOrder.orderNumber}</strong>
         </p>
 
         <Card className="mt-8 p-6 text-left space-y-4">
-          <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">
-            Yetkazib berish ma'lumotlari
+          <h3 className="text-xs font-bold text-[#737985] uppercase tracking-wider">
+            {t('checkout.delivery_address')}
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
             <div>
-              <span className="text-slate-400 block text-xs">Qabul qiluvchi:</span>
-              <span className="font-semibold text-slate-900 dark:text-white">
-                {completedOrder.customer.fullName}
+              <span className="text-[#737985] block text-xs">{t('admin.customer_col')}:</span>
+              <span className="font-semibold text-[#17191F] dark:text-white">
+                {completedOrder.customer?.fullName || completedOrder.customerName}
               </span>
             </div>
 
             <div>
-              <span className="text-slate-400 block text-xs">Telefon:</span>
-              <span className="font-semibold text-slate-900 dark:text-white">
-                {completedOrder.customer.phone}
+              <span className="text-[#737985] block text-xs">{t('auth.phone_label')}:</span>
+              <span className="font-semibold text-[#17191F] dark:text-white">
+                {completedOrder.customer?.phone || completedOrder.customerPhone}
               </span>
             </div>
 
             <div className="sm:col-span-2">
-              <span className="text-slate-400 block text-xs">Manzil:</span>
-              <span className="font-semibold text-slate-900 dark:text-white">
-                {completedOrder.customer.region}, {completedOrder.customer.streetAddress}
+              <span className="text-[#737985] block text-xs">{t('checkout.delivery_address')}:</span>
+              <span className="font-semibold text-[#17191F] dark:text-white">
+                {completedOrder.customer?.region || ''}, {completedOrder.customer?.streetAddress || ''}
               </span>
             </div>
 
             <div>
-              <span className="text-slate-400 block text-xs">To'lov turi:</span>
-              <span className="font-semibold text-slate-900 dark:text-white uppercase">
-                {completedOrder.paymentMethod === 'cash' ? 'Naqd (kuryerga)' : completedOrder.paymentMethod}
+              <span className="text-[#737985] block text-xs">{t('checkout.payment_method')}:</span>
+              <span className="font-semibold text-[#17191F] dark:text-white uppercase">
+                {completedOrder.paymentMethod === 'cash' ? t('checkout.payment_cash_desc') : completedOrder.paymentMethod}
               </span>
             </div>
 
             <div>
-              <span className="text-slate-400 block text-xs">Jami summa:</span>
-              <span className="font-black text-[#FF7A00]">
+              <span className="text-[#737985] block text-xs">{t('cart.total')}:</span>
+              <span className="font-extrabold text-[#5B5BD6]">
                 {formatUzbekCurrency(completedOrder.total, language)}
               </span>
             </div>
@@ -149,12 +149,12 @@ export function CheckoutPage() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
           <Link to="/account/orders" className="w-full sm:w-auto">
             <Button variant="primary" size="lg" className="w-full">
-              Buyurtmalar tarixini ko'rish
+              {t('checkout.view_order_history')}
             </Button>
           </Link>
           <Link to="/shop" className="w-full sm:w-auto">
             <Button variant="outline" size="lg" className="w-full">
-              Xarid qilishda davom etish
+              {t('checkout.continue_shopping')}
             </Button>
           </Link>
         </div>
@@ -234,23 +234,23 @@ export function CheckoutPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-6">
-        <Link to="/" className="hover:text-slate-600 dark:hover:text-slate-200">
+      <div className="flex items-center gap-2 text-xs font-semibold text-[#737985] mb-6">
+        <Link to="/" className="hover:text-[#17191F] dark:hover:text-slate-200">
           {t('nav.home')}
         </Link>
         <span>/</span>
-        <Link to="/cart" className="hover:text-slate-600 dark:hover:text-slate-200">
+        <Link to="/cart" className="hover:text-[#17191F] dark:hover:text-slate-200">
           {t('cart.title')}
         </Link>
         <span>/</span>
-        <span className="text-slate-700 dark:text-slate-300">Rasmiylashtirish</span>
+        <span className="text-[#17191F] dark:text-slate-300">Rasmiylashtirish</span>
       </div>
 
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#17191F] dark:text-white">
           Buyurtmani rasmiylashtirish
         </h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <p className="text-sm text-[#737985] mt-1">
           Ma'lumotlaringizni to'ldiring va buyurtmani tasdiqlang
         </p>
       </div>
@@ -260,25 +260,25 @@ export function CheckoutPage() {
           {/* Left Form: Delivery Details & Payment */}
           <div className="lg:col-span-8 space-y-6">
             {errorMsg && (
-              <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 text-sm font-semibold">
+              <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-[#D64545] text-sm font-semibold">
                 {errorMsg}
               </div>
             )}
 
             {/* 1. Recipient Info */}
             <Card className="p-6 space-y-4">
-              <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
-                <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-950/60 text-[#FF7A00] flex items-center justify-center font-bold text-sm">
+              <div className="flex items-center gap-3 border-b border-[#E6E8EE] dark:border-slate-800 pb-3">
+                <div className="w-7 h-7 rounded-lg bg-[#5B5BD6]/10 text-[#5B5BD6] border border-[#5B5BD6]/20 flex items-center justify-center font-bold text-xs">
                   1
                 </div>
-                <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                <h2 className="text-base font-bold text-[#17191F] dark:text-white">
                   Qabul qiluvchi ma'lumotlari
                 </h2>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block text-xs font-semibold text-[#17191F] dark:text-slate-300 mb-1.5">
                     F.I.SH (Ism va familiya) *
                   </label>
                   <Input
@@ -291,7 +291,7 @@ export function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block text-xs font-semibold text-[#17191F] dark:text-slate-300 mb-1.5">
                     Telefon raqam *
                   </label>
                   <Input
@@ -307,18 +307,18 @@ export function CheckoutPage() {
 
             {/* 2. Delivery Address */}
             <Card className="p-6 space-y-4">
-              <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
-                <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-950/60 text-[#FF7A00] flex items-center justify-center font-bold text-sm">
+              <div className="flex items-center gap-3 border-b border-[#E6E8EE] dark:border-slate-800 pb-3">
+                <div className="w-7 h-7 rounded-lg bg-[#5B5BD6]/10 text-[#5B5BD6] border border-[#5B5BD6]/20 flex items-center justify-center font-bold text-xs">
                   2
                 </div>
-                <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                <h2 className="text-base font-bold text-[#17191F] dark:text-white">
                   Yetkazib berish manzili
                 </h2>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block text-xs font-semibold text-[#17191F] dark:text-slate-300 mb-1.5">
                     Viloyat / Shahar *
                   </label>
                   <Select
@@ -329,7 +329,7 @@ export function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block text-xs font-semibold text-[#17191F] dark:text-slate-300 mb-1.5">
                     Tuman / Aholi punkti
                   </label>
                   <Input
@@ -341,7 +341,7 @@ export function CheckoutPage() {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block text-xs font-semibold text-[#17191F] dark:text-slate-300 mb-1.5">
                     Ko'cha, uy, xonadon raqami *
                   </label>
                   <Input
@@ -354,7 +354,7 @@ export function CheckoutPage() {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block text-xs font-semibold text-[#17191F] dark:text-slate-300 mb-1.5">
                     Kuryer uchun izoh (ixtiyoriy)
                   </label>
                   <Input
@@ -369,11 +369,11 @@ export function CheckoutPage() {
 
             {/* 3. Payment Method */}
             <Card className="p-6 space-y-4">
-              <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
-                <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-950/60 text-[#FF7A00] flex items-center justify-center font-bold text-sm">
+              <div className="flex items-center gap-3 border-b border-[#E6E8EE] dark:border-slate-800 pb-3">
+                <div className="w-7 h-7 rounded-lg bg-[#5B5BD6]/10 text-[#5B5BD6] border border-[#5B5BD6]/20 flex items-center justify-center font-bold text-xs">
                   3
                 </div>
-                <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                <h2 className="text-base font-bold text-[#17191F] dark:text-white">
                   To'lov usuli
                 </h2>
               </div>
@@ -383,61 +383,61 @@ export function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('cash')}
-                  className={`p-4 rounded-2xl border-2 text-left cursor-pointer transition-all flex flex-col justify-between ${
+                  className={`p-4 rounded-xl border text-left cursor-pointer transition-all flex flex-col justify-between ${
                     paymentMethod === 'cash'
-                      ? 'border-[#FF7A00] bg-orange-50/50 dark:bg-orange-950/20'
-                      : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                      ? 'border-[#5B5BD6] bg-[#EEEEFF]/40 dark:bg-slate-800 shadow-xs'
+                      : 'border-[#E6E8EE] dark:border-slate-800 hover:border-slate-300 bg-white dark:bg-slate-900'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <Banknote className="w-6 h-6 text-[#FF7A00]" />
+                    <Banknote className="w-6 h-6 text-[#5B5BD6]" />
                     {paymentMethod === 'cash' && (
-                      <div className="w-5 h-5 rounded-full bg-[#FF7A00] text-white flex items-center justify-center text-xs">
+                      <div className="w-5 h-5 rounded-full bg-[#5B5BD6] text-white flex items-center justify-center text-xs">
                         ✓
                       </div>
                     )}
                   </div>
                   <div className="mt-3">
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                    <h4 className="text-sm font-bold text-[#17191F] dark:text-white">
                       Naqd / Kuryerga
                     </h4>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs text-[#737985] mt-0.5">
                       Qabul qilib olganda to'lash
                     </p>
                   </div>
                 </button>
 
                 {/* Payme */}
-                <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/40 opacity-70 relative flex flex-col justify-between">
+                <div className="p-4 rounded-xl border border-[#E6E8EE] dark:border-slate-800 bg-[#F7F8FA]/60 dark:bg-slate-800/40 opacity-70 relative flex flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <CreditCard className="w-6 h-6 text-sky-500" />
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-[#737985] dark:text-slate-300">
                       Tez orada
                     </span>
                   </div>
                   <div className="mt-3">
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                    <h4 className="text-sm font-bold text-[#17191F] dark:text-white">
                       Payme
                     </h4>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs text-[#737985] mt-0.5">
                       Karta orqali to'lov
                     </p>
                   </div>
                 </div>
 
                 {/* Click */}
-                <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/40 opacity-70 relative flex flex-col justify-between">
+                <div className="p-4 rounded-xl border border-[#E6E8EE] dark:border-slate-800 bg-[#F7F8FA]/60 dark:bg-slate-800/40 opacity-70 relative flex flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <CreditCard className="w-6 h-6 text-blue-600" />
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-[#737985] dark:text-slate-300">
                       Tez orada
                     </span>
                   </div>
                   <div className="mt-3">
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                    <h4 className="text-sm font-bold text-[#17191F] dark:text-white">
                       Click
                     </h4>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs text-[#737985] mt-0.5">
                       Karta orqali to'lov
                     </p>
                   </div>
@@ -449,7 +449,7 @@ export function CheckoutPage() {
           {/* Right Summary */}
           <div className="lg:col-span-4 space-y-6">
             <Card className="p-6 space-y-4">
-              <h3 className="text-lg font-black text-slate-900 dark:text-white">
+              <h3 className="text-lg font-bold text-[#17191F] dark:text-white">
                 Buyurtma tarkibi
               </h3>
 
@@ -464,17 +464,17 @@ export function CheckoutPage() {
                       <img
                         src={image}
                         alt={name}
-                        className="w-12 h-12 object-contain rounded-lg bg-slate-50 dark:bg-slate-800 p-1 border border-slate-200 dark:border-slate-700 shrink-0"
+                        className="w-12 h-12 object-contain rounded-lg bg-white dark:bg-slate-900 p-1 border border-[#E6E8EE] dark:border-slate-800 shadow-xs shrink-0"
                       />
                       <div className="min-w-0 flex-1">
-                        <p className="font-bold text-slate-900 dark:text-white truncate">
+                        <p className="font-semibold text-[#17191F] dark:text-white truncate">
                           {name}
                         </p>
-                        <p className="text-slate-400">
+                        <p className="text-[#737985]">
                           {item.quantity} × {formatUzbekCurrency(item.price, language)}
                         </p>
                       </div>
-                      <span className="font-bold text-slate-900 dark:text-white">
+                      <span className="font-bold text-[#17191F] dark:text-white">
                         {formatUzbekCurrency(item.price * item.quantity, language)}
                       </span>
                     </div>
@@ -482,26 +482,26 @@ export function CheckoutPage() {
                 })}
               </div>
 
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2 text-sm">
-                <div className="flex justify-between text-slate-500">
+              <div className="pt-3 border-t border-[#E6E8EE] dark:border-slate-800 space-y-2 text-sm">
+                <div className="flex justify-between text-[#737985]">
                   <span>{t('cart.subtotal')}:</span>
-                  <span className="font-bold text-slate-900 dark:text-white">
+                  <span className="font-semibold text-[#17191F] dark:text-white">
                     {formatUzbekCurrency(subtotal, language)}
                   </span>
                 </div>
 
-                <div className="flex justify-between text-slate-500">
+                <div className="flex justify-between text-[#737985]">
                   <span>{t('cart.delivery')}:</span>
-                  <span className="font-bold text-emerald-600">
+                  <span className="font-semibold text-[#16845B]">
                     {deliveryFee === 0 ? t('cart.delivery_free') : formatUzbekCurrency(deliveryFee, language)}
                   </span>
                 </div>
 
-                <div className="pt-2 border-t border-slate-200 dark:border-slate-700 flex justify-between items-baseline">
-                  <span className="text-base font-extrabold text-slate-900 dark:text-white">
+                <div className="pt-2 border-t border-[#E6E8EE] dark:border-slate-700 flex justify-between items-baseline">
+                  <span className="text-base font-bold text-[#17191F] dark:text-white">
                     {t('cart.total')}:
                   </span>
-                  <span className="text-xl font-black text-[#FF7A00]">
+                  <span className="text-xl font-extrabold text-[#5B5BD6]">
                     {formatUzbekCurrency(total, language)}
                   </span>
                 </div>
@@ -512,16 +512,16 @@ export function CheckoutPage() {
                 variant="primary"
                 size="lg"
                 loading={isSubmitting}
-                className="w-full justify-center mt-2"
+                className="w-full justify-center mt-2 cursor-pointer"
               >
                 <span>Buyurtmani tasdiqlash</span>
                 <Check className="w-4 h-4 ml-2" />
               </Button>
             </Card>
 
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-xs text-slate-500 space-y-2">
-              <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-bold">
-                <ShieldCheck className="w-4 h-4 text-emerald-500" />
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-800/50 border border-[#E6E8EE] dark:border-slate-800 text-xs text-[#737985] space-y-2 shadow-xs">
+              <div className="flex items-center gap-2 text-[#17191F] dark:text-slate-300 font-bold">
+                <ShieldCheck className="w-4 h-4 text-[#16845B]" />
                 <span>100% Xavfsiz xarid</span>
               </div>
               <p>

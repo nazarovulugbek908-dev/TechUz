@@ -9,19 +9,19 @@
 
 export function formatUzbekCurrency(amount, language = 'uz') {
   if (amount === null || amount === undefined || isNaN(amount)) {
-    return `0 ${language === 'ru' ? 'сум' : "so'm"}`;
+    return `0\u00A0${language === 'ru' ? 'сум' : "so'm"}`;
   }
 
   // Ensure integer
   const integerAmount = Math.round(Number(amount));
   
-  // Format with space as thousand separator
+  // Format with non-breaking space (\u00A0) as thousand separator
   const formattedNumber = integerAmount
     .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    .replace(/\B(?=(\d{3})+(?!\d))/g, '\u00A0');
 
   const suffix = language === 'ru' ? 'сум' : "so'm";
-  return `${formattedNumber} ${suffix}`;
+  return `${formattedNumber}\u00A0${suffix}`;
 }
 
 /**

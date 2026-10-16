@@ -6,7 +6,7 @@ const THEME_STORAGE_KEY = 'techuz_theme';
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    return storage.get(THEME_STORAGE_KEY, 'light');
+    return storage.get(THEME_STORAGE_KEY, 'dark');
   });
 
   const isDark = theme === 'dark' || theme === 'techuz-dark';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import {
   Smartphone,
   Shield,
@@ -29,7 +29,7 @@ export function CategoryPillsBar({ className = '' }) {
 
   return (
     <div className={cn('max-w-7xl mx-auto px-4 sm:px-6', className)}>
-      <div className="flex items-center gap-2.5 overflow-x-auto pb-2 pt-1 no-scrollbar">
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar">
         {categories.map((cat) => {
           const Icon = cat.icon;
           return (
@@ -38,15 +38,24 @@ export function CategoryPillsBar({ className = '' }) {
               to={cat.to}
               className={({ isActive }) =>
                 cn(
-                  'inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-200 border cursor-pointer select-none',
+                  'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors border cursor-pointer select-none',
                   isActive && cat.id !== 'all'
-                    ? 'bg-[#FF7A00] text-white border-[#FF7A00] shadow-sm shadow-orange-500/20'
-                    : 'bg-white dark:bg-slate-900 border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:border-orange-300 hover:bg-orange-50/50 dark:hover:bg-slate-800'
+                    ? 'bg-[#5B5BD6] text-white border-[#5B5BD6] shadow-xs'
+                    : 'bg-white dark:bg-[#1D2028] border-[#E6E8EE] dark:border-[#2A2E3B] text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-[#F4F7FC] hover:border-[#D1D5DB]'
                 )
               }
             >
-              <Icon className="w-4 h-4 text-[#FF7A00] shrink-0" />
-              <span>{cat.label}</span>
+              {({ isActive }) => (
+                <>
+                  <Icon
+                    className={cn(
+                      'w-3.5 h-3.5 shrink-0',
+                      isActive && cat.id !== 'all' ? 'text-white' : 'text-[#737985] dark:text-[#9CA3AF]'
+                    )}
+                  />
+                  <span>{cat.label}</span>
+                </>
+              )}
             </NavLink>
           );
         })}

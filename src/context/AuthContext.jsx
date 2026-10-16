@@ -25,8 +25,8 @@ export function AuthProvider({ children }) {
     loadAuth();
   }, []);
 
-  const login = async (email, password) => {
-    const { data, error } = await authService.signIn({ email, password });
+  const login = async (email, password, remember = true) => {
+    const { data, error } = await authService.signIn({ email, password, remember });
     if (!error && data?.user) {
       setUser(data.user);
       setSession(data.session);

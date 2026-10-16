@@ -14,10 +14,10 @@ export function PillFilter({
       type="button"
       onClick={onClick}
       className={cn(
-        'inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer select-none whitespace-nowrap',
+        'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-150 cursor-pointer select-none whitespace-nowrap',
         active
-          ? 'bg-[#FF7A00] text-white shadow-sm shadow-orange-500/20'
-          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200/80 dark:hover:bg-slate-700/80',
+          ? 'bg-[#5B5BD6] text-white shadow-xs'
+          : 'bg-white dark:bg-[#1D2028] text-[#737985] dark:text-[#9CA3AF] border border-[#E6E8EE] dark:border-[#2A2E3B] hover:text-[#17191F] dark:hover:text-white hover:border-[#D1D5DB] dark:hover:border-[#3B4254]',
         className
       )}
     >
@@ -26,8 +26,10 @@ export function PillFilter({
       {count !== null && (
         <span
           className={cn(
-            'px-1.5 py-0.2 rounded-full text-[10px] font-bold',
-            active ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+            'px-1.5 py-0.2 rounded text-[10px] font-semibold tabular-nums',
+            active
+              ? 'bg-white/20 text-white'
+              : 'bg-[#F7F8FA] dark:bg-[#15171D] text-[#737985] dark:text-[#9CA3AF]'
           )}
         >
           {count}
@@ -39,7 +41,7 @@ export function PillFilter({
 
 export function Tabs({ tabs, activeTab, onChange, className = '' }) {
   return (
-    <div className={cn('flex items-center gap-2 overflow-x-auto no-scrollbar py-1', className)}>
+    <div className={cn('flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1', className)}>
       {tabs.map((tab) => (
         <PillFilter
           key={tab.id}

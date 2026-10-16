@@ -1,21 +1,19 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '../hooks/useLanguage';
 import { usePhoneModel } from '../context/PhoneModelContext';
 import { productService } from '../services/productService';
 import { categoryService } from '../services/categoryService';
 import { brandService } from '../services/brandService';
-import { formatUzbekCurrency } from '../utils/currency';
 import { ProductCard } from '../components/product/ProductCard';
 import { QuickViewModal } from '../components/product/QuickViewModal';
 import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { Input } from '../components/common/Input';
 import { Select } from '../components/common/Select';
-import { Badge } from '../components/common/Badge';
 import { Drawer } from '../components/common/Drawer';
 import { EmptyState } from '../components/feedback/EmptyState';
-import { LoadingSpinner } from '../components/feedback/LoadingSpinner';
+import { SkeletonCard } from '../components/feedback/LoadingSpinner';
 import {
   Filter,
   SlidersHorizontal,
@@ -26,10 +24,9 @@ import {
   Smartphone,
   Check,
   RefreshCw,
-  Sparkles,
   ShoppingBag
 } from 'lucide-react';
-import clsx from 'clsx';
+import { cn } from '../utils/cn';
 
 export function ShopPage() {
   const { t, language, isUz } = useLanguage();
@@ -47,7 +44,7 @@ export function ShopPage() {
   const minPriceParam = searchParams.get('minPrice') || '';
   const maxPriceParam = searchParams.get('maxPrice') || '';
 
-  // Local state for filter inputs
+  // Local state
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -55,10 +52,10 @@ export function ShopPage() {
 
   // UI state
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
+  const [viewMode, setViewMode] = useState('grid');
   const [quickViewProduct, setQuickViewProduct] = useState(null);
 
-  // Local price input state (debounced)
+  // Local price input state
   const [minPriceInput, setMinPriceInput] = useState(minPriceParam);
   const [maxPriceInput, setMaxPriceInput] = useState(maxPriceParam);
 
@@ -98,7 +95,6 @@ export function ShopPage() {
 
         let result = data || [];
 
-        // If compatible only filter is toggled and a model is picked
         if (compatibleOnlyParam && selectedModelId) {
           result = result.filter(
             (p) =>
@@ -129,9 +125,12 @@ export function ShopPage() {
     selectedModelId
   ]);
 
-  // Update query params helper
   const updateFilter = (key, value) => {
     const newParams = new URLSearchParams(searchParams);
+    if (key === 'search' || key === 'q') {
+      newParams.delete('q');
+      newParams.delete('search');
+    }
     if (value === null || value === '' || value === 'all' || value === false) {
       newParams.delete(key);
     } else {
@@ -157,7 +156,6 @@ export function ShopPage() {
     setSearchParams(new URLSearchParams());
   };
 
-  // Active filters count
   const activeFiltersCount = useMemo(() => {
     let count = 0;
     if (categoryParam !== 'all') count++;
@@ -179,13 +177,6 @@ export function ShopPage() {
     maxPriceParam
   ]);
 
-  // Category counts
-  const getCategoryCount = (slug) => {
-    if (slug === 'all') return products.length;
-    return categories.find((c) => c.slug === slug || c.id === slug)?.count || 0;
-  };
-
-  // Resolve Category Title
   const currentCategoryName = useMemo(() => {
     if (categoryParam === 'all') return t('nav.shop');
     const matched = categories.find((c) => c.slug === categoryParam || c.id === categoryParam);
@@ -193,13 +184,12 @@ export function ShopPage() {
     return categoryParam;
   }, [categoryParam, categories, language, t]);
 
-  // Sidebar Filter Content component (used in desktop and mobile drawer)
   const FilterContent = (
-    <div className="space-y-6 text-xs">
+    <div className="space-y-5 text-xs">
       {/* Search Input inside filter */}
       <div>
-        <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-          {t('catalog.filter_by')} / {t('placeholder.search_query')}
+        <label className="block text-xs font-semibold text-[#17191F] dark:text-[#F4F7FC] mb-1.5">
+          {t('catalog.filter_by')}
         </label>
         <Input
           placeholder={t('nav.search_placeholder')}
@@ -209,19 +199,19 @@ export function ShopPage() {
         />
       </div>
 
-      {/* "My Phone Model" Compatibility Filter */}
+      {/* Phone model compatibility filter */}
       {hasSelectedModel && (
-        <div className="p-3.5 rounded-2xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200/80 dark:border-orange-900/60 space-y-2">
+        <div className="p-3 rounded-lg bg-[#F7F8FA] dark:bg-[#15171D] border border-[#E6E8EE] dark:border-[#2A2E3B] space-y-2">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Smartphone className="w-4 h-4 text-[#FF7A00]" />
-              <span className="font-bold text-slate-900 dark:text-white">
+            <div className="flex items-center gap-1.5">
+              <Smartphone className="w-3.5 h-3.5 text-[#5B5BD6]" />
+              <span className="font-semibold text-[#17191F] dark:text-white">
                 {selectedModel?.name}
               </span>
             </div>
-            <Badge variant="primary" size="sm">
+            <span className="text-[10px] font-semibold text-[#16845B] bg-[#EAF6F0] px-1.5 py-0.5 rounded border border-[#CFEBDD]">
               {t('phone_model.compatible_match')}
-            </Badge>
+            </span>
           </div>
 
           <label className="flex items-center gap-2 pt-1 cursor-pointer">
@@ -229,9 +219,9 @@ export function ShopPage() {
               type="checkbox"
               checked={compatibleOnlyParam}
               onChange={(e) => updateFilter('compatibleOnly', e.target.checked)}
-              className="rounded border-slate-300 text-[#FF7A00] focus:ring-[#FF7A00]"
+              className="rounded border-[#E6E8EE] text-[#5B5BD6] focus:ring-[#5B5BD6]"
             />
-            <span className="font-bold text-slate-800 dark:text-slate-200">
+            <span className="font-medium text-[#17191F] dark:text-[#9CA3AF]">
               {t('phone_model.compatible_only')}
             </span>
           </label>
@@ -239,23 +229,23 @@ export function ShopPage() {
       )}
 
       {/* Categories Filter */}
-      <div className="space-y-2.5">
-        <h3 className="font-bold font-heading text-sm text-slate-900 dark:text-white">
+      <div className="space-y-2">
+        <h3 className="font-semibold text-xs text-[#17191F] dark:text-[#F4F7FC] uppercase tracking-wider">
           {t('catalog.category')}
         </h3>
-        <div className="space-y-1 max-h-56 overflow-y-auto pr-1">
+        <div className="space-y-0.5 max-h-52 overflow-y-auto pr-1">
           <button
             type="button"
             onClick={() => updateFilter('category', 'all')}
-            className={clsx(
-              'w-full flex items-center justify-between p-2 rounded-xl text-left transition-colors font-bold',
+            className={cn(
+              'w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-left transition-colors text-xs cursor-pointer',
               categoryParam === 'all'
-                ? 'bg-[#FF7A00] text-white'
-                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'bg-[#5B5BD6] text-white font-semibold'
+                : 'text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-white hover:bg-[#F7F8FA] dark:hover:bg-[#15171D]'
             )}
           >
             <span>{t('placeholder.all_categories_label')}</span>
-            {categoryParam === 'all' && <Check className="w-3.5 h-3.5" />}
+            {categoryParam === 'all' && <Check className="w-3.5 h-3.5 text-white" />}
           </button>
 
           {categories.map((cat) => {
@@ -266,15 +256,15 @@ export function ShopPage() {
                 type="button"
                 key={cat.id || cat.slug}
                 onClick={() => updateFilter('category', cat.slug || cat.id)}
-                className={clsx(
-                  'w-full flex items-center justify-between p-2 rounded-xl text-left transition-colors font-bold',
+                className={cn(
+                  'w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-left transition-colors text-xs cursor-pointer',
                   isSelected
-                    ? 'bg-[#FF7A00] text-white'
-                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'bg-[#5B5BD6] text-white font-semibold'
+                    : 'text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-white hover:bg-[#F7F8FA] dark:hover:bg-[#15171D]'
                 )}
               >
                 <span>{label}</span>
-                {isSelected && <Check className="w-3.5 h-3.5" />}
+                {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
               </button>
             );
           })}
@@ -282,23 +272,23 @@ export function ShopPage() {
       </div>
 
       {/* Brands Filter */}
-      <div className="space-y-2.5 pt-2 border-t border-slate-100 dark:border-slate-800">
-        <h3 className="font-bold font-heading text-sm text-slate-900 dark:text-white">
+      <div className="space-y-2 pt-2 border-t border-[#E6E8EE] dark:border-[#2A2E3B]">
+        <h3 className="font-semibold text-xs text-[#17191F] dark:text-[#F4F7FC] uppercase tracking-wider">
           {t('catalog.brand')}
         </h3>
-        <div className="space-y-1 max-h-48 overflow-y-auto pr-1">
+        <div className="space-y-0.5 max-h-44 overflow-y-auto pr-1">
           <button
             type="button"
             onClick={() => updateFilter('brand', 'all')}
-            className={clsx(
-              'w-full flex items-center justify-between p-2 rounded-xl text-left transition-colors font-bold',
+            className={cn(
+              'w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-left transition-colors text-xs cursor-pointer',
               brandParam === 'all'
-                ? 'bg-[#FF7A00] text-white'
-                : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'bg-[#5B5BD6] text-white font-semibold'
+                : 'text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-white hover:bg-[#F7F8FA] dark:hover:bg-[#15171D]'
             )}
           >
             <span>{t('admin.all_brands_filter')}</span>
-            {brandParam === 'all' && <Check className="w-3.5 h-3.5" />}
+            {brandParam === 'all' && <Check className="w-3.5 h-3.5 text-white" />}
           </button>
 
           {brands.map((b) => {
@@ -308,15 +298,15 @@ export function ShopPage() {
                 type="button"
                 key={b.id || b.name}
                 onClick={() => updateFilter('brand', isSelected ? 'all' : b.name)}
-                className={clsx(
-                  'w-full flex items-center justify-between p-2 rounded-xl text-left transition-colors font-bold',
+                className={cn(
+                  'w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-left transition-colors text-xs cursor-pointer',
                   isSelected
-                    ? 'bg-[#FF7A00] text-white'
-                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'bg-[#5B5BD6] text-white font-semibold'
+                    : 'text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-white hover:bg-[#F7F8FA] dark:hover:bg-[#15171D]'
                 )}
               >
                 <span>{b.name}</span>
-                {isSelected && <Check className="w-3.5 h-3.5" />}
+                {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
               </button>
             );
           })}
@@ -324,8 +314,8 @@ export function ShopPage() {
       </div>
 
       {/* Price Range */}
-      <div className="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
-        <h3 className="font-bold font-heading text-sm text-slate-900 dark:text-white">
+      <div className="space-y-2.5 pt-2 border-t border-[#E6E8EE] dark:border-[#2A2E3B]">
+        <h3 className="font-semibold text-xs text-[#17191F] dark:text-[#F4F7FC] uppercase tracking-wider">
           {t('catalog.price_range')} (UZS)
         </h3>
         <div className="grid grid-cols-2 gap-2">
@@ -344,36 +334,36 @@ export function ShopPage() {
         </div>
         <Button
           variant="outline"
-          size="xs"
+          size="sm"
           onClick={handleApplyPrice}
-          className="w-full font-bold"
+          className="w-full text-xs font-semibold"
         >
           {t('common.save')}
         </Button>
       </div>
 
       {/* Toggles (In Stock & On Sale) */}
-      <div className="space-y-2.5 pt-2 border-t border-slate-100 dark:border-slate-800">
-        <label className="flex items-center gap-2.5 cursor-pointer">
+      <div className="space-y-2 pt-2 border-t border-[#E6E8EE] dark:border-[#2A2E3B]">
+        <label className="flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
             checked={inStockParam}
             onChange={(e) => updateFilter('inStock', e.target.checked)}
-            className="rounded border-slate-300 text-[#FF7A00] focus:ring-[#FF7A00]"
+            className="rounded border-[#E6E8EE] text-[#5B5BD6] focus:ring-[#5B5BD6]"
           />
-          <span className="font-bold text-slate-700 dark:text-slate-300">
+          <span className="font-medium text-[#17191F] dark:text-[#9CA3AF]">
             {t('catalog.in_stock')}
           </span>
         </label>
 
-        <label className="flex items-center gap-2.5 cursor-pointer">
+        <label className="flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
             checked={onSaleParam}
             onChange={(e) => updateFilter('onSale', e.target.checked)}
-            className="rounded border-slate-300 text-[#FF7A00] focus:ring-[#FF7A00]"
+            className="rounded border-[#E6E8EE] text-[#5B5BD6] focus:ring-[#5B5BD6]"
           />
-          <span className="font-bold text-slate-700 dark:text-slate-300">
+          <span className="font-medium text-[#17191F] dark:text-[#9CA3AF]">
             {t('nav.sales_deals')}
           </span>
         </label>
@@ -387,7 +377,7 @@ export function ShopPage() {
             size="sm"
             onClick={handleResetFilters}
             icon={RefreshCw}
-            className="w-full text-slate-500 hover:text-[#FF7A00]"
+            className="w-full text-[#737985] hover:text-[#5B5BD6]"
           >
             {t('catalog.clear_filters')} ({activeFiltersCount})
           </Button>
@@ -397,122 +387,141 @@ export function ShopPage() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-xs text-slate-500">
-        <Link to="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">
-          {t('nav.home')}
-        </Link>
-        <span>/</span>
-        <span className="text-slate-900 dark:text-white font-bold">
-          {currentCategoryName}
-        </span>
-      </div>
-
-      {/* Page Header Banner */}
-      <div className="bg-gradient-to-r from-orange-500 to-amber-500 rounded-3xl p-6 sm:p-8 text-white shadow-lg shadow-orange-500/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-black font-heading text-white">
-            {currentCategoryName}
-          </h1>
-          <p className="text-xs text-orange-100">
-            {products.length} {t('catalog.products_found')}
-          </p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-7 space-y-5">
+      {/* Breadcrumb & Header Bar */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 text-xs text-[#737985] dark:text-[#9CA3AF]">
+          <Link to="/" className="hover:text-[#17191F] dark:hover:text-[#F4F7FC] transition-colors">
+            {t('nav.home')}
+          </Link>
+          <span>/</span>
+          {searchParam ? (
+            <>
+              <Link to="/shop" className="hover:text-[#17191F] dark:hover:text-[#F4F7FC] transition-colors">
+                {t('nav.shop')}
+              </Link>
+              <span>/</span>
+              <span className="text-[#17191F] dark:text-[#F4F7FC] font-semibold truncate max-w-xs">
+                "{searchParam}"
+              </span>
+            </>
+          ) : (
+            <span className="text-[#17191F] dark:text-[#F4F7FC] font-semibold">
+              {currentCategoryName}
+            </span>
+          )}
         </div>
 
-        {/* Mobile Filter Trigger */}
-        <div className="lg:hidden flex items-center gap-2">
-          <Button
-            variant="secondary"
-            size="md"
-            icon={Filter}
-            onClick={() => setMobileFilterOpen(true)}
-            className="bg-white text-slate-900 font-bold hover:bg-slate-100 shadow-md"
-          >
-            {t('catalog.filter_by')} {activeFiltersCount > 0 && `(${activeFiltersCount})`}
-          </Button>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#17191F] dark:text-[#F4F7FC]">
+              {searchParam ? (
+                <>
+                  {t('catalog.search_results_title')}: <span className="text-[#5B5BD6]">"{searchParam}"</span>
+                </>
+              ) : (
+                currentCategoryName
+              )}
+            </h1>
+            <p className="text-xs text-[#737985] dark:text-[#9CA3AF] mt-0.5">
+              <span>{products.length}</span> {t('catalog.products_found')}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* Mobile Filter Button */}
+            <div className="lg:hidden">
+              <Button
+                variant="outline"
+                size="sm"
+                icon={Filter}
+                onClick={() => setMobileFilterOpen(true)}
+                className="font-semibold text-xs"
+              >
+                {t('catalog.filter_by')} {activeFiltersCount > 0 && `(${activeFiltersCount})`}
+              </Button>
+            </div>
+
+            {/* Sort Select */}
+            <Select
+              value={sortParam}
+              onChange={(e) => updateFilter('sort', e.target.value)}
+              options={[
+                { value: 'popular', label: t('catalog.sort_popular') },
+                { value: 'newest', label: t('catalog.sort_newest') },
+                { value: 'price_asc', label: t('catalog.sort_price_asc') },
+                { value: 'price_desc', label: t('catalog.sort_price_desc') }
+              ]}
+              className="text-xs font-semibold py-1.5"
+            />
+          </div>
         </div>
       </div>
 
-      {/* Active Filter Tags */}
+      {/* Active Filter Chips */}
       {activeFiltersCount > 0 && (
         <div className="flex items-center gap-2 flex-wrap text-xs">
-          <span className="text-slate-400 font-bold">{t('catalog.filter_by')}:</span>
+          <span className="text-[#737985] font-medium">{t('catalog.filter_by')}:</span>
           {categoryParam !== 'all' && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 text-[#FF7A00] border border-orange-200 dark:border-orange-900 font-bold">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#EEEEFF] text-[#5B5BD6] border border-[#DCDCFB] font-semibold">
               {currentCategoryName}
               <button
                 type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  updateFilter('category', 'all');
-                }}
-                className="hover:opacity-75 cursor-pointer"
-                aria-label="Remove category filter"
+                onClick={() => updateFilter('category', 'all')}
+                className="hover:text-[#3C3CA8] cursor-pointer"
+                aria-label="Remove category"
               >
                 <X className="w-3 h-3" />
               </button>
             </span>
           )}
           {brandParam !== 'all' && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 text-[#FF7A00] border border-orange-200 dark:border-orange-900 font-bold">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#EEEEFF] text-[#5B5BD6] border border-[#DCDCFB] font-semibold">
               {brandParam}
               <button
                 type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  updateFilter('brand', 'all');
-                }}
-                className="hover:opacity-75 cursor-pointer"
-                aria-label="Remove brand filter"
+                onClick={() => updateFilter('brand', 'all')}
+                className="hover:text-[#3C3CA8] cursor-pointer"
+                aria-label="Remove brand"
               >
                 <X className="w-3 h-3" />
               </button>
             </span>
           )}
           {searchParam && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 text-[#FF7A00] border border-orange-200 dark:border-orange-900 font-bold">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#EEEEFF] text-[#5B5BD6] border border-[#DCDCFB] font-semibold">
               "{searchParam}"
               <button
                 type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  updateFilter('search', '');
-                }}
-                className="hover:opacity-75 cursor-pointer"
-                aria-label="Remove search filter"
+                onClick={() => updateFilter('search', '')}
+                className="hover:text-[#3C3CA8] cursor-pointer"
+                aria-label="Remove search"
               >
                 <X className="w-3 h-3" />
               </button>
             </span>
           )}
           {inStockParam && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 text-[#FF7A00] border border-orange-200 dark:border-orange-900 font-bold">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#EEEEFF] text-[#5B5BD6] border border-[#DCDCFB] font-semibold">
               {t('catalog.in_stock')}
               <button
                 type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  updateFilter('inStock', false);
-                }}
-                className="hover:opacity-75 cursor-pointer"
-                aria-label="Remove inStock filter"
+                onClick={() => updateFilter('inStock', false)}
+                className="hover:text-[#3C3CA8] cursor-pointer"
+                aria-label="Remove inStock"
               >
                 <X className="w-3 h-3" />
               </button>
             </span>
           )}
           {onSaleParam && (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 text-[#FF7A00] border border-orange-200 dark:border-orange-900 font-bold">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#EEEEFF] text-[#5B5BD6] border border-[#DCDCFB] font-semibold">
               {t('nav.sales_deals')}
               <button
                 type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  updateFilter('onSale', false);
-                }}
-                className="hover:opacity-75 cursor-pointer"
-                aria-label="Remove onSale filter"
+                onClick={() => updateFilter('onSale', false)}
+                className="hover:text-[#3C3CA8] cursor-pointer"
+                aria-label="Remove onSale"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -520,29 +529,26 @@ export function ShopPage() {
           )}
           <button
             type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              handleResetFilters();
-            }}
-            className="text-xs text-slate-500 hover:text-[#FF7A00] underline font-bold ml-1 cursor-pointer"
+            onClick={handleResetFilters}
+            className="text-xs text-[#737985] hover:text-[#5B5BD6] font-semibold ml-1 cursor-pointer transition-colors"
           >
             {t('catalog.clear_filters')}
           </button>
         </div>
       )}
 
-      {/* Main Content Layout (Sidebar + Products Grid) */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Desktop Left Sidebar Filter */}
-        <div className="hidden lg:block lg:col-span-1 space-y-6">
-          <Card className="p-6 border-slate-200/80 dark:border-slate-800 shadow-xs sticky top-24">
-            <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100 dark:border-slate-800">
-              <h2 className="text-base font-bold font-heading text-slate-900 dark:text-white flex items-center gap-2">
-                <SlidersHorizontal className="w-4 h-4 text-[#FF7A00]" />
+      {/* Main Grid Layout (Sidebar + Products Grid) */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+        {/* Desktop Sidebar */}
+        <div className="hidden lg:block lg:col-span-1">
+          <Card className="p-4 bg-white dark:bg-[#1D2028] border-[#E6E8EE] dark:border-[#2A2E3B] sticky top-20 rounded-xl">
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#E6E8EE] dark:border-[#2A2E3B]">
+              <h2 className="text-sm font-semibold text-[#17191F] dark:text-[#F4F7FC] flex items-center gap-1.5">
+                <SlidersHorizontal className="w-4 h-4 text-[#5B5BD6]" />
                 {t('catalog.filter_by')}
               </h2>
               {activeFiltersCount > 0 && (
-                <span className="w-5 h-5 rounded-full bg-[#FF7A00] text-white text-[11px] font-bold flex items-center justify-center">
+                <span className="w-4.5 h-4.5 rounded-full bg-[#5B5BD6] text-white text-[10px] font-bold flex items-center justify-center">
                   {activeFiltersCount}
                 </span>
               )}
@@ -551,89 +557,33 @@ export function ShopPage() {
           </Card>
         </div>
 
-        {/* Right Product Grid Area */}
-        <div className="lg:col-span-3 space-y-6">
-          {/* Top Controls Toolbar */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-3 sm:p-4 border border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
-            <div className="text-xs text-slate-500 font-bold">
-              {products.length} {t('catalog.products_found')}
-            </div>
-
-            <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
-              {/* Sort Select */}
-              <div className="flex items-center gap-2 text-xs flex-1 sm:flex-initial">
-                <span className="text-slate-400 hidden md:inline">{t('catalog.sort_by')}:</span>
-                <Select
-                  value={sortParam}
-                  onChange={(e) => updateFilter('sort', e.target.value)}
-                  options={[
-                    { value: 'popular', label: t('catalog.sort_popular') },
-                    { value: 'newest', label: t('catalog.sort_newest') },
-                    { value: 'price_asc', label: t('catalog.sort_price_asc') },
-                    { value: 'price_desc', label: t('catalog.sort_price_desc') }
-                  ]}
-                  className="w-full sm:w-44 text-xs font-bold"
-                />
-              </div>
-
-              {/* View Toggle (Grid / List) */}
-              <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl p-0.5 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => setViewMode('grid')}
-                  className={clsx(
-                    'p-1.5 rounded-lg transition-colors cursor-pointer',
-                    viewMode === 'grid'
-                      ? 'bg-white dark:bg-slate-700 text-[#FF7A00] shadow-xs'
-                      : 'text-slate-400 hover:text-slate-600'
-                  )}
-                  aria-label="Grid view"
-                >
-                  <Grid className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setViewMode('list')}
-                  className={clsx(
-                    'p-1.5 rounded-lg transition-colors cursor-pointer',
-                    viewMode === 'list'
-                      ? 'bg-white dark:bg-slate-700 text-[#FF7A00] shadow-xs'
-                      : 'text-slate-400 hover:text-slate-600'
-                  )}
-                  aria-label="List view"
-                >
-                  <List className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Product Grid / List Content */}
+        {/* Product Grid Area */}
+        <div className="lg:col-span-3">
           {loading ? (
-            <div className="py-24 flex justify-center">
-              <LoadingSpinner size="lg" />
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-4">
+              {Array.from({ length: 6 }).map((_, idx) => (
+                <SkeletonCard key={idx} />
+              ))}
             </div>
           ) : products.length === 0 ? (
-            <Card className="p-12 border-slate-200/80 dark:border-slate-800 text-center">
+            <div className="py-12">
               <EmptyState
-                title={t('catalog.no_products')}
-                description={t('catalog.no_products_desc')}
                 icon={ShoppingBag}
+                title={searchParam ? t('catalog.no_search_results') : t('catalog.no_products')}
+                description={
+                  searchParam
+                    ? `"${searchParam}" ${t('catalog.no_search_results_desc')}`
+                    : t('catalog.no_products_desc')
+                }
                 actionLabel={t('catalog.clear_filters')}
                 onAction={handleResetFilters}
               />
-            </Card>
+            </div>
           ) : (
-            <div
-              className={clsx(
-                viewMode === 'grid'
-                  ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6'
-                  : 'space-y-4'
-              )}
-            >
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-4">
               {products.map((product) => (
                 <ProductCard
-                  key={product.id || product.slug}
+                  key={product.id}
                   product={product}
                   onQuickView={(p) => setQuickViewProduct(p)}
                 />
@@ -648,21 +598,18 @@ export function ShopPage() {
         isOpen={mobileFilterOpen}
         onClose={() => setMobileFilterOpen(false)}
         title={t('catalog.filter_by')}
-        position="left"
       >
-        <div className="p-4 overflow-y-auto max-h-[calc(100vh-120px)]">
+        <div className="py-2">
           {FilterContent}
         </div>
       </Drawer>
 
-      {/* Quick View Modal */}
-      {quickViewProduct && (
-        <QuickViewModal
-          product={quickViewProduct}
-          isOpen={!!quickViewProduct}
-          onClose={() => setQuickViewProduct(null)}
-        />
-      )}
+      {/* Global Quick View Modal */}
+      <QuickViewModal
+        isOpen={!!quickViewProduct}
+        onClose={() => setQuickViewProduct(null)}
+        product={quickViewProduct}
+      />
     </div>
   );
 }

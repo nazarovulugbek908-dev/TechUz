@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAdminAuth } from '../../context/AdminAuthContext';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import { Modal } from '../common/Modal';
 import { Input } from '../common/Input';
 import { Button } from '../common/Button';
@@ -79,23 +79,23 @@ export function AdminProfileModal({ isOpen, onClose }) {
     >
       <div className="space-y-6 text-xs">
         {/* Admin Header Badge */}
-        <div className="p-4 rounded-2xl bg-gradient-to-tr from-slate-900 to-slate-800 text-white flex items-center gap-4 shadow-sm border border-slate-700">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-500 text-white font-black text-2xl flex items-center justify-center shadow-md shadow-orange-500/20 font-heading">
+        <div className="p-4 rounded-xl bg-[#15171D] text-white flex items-center gap-4 shadow-sm border border-neutral-800">
+          <div className="w-12 h-12 rounded-xl bg-brand-600 text-white font-extrabold text-xl flex items-center justify-center font-heading">
             A
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-heading font-black text-base text-white">
+              <h3 className="font-heading font-extrabold text-sm text-white">
                 {admin?.name || 'Super Admin'}
               </h3>
               <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold">
                 {t('admin.online_status')}
               </span>
             </div>
-            <p className="text-[11px] text-slate-300 mt-0.5">
+            <p className="text-[11px] text-neutral-400 mt-0.5">
               {admin?.email || 'admin@gmail.com'}
             </p>
-            <span className="inline-block mt-1 text-[10px] font-bold text-orange-400">
+            <span className="inline-block mt-0.5 text-[10px] font-semibold text-brand-400">
               {t('admin.role_super_admin')}
             </span>
           </div>
@@ -115,7 +115,7 @@ export function AdminProfileModal({ isOpen, onClose }) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+            <label className="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1.5">
               {t('admin.name_label')} *
             </label>
             <Input
@@ -128,7 +128,7 @@ export function AdminProfileModal({ isOpen, onClose }) {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+            <label className="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1.5">
               {t('auth.email_label')} *
             </label>
             <Input
@@ -141,9 +141,9 @@ export function AdminProfileModal({ isOpen, onClose }) {
             />
           </div>
 
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-4">
+          <div className="pt-2 border-t border-neutral-200 dark:border-neutral-800 space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+              <label className="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1.5">
                 {t('admin.new_password_optional')}
               </label>
               <div className="relative">
@@ -157,7 +157,7 @@ export function AdminProfileModal({ isOpen, onClose }) {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 p-1 cursor-pointer"
                   aria-label={showPassword ? 'Hide' : 'Show'}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -167,7 +167,7 @@ export function AdminProfileModal({ isOpen, onClose }) {
 
             {newPassword && (
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block text-xs font-bold text-neutral-700 dark:text-neutral-300 mb-1.5">
                   {t('auth.confirm_password_label')}
                 </label>
                 <Input
@@ -181,7 +181,7 @@ export function AdminProfileModal({ isOpen, onClose }) {
             )}
           </div>
 
-          <div className="flex justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex justify-end gap-3 pt-3 border-t border-neutral-200 dark:border-neutral-800">
             <Button variant="ghost" size="sm" type="button" onClick={onClose}>
               {t('common.cancel')}
             </Button>
@@ -190,7 +190,7 @@ export function AdminProfileModal({ isOpen, onClose }) {
               size="sm"
               type="submit"
               disabled={saving}
-              className="font-bold shadow-lg shadow-orange-500/20"
+              className="font-bold shadow-sm shadow-brand-500/20"
             >
               {saving ? t('common.loading') : t('common.save')}
             </Button>

@@ -13,9 +13,12 @@ export function AdminAuthProvider({ children }) {
         const { data } = await adminAuthService.getCurrentAdmin();
         if (data) {
           setAdmin(data);
+        } else {
+          setAdmin(null);
         }
       } catch (err) {
         console.error('Failed to load admin session:', err);
+        setAdmin(null);
       } finally {
         setLoading(false);
       }

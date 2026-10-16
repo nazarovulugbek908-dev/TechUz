@@ -8,6 +8,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { PhoneModelProvider } from './context/PhoneModelContext';
 import { CartProvider } from './context/CartContext';
+import { FavoritesProvider } from './context/FavoritesContext';
 import { AuthProvider } from './context/AuthContext';
 
 import { registerServiceWorker } from './serviceWorkerRegistration';
@@ -18,9 +19,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <ThemeProvider>
         <PhoneModelProvider>
           <AuthProvider>
-            <CartProvider>
-              <App />
-            </CartProvider>
+            <FavoritesProvider>
+              <CartProvider>
+                <App />
+              </CartProvider>
+            </FavoritesProvider>
           </AuthProvider>
         </PhoneModelProvider>
       </ThemeProvider>

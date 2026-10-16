@@ -2,7 +2,7 @@ import React from 'react';
 import { ProductCard } from './ProductCard';
 import { SkeletonCard } from '../feedback/LoadingSpinner';
 import { EmptyState } from '../feedback/EmptyState';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import { PackageOpen } from 'lucide-react';
 import { cn } from '../../utils/cn';
 

@@ -307,7 +307,7 @@ export const mockProducts = [
       'https://images.unsplash.com/photo-1601593346740-925612772716?auto=format&fit=crop&w=800&q=80'
     ],
     variants: [
-      { id: 'v-case-ip15p-org', color: '#FF7A00', colorNameUz: 'Orange Tech', colorNameRu: 'Оранжевый Tech', price: 185000, oldPrice: 240000, stock: 20 },
+      { id: 'v-case-ip15p-org', color: '#FF7900', colorNameUz: 'Orange Tech', colorNameRu: 'Оранжевый Tech', price: 185000, oldPrice: 240000, stock: 20 },
       { id: 'v-case-ip15p-blk', color: '#18181B', colorNameUz: 'Midnight Black', colorNameRu: 'Черный полночь', price: 185000, oldPrice: 240000, stock: 15 },
       { id: 'v-case-ip15p-blu', color: '#1E3A8A', colorNameUz: 'Deep Blue', colorNameRu: 'Глубокий синий', price: 185000, oldPrice: 240000, stock: 10 }
     ],
@@ -339,7 +339,7 @@ export const mockProducts = [
       'https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=800&q=80'
     ],
     variants: [
-      { id: 'v-case-ip15pm-org', color: '#FF7A00', colorNameUz: 'Orange Tech', colorNameRu: 'Оранжевый', price: 195000, oldPrice: 250000, stock: 15 },
+      { id: 'v-case-ip15pm-org', color: '#FF7900', colorNameUz: 'Orange Tech', colorNameRu: 'Оранжевый', price: 195000, oldPrice: 250000, stock: 15 },
       { id: 'v-case-ip15pm-blk', color: '#18181B', colorNameUz: 'Black', colorNameRu: 'Черный', price: 195000, oldPrice: 250000, stock: 20 }
     ],
     specs: {
@@ -448,7 +448,7 @@ export const mockProducts = [
     descRu: 'Стильная карбоновая текстура, эффективное рассеивание тепла.',
     price: 85000,
     oldPrice: 110000,
-    stock: 0,
+    stock: 25,
     warrantyMonths: 1,
     badge: 'sale',
     rating: 4.5,
@@ -610,7 +610,7 @@ export const mockProducts = [
     descRu: 'Мощная зарядная станция 100 Вт для одновременной зарядки 4 устройств.',
     price: 780000,
     oldPrice: 890000,
-    stock: 0,
+    stock: 30,
     warrantyMonths: 18,
     badge: 'premium',
     rating: 5.0,
@@ -660,7 +660,7 @@ export const mockProducts = [
       'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=800&q=80'
     ],
     variants: [
-      { id: 'v-cbl-org', color: '#FF7A00', colorNameUz: 'Orange-Black', colorNameRu: 'Оранжево-черный', price: 85000, oldPrice: 110000, stock: 45 },
+      { id: 'v-cbl-org', color: '#FF7900', colorNameUz: 'Orange-Black', colorNameRu: 'Оранжево-черный', price: 85000, oldPrice: 110000, stock: 45 },
       { id: 'v-cbl-blk', color: '#18181B', colorNameUz: 'Black', colorNameRu: 'Черный', price: 85000, oldPrice: 110000, stock: 35 }
     ],
     specs: {

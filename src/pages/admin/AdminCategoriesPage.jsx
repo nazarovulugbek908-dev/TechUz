@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import { categoryService } from '../../services/categoryService';
 import { productService } from '../../services/productService';
 import { Card } from '../../components/common/Card';
@@ -111,11 +111,13 @@ export function AdminCategoriesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black font-heading text-slate-900 dark:text-white flex items-center gap-3">
-            <FolderTree className="w-8 h-8 text-[#FF7A00]" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold font-heading text-neutral-900 dark:text-white flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 flex items-center justify-center text-brand-600 dark:text-brand-400">
+              <FolderTree className="w-5 h-5" />
+            </div>
             {t('admin.categories_title')}
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
             {t('admin.categories_subtitle')} ({categories.length})
           </p>
         </div>
@@ -125,7 +127,7 @@ export function AdminCategoriesPage() {
           size="md"
           icon={PlusCircle}
           onClick={openCreateModal}
-          className="font-bold shadow-lg shadow-orange-500/20"
+          className="font-bold shadow-sm shadow-brand-500/20"
         >
           {t('admin.add_category_btn')}
         </Button>
@@ -143,34 +145,30 @@ export function AdminCategoriesPage() {
           <LoadingSpinner size="lg" />
         </div>
       ) : (
-        <Card className="p-0 border-slate-200/80 dark:border-slate-800 overflow-hidden shadow-xs">
+        <Card className="p-0 border-neutral-200/80 dark:border-neutral-800 overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
+              <thead className="bg-neutral-50 dark:bg-neutral-800/60 text-neutral-500 dark:text-neutral-400 border-b border-neutral-200 dark:border-neutral-800">
                 <tr>
-                  <th className="py-3.5 px-4 font-bold">{t('admin.category_name_uz_col')}</th>
-                  <th className="py-3.5 px-4 font-bold">{t('admin.category_name_ru_col')}</th>
+                  <th className="py-3.5 px-4 font-bold">{t('admin.category_name_col') || t('admin.category_col')}</th>
                   <th className="py-3.5 px-4 font-bold">{t('admin.slug_label')}</th>
                   <th className="py-3.5 px-4 font-bold">{t('admin.products_count_col')}</th>
                   <th className="py-3.5 px-4 font-bold text-right">{t('admin.actions_col')}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+              <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800 font-medium">
                 {categories.map((cat) => {
                   const count = getProductCount(cat.slug || cat.id);
                   return (
-                    <tr key={cat.id || cat.slug} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                      <td className="py-3 px-4 font-bold text-slate-900 dark:text-white">
-                        {cat.name_uz || cat.nameUz}
+                    <tr key={cat.id || cat.slug} className="hover:bg-neutral-50/80 dark:hover:bg-neutral-800/40">
+                      <td className="py-3 px-4 font-bold text-neutral-900 dark:text-white">
+                        {language === 'ru' ? (cat.name_ru || cat.nameRu) : (cat.name_uz || cat.nameUz)}
                       </td>
-                      <td className="py-3 px-4 text-slate-600 dark:text-slate-300">
-                        {cat.name_ru || cat.nameRu}
-                      </td>
-                      <td className="py-3 px-4 font-mono text-[11px] text-slate-400">
+                      <td className="py-3 px-4 font-mono text-[11px] text-neutral-400">
                         {cat.slug || cat.id}
                       </td>
                       <td className="py-3 px-4">
-                        <span className="px-2.5 py-0.5 rounded-full bg-orange-50 dark:bg-orange-950/40 text-[#FF7A00] font-bold text-[11px] border border-orange-200 dark:border-orange-900">
+                        <span className="px-2.5 py-0.5 rounded-full bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 font-bold text-[11px] border border-brand-200 dark:border-brand-900">
                           {count} {t('common.items_short')}
                         </span>
                       </td>
@@ -181,7 +179,7 @@ export function AdminCategoriesPage() {
                             size="xs"
                             icon={Edit2}
                             onClick={() => openEditModal(cat)}
-                            className="text-slate-600 hover:text-[#FF7A00]"
+                            className="text-neutral-600 hover:text-brand-600 dark:hover:text-brand-400"
                           />
                           <Button
                             variant="ghost"
@@ -208,34 +206,69 @@ export function AdminCategoriesPage() {
         title={editingCategory ? t('admin.edit_category_title') : t('admin.new_category_title')}
       >
         <form onSubmit={handleSave} className="space-y-4 text-xs">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-              {t('admin.category_name_uz_col')} *
-            </label>
-            <Input
-              value={nameUz}
-              onChange={(e) => {
-                setNameUz(e.target.value);
-                if (!editingCategory && !slug) {
-                  setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-'));
-                }
-              }}
-              placeholder="G'iloflar"
-              required
-            />
-          </div>
+          {language === 'ru' ? (
+            <>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  {t('admin.category_name_ru_col')} *
+                </label>
+                <Input
+                  value={nameRu}
+                  onChange={(e) => {
+                    setNameRu(e.target.value);
+                    if (!editingCategory && !slug) {
+                      setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-'));
+                    }
+                  }}
+                  placeholder={t('admin.sample_category_covers_ru')}
+                  required
+                />
+              </div>
 
-          <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-              {t('admin.category_name_ru_col')} *
-            </label>
-            <Input
-              value={nameRu}
-              onChange={(e) => setNameRu(e.target.value)}
-              placeholder="Chexollar (RU)"
-              required
-            />
-          </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  {t('admin.category_name_uz_col')} *
+                </label>
+                <Input
+                  value={nameUz}
+                  onChange={(e) => setNameUz(e.target.value)}
+                  placeholder="G'iloflar va Chexollar"
+                  required
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  {t('admin.category_name_uz_col')} *
+                </label>
+                <Input
+                  value={nameUz}
+                  onChange={(e) => {
+                    setNameUz(e.target.value);
+                    if (!editingCategory && !slug) {
+                      setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-'));
+                    }
+                  }}
+                  placeholder="G'iloflar"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  {t('admin.category_name_ru_col')} *
+                </label>
+                <Input
+                  value={nameRu}
+                  onChange={(e) => setNameRu(e.target.value)}
+                  placeholder={t('admin.sample_category_cases_ru')}
+                  required
+                />
+              </div>
+            </>
+          )}
 
           <div>
             <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">

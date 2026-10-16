@@ -8,7 +8,8 @@ export function Modal({
   title,
   children,
   maxWidth = 'max-w-lg',
-  className = ''
+  className = '',
+  contentClassName = ''
 }) {
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -31,10 +32,10 @@ export function Modal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-150">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-[#17191F]/50 backdrop-blur-[2px] transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -42,7 +43,7 @@ export function Modal({
       {/* Modal Dialog */}
       <div
         className={cn(
-          'relative w-full bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 z-10 overflow-hidden flex flex-col max-h-[90vh]',
+          'relative w-full bg-white dark:bg-[#1D2028] rounded-xl shadow-xl border border-[#E6E8EE] dark:border-[#2A2E3B] z-10 overflow-hidden flex flex-col max-h-[90vh]',
           maxWidth,
           className
         )}
@@ -51,22 +52,22 @@ export function Modal({
       >
         {/* Modal Header */}
         {title && (
-          <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800">
-            <h3 className="text-lg font-bold font-heading text-slate-900 dark:text-white">
+          <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#E6E8EE] dark:border-[#2A2E3B]">
+            <h3 className="text-base font-semibold text-[#17191F] dark:text-[#F4F7FC]">
               {title}
             </h3>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors"
+              className="p-1 rounded-md text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] hover:bg-[#F7F8FA] dark:hover:bg-[#15171D] dark:hover:text-white transition-colors cursor-pointer"
               aria-label="Yopish"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         )}
 
         {/* Modal Content */}
-        <div className="p-5 overflow-y-auto">{children}</div>
+        <div className={cn('p-5 overflow-y-auto', contentClassName)}>{children}</div>
       </div>
     </div>
   );

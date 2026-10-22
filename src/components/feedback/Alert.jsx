@@ -19,7 +19,7 @@ export function Alert({
   const Icon = icons[type] || Info;
 
   const styles = {
-    info: 'bg-[#EEEEFF] border-[#DCDCFB] text-[#5B5BD6] dark:bg-[#5B5BD6]/15 dark:border-[#5B5BD6]/30 dark:text-[#A5A5F5]',
+    info: 'bg-[#E6F7EF] border-[#00A859]/20 text-[#00A859] dark:bg-[#00A859]/15 dark:border-[#00A859]/30 dark:text-[#00A859]',
     success: 'bg-[#EAF6F0] border-[#CFEBDD] text-[#16845B] dark:bg-[#16845B]/15 dark:border-[#16845B]/30 dark:text-[#4ADE80]',
     warning: 'bg-[#FFFBEB] border-[#FDE68A] text-[#D97706] dark:bg-[#D97706]/15 dark:border-[#D97706]/30 dark:text-[#FBBF24]',
     error: 'bg-[#FDF2F2] border-[#FCDADA] text-[#D64545] dark:bg-[#D64545]/15 dark:border-[#D64545]/30 dark:text-[#F87171]'

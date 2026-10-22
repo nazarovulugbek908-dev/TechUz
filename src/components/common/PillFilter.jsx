@@ -16,7 +16,7 @@ export function PillFilter({
       className={cn(
         'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-150 cursor-pointer select-none whitespace-nowrap',
         active
-          ? 'bg-[#5B5BD6] text-white shadow-xs'
+          ? 'bg-[#00A859] text-white shadow-xs'
           : 'bg-white dark:bg-[#1D2028] text-[#737985] dark:text-[#9CA3AF] border border-[#E6E8EE] dark:border-[#2A2E3B] hover:text-[#17191F] dark:hover:text-white hover:border-[#D1D5DB] dark:hover:border-[#3B4254]',
         className
       )}

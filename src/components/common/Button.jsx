@@ -19,15 +19,15 @@ export function Button({
 
   const variants = {
     primary:
-      'bg-[#5B5BD6] text-white hover:bg-[#4949BC] active:bg-[#3C3CA8] focus:ring-[#5B5BD6]/30 shadow-xs',
+      'bg-[#00A859] text-white hover:bg-[#00924C] active:bg-[#007D40] focus:ring-[#00A859]/30 shadow-xs',
     secondary:
       'bg-[#17191F] text-white hover:bg-[#252830] active:bg-[#111216] focus:ring-[#17191F]/30 shadow-xs',
     outline:
-      'border border-[#E6E8EE] bg-white text-[#17191F] hover:bg-[#F7F8FA] hover:border-[#D1D5DB] focus:ring-[#5B5BD6]/20 dark:bg-[#15171D] dark:border-[#2A2E3B] dark:text-[#F4F7FC] dark:hover:bg-[#1D2028]',
+      'border border-[#E6E8EE] bg-white text-[#17191F] hover:bg-[#F7F8FA] hover:border-[#00A859] focus:ring-[#00A859]/20 dark:bg-[#15171D] dark:border-[#2A2E3B] dark:text-[#F4F7FC] dark:hover:bg-[#1D2028]',
     ghost:
       'bg-transparent text-[#737985] hover:bg-[#F7F8FA] hover:text-[#17191F] focus:ring-slate-200 dark:text-[#9CA3AF] dark:hover:bg-[#1D2028] dark:hover:text-white',
     soft:
-      'bg-[#EEEEFF] text-[#5B5BD6] hover:bg-[#E5E5FF] active:bg-[#DBDBFA] focus:ring-[#5B5BD6]/20 dark:bg-[#5B5BD6]/15 dark:text-[#A5A5F5] dark:hover:bg-[#5B5BD6]/25',
+      'bg-[#E6F7EF] text-[#00A859] hover:bg-[#D5F2E3] active:bg-[#C2EBD4] focus:ring-[#00A859]/20 dark:bg-[#00A859]/15 dark:text-[#00A859] dark:hover:bg-[#00A859]/25',
     danger:
       'bg-[#D64545] text-white hover:bg-[#BC3636] active:bg-[#A62F2F] focus:ring-[#D64545]/30 shadow-xs'
   };

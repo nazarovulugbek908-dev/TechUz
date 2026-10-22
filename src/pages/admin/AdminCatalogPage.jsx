@@ -332,19 +332,23 @@ export function AdminCatalogPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-1">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E6E8EE] dark:border-[#2A2E3B]">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold font-heading text-neutral-900 dark:text-white flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 flex items-center justify-center">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#E6F7EF] dark:bg-[#00A859]/15 text-[#00A859] flex items-center justify-center shadow-2xs">
               <FolderTree className="w-5 h-5" />
             </div>
-            {t('admin.catalog_title')}
-          </h1>
-          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
-            {t('admin.catalog_subtitle')}
-          </p>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#17191F] dark:text-white tracking-tight">
+                {t('admin.catalog_title')}
+              </h1>
+              <p className="text-xs text-[#737985] dark:text-[#9CA3AF] mt-0.5">
+                {t('admin.catalog_subtitle')}
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Action Button depends on active tab */}
@@ -355,7 +359,7 @@ export function AdminCatalogPage() {
               size="md"
               icon={PlusCircle}
               onClick={openCreateCategory}
-              className="font-bold shadow-sm shadow-brand-500/20"
+              className="font-bold shadow-xs"
             >
               {t('admin.add_category_btn')}
             </Button>
@@ -366,7 +370,7 @@ export function AdminCatalogPage() {
               size="md"
               icon={PlusCircle}
               onClick={openCreateBrand}
-              className="font-bold shadow-sm shadow-brand-500/20"
+              className="font-bold shadow-xs"
             >
               {t('admin.add_brand_btn')}
             </Button>
@@ -377,7 +381,7 @@ export function AdminCatalogPage() {
               size="md"
               icon={PlusCircle}
               onClick={openCreateModel}
-              className="font-bold shadow-sm shadow-brand-500/20"
+              className="font-bold shadow-xs"
             >
               {t('admin.add_model_btn')}
             </Button>
@@ -391,8 +395,8 @@ export function AdminCatalogPage() {
         </Alert>
       )}
 
-      {/* Tabs Navigation */}
-      <div className="flex items-center gap-2 border-b border-neutral-200 dark:border-neutral-800 pb-px overflow-x-auto">
+      {/* Modern Segmented Pill Tabs Navigation */}
+      <div className="inline-flex items-center gap-1.5 p-1.5 bg-[#F4F6F8] dark:bg-[#1A1D24] border border-[#E6E8EE] dark:border-[#2A2E3B] rounded-2xl overflow-x-auto max-w-full">
         {tabsConfig.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -401,20 +405,20 @@ export function AdminCatalogPage() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={clsx(
-                'flex items-center gap-2.5 px-4 py-3 text-xs sm:text-sm font-bold border-b-2 transition-all whitespace-nowrap',
+                'flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap select-none',
                 isActive
-                  ? 'border-brand-600 text-brand-600 bg-brand-50/60 dark:bg-brand-950/30 rounded-t-xl'
-                  : 'border-transparent text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-700'
+                  ? 'bg-white dark:bg-[#15171D] text-[#17191F] dark:text-white shadow-xs font-bold border border-gray-200/60 dark:border-[#2A2E3B]'
+                  : 'text-[#737985] hover:text-[#17191F] dark:hover:text-white hover:bg-white/50'
               )}
             >
-              <Icon className={clsx('w-4 h-4', isActive ? 'text-brand-600 dark:text-brand-400' : 'text-neutral-400')} />
+              <Icon className={clsx('w-4 h-4', isActive ? 'text-[#00A859]' : 'text-[#737985]')} />
               <span>{tab.label}</span>
               <span
                 className={clsx(
-                  'px-2 py-0.5 rounded-full text-[11px] font-bold',
+                  'px-2 py-0.5 rounded-full text-[11px] font-bold transition-colors',
                   isActive
-                    ? 'bg-brand-600 text-white'
-                    : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400'
+                    ? 'bg-[#E6F7EF] dark:bg-[#00A859]/20 text-[#00A859]'
+                    : 'bg-gray-200/70 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
                 )}
               >
                 {tab.count}
@@ -434,77 +438,108 @@ export function AdminCatalogPage() {
           {activeTab === 'categories' && (
             <div className="space-y-4">
               {/* Category Search Filter */}
-              <div className="max-w-md">
-                <Input
-                  placeholder={t('admin.search_categories_placeholder')}
-                  value={categorySearch}
-                  onChange={(e) => setCategorySearch(e.target.value)}
-                  icon={Search}
-                />
-              </div>
-
-              <Card className="p-0 border-slate-200/80 dark:border-slate-800 overflow-hidden shadow-xs">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-50 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
-                      <tr>
-                        <th className="py-3.5 px-4 font-bold">{t('admin.category_name_col') || t('admin.category_col')}</th>
-                        <th className="py-3.5 px-4 font-bold">{t('admin.slug_label')}</th>
-                        <th className="py-3.5 px-4 font-bold">{t('admin.products_count_col')}</th>
-                        <th className="py-3.5 px-4 font-bold text-right">{t('admin.actions_col')}</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
-                      {filteredCategories.length === 0 ? (
-                        <tr>
-                          <td colSpan="4" className="py-8 text-center text-slate-400">
-                            {t('admin.categories_not_found')}
-                          </td>
-                        </tr>
-                      ) : (
-                        filteredCategories.map((cat) => {
-                          const count = getCategoryProductCount(cat.slug || cat.id);
-                          return (
-                            <tr
-                              key={cat.id || cat.slug}
-                              className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
-                            >
-                              <td className="py-3 px-4 font-bold text-slate-900 dark:text-white">
-                                {language === 'ru' ? (cat.name_ru || cat.nameRu) : (cat.name_uz || cat.nameUz)}
-                              </td>
-                              <td className="py-3 px-4 font-mono text-[11px] text-slate-400">
-                                {cat.slug || cat.id}
-                              </td>
-                              <td className="py-3 px-4">
-                                <span className="px-2.5 py-0.5 rounded-full bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 font-bold text-[11px] border border-brand-200 dark:border-brand-900">
-                                  {count} {t('common.items_short')}
-                                </span>
-                              </td>
-                              <td className="py-3 px-4 text-right">
-                                <div className="flex items-center justify-end gap-1.5">
-                                  <Button
-                                    variant="ghost"
-                                    size="xs"
-                                    icon={Edit2}
-                                    onClick={() => openEditCategory(cat)}
-                                    className="text-neutral-600 hover:text-brand-600 dark:hover:text-brand-400"
-                                  />
-                                  <Button
-                                    variant="ghost"
-                                    size="xs"
-                                    icon={Trash2}
-                                    onClick={() => setCategoryToDelete(cat)}
-                                    className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/40"
-                                  />
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        })
-                      )}
-                    </tbody>
-                  </table>
+              {categories.length > 0 && (
+                <div className="max-w-md">
+                  <Input
+                    placeholder={t('admin.search_categories_placeholder')}
+                    value={categorySearch}
+                    onChange={(e) => setCategorySearch(e.target.value)}
+                    icon={Search}
+                  />
                 </div>
+              )}
+
+              <Card className="p-0 border-gray-150 dark:border-[#2A2E3B] rounded-2xl overflow-hidden shadow-2xs">
+                {categories.length === 0 ? (
+                  <div className="py-16 text-center flex flex-col items-center justify-center space-y-3">
+                    <div className="w-14 h-14 rounded-2xl bg-[#E6F7EF] dark:bg-[#00A859]/15 text-[#00A859] flex items-center justify-center shadow-xs">
+                      <FolderTree className="w-7 h-7" />
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-base font-bold text-gray-900 dark:text-white">
+                        {language === 'ru' ? 'Категории еще не добавлены' : 'Kategoriyalar hali qo‘shilmagan'}
+                      </h3>
+                      <p className="text-xs text-gray-500 max-w-sm">
+                        {language === 'ru'
+                          ? 'Создайте первую категорию товаров, чтобы начать наполнение каталога магазина'
+                          : 'Mahsulotlar katalogini shakllantirish uchun birinchi kategoriyani qo‘shing'}
+                      </p>
+                    </div>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      icon={PlusCircle}
+                      onClick={openCreateCategory}
+                      className="font-bold shadow-xs mt-2"
+                    >
+                      {t('admin.add_category_btn')}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-[#F8F9FA] dark:bg-[#15171D] text-gray-400 font-bold uppercase tracking-wider text-[10px] border-b border-gray-150 dark:border-[#2A2E3B]">
+                        <tr>
+                          <th className="py-3 px-4">{t('admin.category_name_col') || t('admin.category_col')}</th>
+                          <th className="py-3 px-4">{t('admin.slug_label')}</th>
+                          <th className="py-3 px-4">{t('admin.products_count_col')}</th>
+                          <th className="py-3 px-4 text-right">{t('admin.actions_col')}</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100 dark:divide-[#2A2E3B] font-medium">
+                        {filteredCategories.length === 0 ? (
+                          <tr>
+                            <td colSpan="4" className="py-8 text-center text-gray-400">
+                              {t('admin.categories_not_found')}
+                            </td>
+                          </tr>
+                        ) : (
+                          filteredCategories.map((cat) => {
+                            const count = getCategoryProductCount(cat.slug || cat.id);
+                            return (
+                              <tr
+                                key={cat.id || cat.slug}
+                                className="hover:bg-emerald-50/30 dark:hover:bg-[#1E212B] transition-colors"
+                              >
+                                <td className="py-3 px-4 font-bold text-gray-900 dark:text-white">
+                                  {language === 'ru' ? (cat.name_ru || cat.nameRu) : (cat.name_uz || cat.nameUz)}
+                                </td>
+                                <td className="py-3 px-4 font-mono text-[11px] text-gray-400">
+                                  {cat.slug || cat.id}
+                                </td>
+                                <td className="py-3 px-4">
+                                  <span className="px-2.5 py-0.5 rounded-full bg-[#E6F7EF] dark:bg-[#00A859]/20 text-[#00A859] font-bold text-[11px] border border-[#00A859]/20">
+                                    {count} {t('common.items_short')}
+                                  </span>
+                                </td>
+                                <td className="py-3 px-4 text-right">
+                                  <div className="flex items-center justify-end gap-1.5">
+                                    <button
+                                      type="button"
+                                      onClick={() => openEditCategory(cat)}
+                                      className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-[#E6F7EF] text-gray-600 hover:text-[#00A859] flex items-center justify-center transition-colors cursor-pointer"
+                                      title="Edit"
+                                    >
+                                      <Edit2 className="w-3.5 h-3.5" />
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setCategoryToDelete(cat)}
+                                      className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-600 flex items-center justify-center transition-colors cursor-pointer"
+                                      title="Delete"
+                                    >
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </Card>
             </div>
           )}
@@ -513,77 +548,108 @@ export function AdminCatalogPage() {
           {activeTab === 'brands' && (
             <div className="space-y-4">
               {/* Brand Search Filter */}
-              <div className="max-w-md">
-                <Input
-                  placeholder={t('admin.search_brands_placeholder')}
-                  value={brandSearch}
-                  onChange={(e) => setBrandSearch(e.target.value)}
-                  icon={Search}
-                />
-              </div>
-
-              <Card className="p-0 border-slate-200/80 dark:border-slate-800 overflow-hidden shadow-xs">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-50 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
-                      <tr>
-                        <th className="py-3.5 px-4 font-bold">{t('admin.brand_name_col')}</th>
-                        <th className="py-3.5 px-4 font-bold">{t('admin.slug_label')}</th>
-                        <th className="py-3.5 px-4 font-bold">{t('admin.products_count_col')}</th>
-                        <th className="py-3.5 px-4 font-bold text-right">{t('admin.actions_col')}</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
-                      {filteredBrands.length === 0 ? (
-                        <tr>
-                          <td colSpan="4" className="py-8 text-center text-slate-400">
-                            {t('admin.brands_not_found')}
-                          </td>
-                        </tr>
-                      ) : (
-                        filteredBrands.map((b) => {
-                          const count = getBrandProductCount(b.name);
-                          return (
-                            <tr
-                              key={b.id || b.slug || b.name}
-                              className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
-                            >
-                              <td className="py-3 px-4 font-bold text-slate-900 dark:text-white">
-                                {b.name}
-                              </td>
-                              <td className="py-3 px-4 font-mono text-[11px] text-slate-400">
-                                {b.slug || b.id}
-                              </td>
-                              <td className="py-3 px-4">
-                                <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-bold text-[11px] border border-blue-200 dark:border-blue-900">
-                                  {count} {t('common.items_short')}
-                                </span>
-                              </td>
-                              <td className="py-3 px-4 text-right">
-                                <div className="flex items-center justify-end gap-1.5">
-                                  <Button
-                                    variant="ghost"
-                                    size="xs"
-                                    icon={Edit2}
-                                    onClick={() => openEditBrand(b)}
-                                    className="text-neutral-600 hover:text-brand-600 dark:hover:text-brand-400"
-                                  />
-                                  <Button
-                                    variant="ghost"
-                                    size="xs"
-                                    icon={Trash2}
-                                    onClick={() => setBrandToDelete(b)}
-                                    className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/40"
-                                  />
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        })
-                      )}
-                    </tbody>
-                  </table>
+              {brands.length > 0 && (
+                <div className="max-w-md">
+                  <Input
+                    placeholder={t('admin.search_brands_placeholder')}
+                    value={brandSearch}
+                    onChange={(e) => setBrandSearch(e.target.value)}
+                    icon={Search}
+                  />
                 </div>
+              )}
+
+              <Card className="p-0 border-gray-150 dark:border-[#2A2E3B] rounded-2xl overflow-hidden shadow-2xs">
+                {brands.length === 0 ? (
+                  <div className="py-16 text-center flex flex-col items-center justify-center space-y-3">
+                    <div className="w-14 h-14 rounded-2xl bg-[#E6F7EF] dark:bg-[#00A859]/15 text-[#00A859] flex items-center justify-center shadow-xs">
+                      <Building2 className="w-7 h-7" />
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-base font-bold text-gray-900 dark:text-white">
+                        {language === 'ru' ? 'Бренды еще не добавлены' : 'Brendlar hali qo‘shilmagan'}
+                      </h3>
+                      <p className="text-xs text-gray-500 max-w-sm">
+                        {language === 'ru'
+                          ? 'Добавьте бренды производителей для удобной фильтрации товаров'
+                          : 'Mahsulotlar filtratsiyasi uchun birinchi brendni qo‘shing'}
+                      </p>
+                    </div>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      icon={PlusCircle}
+                      onClick={openCreateBrand}
+                      className="font-bold shadow-xs mt-2"
+                    >
+                      {t('admin.add_brand_btn')}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-[#F8F9FA] dark:bg-[#15171D] text-gray-400 font-bold uppercase tracking-wider text-[10px] border-b border-gray-150 dark:border-[#2A2E3B]">
+                        <tr>
+                          <th className="py-3 px-4">{t('admin.brand_name_col')}</th>
+                          <th className="py-3 px-4">{t('admin.slug_label')}</th>
+                          <th className="py-3 px-4">{t('admin.products_count_col')}</th>
+                          <th className="py-3 px-4 text-right">{t('admin.actions_col')}</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100 dark:divide-[#2A2E3B] font-medium">
+                        {filteredBrands.length === 0 ? (
+                          <tr>
+                            <td colSpan="4" className="py-8 text-center text-gray-400">
+                              {t('admin.brands_not_found')}
+                            </td>
+                          </tr>
+                        ) : (
+                          filteredBrands.map((b) => {
+                            const count = getBrandProductCount(b.name);
+                            return (
+                              <tr
+                                key={b.id || b.slug || b.name}
+                                className="hover:bg-emerald-50/30 dark:hover:bg-[#1E212B] transition-colors"
+                              >
+                                <td className="py-3 px-4 font-bold text-gray-900 dark:text-white">
+                                  {b.name}
+                                </td>
+                                <td className="py-3 px-4 font-mono text-[11px] text-gray-400">
+                                  {b.slug || b.id}
+                                </td>
+                                <td className="py-3 px-4">
+                                  <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-bold text-[11px] border border-blue-200 dark:border-blue-900">
+                                    {count} {t('common.items_short')}
+                                  </span>
+                                </td>
+                                <td className="py-3 px-4 text-right">
+                                  <div className="flex items-center justify-end gap-1.5">
+                                    <button
+                                      type="button"
+                                      onClick={() => openEditBrand(b)}
+                                      className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-[#E6F7EF] text-gray-600 hover:text-[#00A859] flex items-center justify-center transition-colors cursor-pointer"
+                                      title="Edit"
+                                    >
+                                      <Edit2 className="w-3.5 h-3.5" />
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setBrandToDelete(b)}
+                                      className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-600 flex items-center justify-center transition-colors cursor-pointer"
+                                      title="Delete"
+                                    >
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </Card>
             </div>
           )}
@@ -592,95 +658,126 @@ export function AdminCatalogPage() {
           {activeTab === 'models' && (
             <div className="space-y-4">
               {/* Models Search & Filter */}
-              <Card className="p-4 sm:p-5 border-slate-200/80 dark:border-slate-800 space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <Input
-                    placeholder={t('admin.search_models_placeholder')}
-                    value={modelSearch}
-                    onChange={(e) => setModelSearch(e.target.value)}
-                    icon={Search}
-                  />
+              {models.length > 0 && (
+                <Card className="p-4 border-gray-150 dark:border-[#2A2E3B] rounded-2xl shadow-2xs space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Input
+                      placeholder={t('admin.search_models_placeholder')}
+                      value={modelSearch}
+                      onChange={(e) => setModelSearch(e.target.value)}
+                      icon={Search}
+                    />
 
-                  <Select
-                    value={modelSelectedBrand}
-                    onChange={(e) => setModelSelectedBrand(e.target.value)}
-                    options={[
-                      { value: 'all', label: t('admin.all_brands_filter') },
-                      ...brands.map((b) => ({ value: b.name, label: b.name }))
-                    ]}
-                  />
-                </div>
-              </Card>
+                    <Select
+                      value={modelSelectedBrand}
+                      onChange={(e) => setModelSelectedBrand(e.target.value)}
+                      options={[
+                        { value: 'all', label: t('admin.all_brands_filter') },
+                        ...brands.map((b) => ({ value: b.name, label: b.name }))
+                      ]}
+                    />
+                  </div>
+                </Card>
+              )}
 
-              <Card className="p-0 border-slate-200/80 dark:border-slate-800 overflow-hidden shadow-xs">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-50 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
-                      <tr>
-                        <th className="py-3.5 px-4 font-bold">{t('admin.brand_col')}</th>
-                        <th className="py-3.5 px-4 font-bold">{t('admin.model_name_col')}</th>
-                        <th className="py-3.5 px-4 font-bold">{t('admin.slug_label')}</th>
-                        <th className="py-3.5 px-4 font-bold">{t('admin.release_year_col')}</th>
-                        <th className="py-3.5 px-4 font-bold">{t('admin.badges_col')}</th>
-                        <th className="py-3.5 px-4 font-bold text-right">{t('admin.actions_col')}</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
-                      {filteredModels.length === 0 ? (
+              <Card className="p-0 border-gray-150 dark:border-[#2A2E3B] rounded-2xl overflow-hidden shadow-2xs">
+                {models.length === 0 ? (
+                  <div className="py-16 text-center flex flex-col items-center justify-center space-y-3">
+                    <div className="w-14 h-14 rounded-2xl bg-[#E6F7EF] dark:bg-[#00A859]/15 text-[#00A859] flex items-center justify-center shadow-xs">
+                      <Smartphone className="w-7 h-7" />
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-base font-bold text-gray-900 dark:text-white">
+                        {language === 'ru' ? 'Модели телефонов еще не добавлены' : 'Telefon modellari hali qo‘shilmagan'}
+                      </h3>
+                      <p className="text-xs text-gray-500 max-w-sm">
+                        {language === 'ru'
+                          ? 'Добавьте поддерживаемые модели телефонов для фильтрации совместимости чехлов и стекол'
+                          : 'G‘ilof va oynalar mosligini tekshirish uchun telefon modellarini qo‘shing'}
+                      </p>
+                    </div>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      icon={PlusCircle}
+                      onClick={openCreateModel}
+                      className="font-bold shadow-xs mt-2"
+                    >
+                      {t('admin.add_model_btn')}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-[#F8F9FA] dark:bg-[#15171D] text-gray-400 font-bold uppercase tracking-wider text-[10px] border-b border-gray-150 dark:border-[#2A2E3B]">
                         <tr>
-                          <td colSpan="6" className="py-8 text-center text-slate-400">
-                            {t('admin.models_not_found')}
-                          </td>
+                          <th className="py-3 px-4">{t('admin.brand_col')}</th>
+                          <th className="py-3 px-4">{t('admin.model_name_col')}</th>
+                          <th className="py-3 px-4">{t('admin.slug_label')}</th>
+                          <th className="py-3 px-4">{t('admin.release_year_col')}</th>
+                          <th className="py-3 px-4">{t('admin.badges_col')}</th>
+                          <th className="py-3 px-4 text-right">{t('admin.actions_col')}</th>
                         </tr>
-                      ) : (
-                        filteredModels.map((m) => (
-                          <tr
-                            key={m.id}
-                            className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
-                          >
-                            <td className="py-3 px-4 font-bold text-slate-900 dark:text-white">
-                              {m.brand}
-                            </td>
-                            <td className="py-3 px-4 font-bold text-slate-800 dark:text-slate-200">
-                              {m.name}
-                            </td>
-                            <td className="py-3 px-4 font-mono text-[11px] text-slate-400">
-                              {m.id}
-                            </td>
-                            <td className="py-3 px-4 text-slate-500">
-                              {m.releaseYear || '—'}
-                            </td>
-                            <td className="py-3 px-4">
-                              {m.popular && (
-                                <Badge variant="warning" size="sm" icon={Sparkles}>
-                                  POPULAR
-                                </Badge>
-                              )}
-                            </td>
-                            <td className="py-3 px-4 text-right">
-                              <div className="flex items-center justify-end gap-1.5">
-                                <Button
-                                    variant="ghost"
-                                    size="xs"
-                                    icon={Edit2}
-                                    onClick={() => openEditModel(m)}
-                                    className="text-neutral-600 hover:text-brand-600 dark:hover:text-brand-400"
-                                  />
-                                  <Button
-                                    variant="ghost"
-                                    size="xs"
-                                    icon={Trash2}
-                                    onClick={() => setModelToDelete(m)}
-                                    className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/40"
-                                  />
-                              </div>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100 dark:divide-[#2A2E3B] font-medium">
+                        {filteredModels.length === 0 ? (
+                          <tr>
+                            <td colSpan="6" className="py-8 text-center text-gray-400">
+                              {t('admin.models_not_found')}
                             </td>
                           </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                        ) : (
+                          filteredModels.map((m) => (
+                            <tr
+                              key={m.id}
+                              className="hover:bg-emerald-50/30 dark:hover:bg-[#1E212B] transition-colors"
+                            >
+                              <td className="py-3 px-4 font-bold text-gray-900 dark:text-white">
+                                {m.brand}
+                              </td>
+                              <td className="py-3 px-4 font-bold text-gray-800 dark:text-gray-200">
+                                {m.name}
+                              </td>
+                              <td className="py-3 px-4 font-mono text-[11px] text-gray-400">
+                                {m.id}
+                              </td>
+                              <td className="py-3 px-4 text-gray-500">
+                                {m.releaseYear || m.release_year || '—'}
+                              </td>
+                              <td className="py-3 px-4">
+                                {Boolean(m.popular) && (
+                                  <span className="px-2 py-0.5 rounded-md bg-[#E6F7EF] dark:bg-[#00A859]/20 text-[#00A859] font-bold text-[10px]">
+                                    {t('admin.popular_badge')}
+                                  </span>
+                                )}
+                              </td>
+                              <td className="py-3 px-4 text-right">
+                                <div className="flex items-center justify-end gap-1.5">
+                                  <button
+                                    type="button"
+                                    onClick={() => openEditModel(m)}
+                                    className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-[#E6F7EF] text-gray-600 hover:text-[#00A859] flex items-center justify-center transition-colors cursor-pointer"
+                                    title="Edit"
+                                  >
+                                    <Edit2 className="w-3.5 h-3.5" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setModelToDelete(m)}
+                                    className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-600 flex items-center justify-center transition-colors cursor-pointer"
+                                    title="Delete"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </Card>
             </div>
           )}

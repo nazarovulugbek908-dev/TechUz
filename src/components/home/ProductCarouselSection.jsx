@@ -61,6 +61,10 @@ export function ProductCarouselSection({
     { id: 'in_stock', label: t('home.tab_in_stock') }
   ];
 
+  if (!loading && products.length === 0) {
+    return null;
+  }
+
   return (
     <section className={cn('max-w-7xl mx-auto px-4 sm:px-6 space-y-4', className)}>
       {/* Header Row */}
@@ -71,7 +75,7 @@ export function ProductCarouselSection({
               {title}
             </h2>
             {category && category !== 'smartphones' && hasSelectedModel && (
-              <span className="hidden sm:inline-flex items-center text-[11px] font-semibold px-2 py-0.5 rounded bg-[#EEEEFF] dark:bg-[#5B5BD6]/15 text-[#5B5BD6] dark:text-[#A5A5F5]">
+              <span className="hidden sm:inline-flex items-center text-[11px] font-semibold px-2 py-0.5 rounded bg-[#E6F7EF] dark:bg-[#00A859]/15 text-[#00A859] dark:text-[#A5A5F5]">
                 {selectedModel.name}
               </span>
             )}
@@ -106,7 +110,7 @@ export function ProductCarouselSection({
           <div className="flex items-center gap-2">
             <Link
               to={viewAllLink}
-              className="text-xs font-semibold text-[#5B5BD6] hover:text-[#4949BC] flex items-center gap-1 shrink-0"
+              className="text-xs font-semibold text-[#00A859] hover:text-[#00924C] flex items-center gap-1 shrink-0"
             >
               <span>{t('home.view_all')}</span>
               <ArrowRight className="w-3.5 h-3.5" />

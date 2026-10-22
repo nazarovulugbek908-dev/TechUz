@@ -78,7 +78,7 @@ export function AccountPage() {
       {/* Profile Header Card */}
       <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-8 border border-[#E6E8EE] dark:border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-xl bg-[#5B5BD6] text-white font-extrabold text-2xl flex items-center justify-center shadow-xs">
+          <div className="w-16 h-16 rounded-xl bg-[#00A859] text-white font-extrabold text-2xl flex items-center justify-center shadow-xs">
             {user?.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'}
           </div>
           <div>
@@ -125,7 +125,7 @@ export function AccountPage() {
         {/* Left Quick Summary Info */}
         <Card className="p-6 space-y-6 h-fit border border-[#E6E8EE] dark:border-slate-800">
           <h2 className="text-base font-bold text-[#17191F] dark:text-white flex items-center gap-2">
-            <User className="w-4 h-4 text-[#5B5BD6]" />
+            <User className="w-4 h-4 text-[#00A859]" />
             {t('account.personal_info')}
           </h2>
 
@@ -148,9 +148,9 @@ export function AccountPage() {
 
           <div className="pt-2">
             <Link to="/account/orders" className="block">
-              <div className="p-4 rounded-xl bg-[#EEEEFF] dark:bg-slate-800 border border-[#E6E8EE] dark:border-slate-700 hover:border-[#5B5BD6] transition-colors flex items-center justify-between">
+              <div className="p-4 rounded-xl bg-[#E6F7EF] dark:bg-slate-800 border border-[#E6E8EE] dark:border-slate-700 hover:border-[#00A859] transition-colors flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Package className="w-5 h-5 text-[#5B5BD6]" />
+                  <Package className="w-5 h-5 text-[#00A859]" />
                   <div>
                     <p className="font-bold text-xs text-[#17191F] dark:text-white">{t('account.view_order_history')}</p>
                     <p className="text-[11px] text-[#737985]">{t('account.track_and_manage_orders')}</p>

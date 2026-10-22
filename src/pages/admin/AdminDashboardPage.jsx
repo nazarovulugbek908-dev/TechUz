@@ -156,7 +156,7 @@ export function AdminDashboardPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-xl border border-[#E6E8EE] dark:border-slate-800 shadow-xs">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#EEEEFF] dark:bg-slate-800 text-[#5B5BD6] text-[10px] font-bold uppercase tracking-wider border border-[#5B5BD6]/20 flex items-center gap-1">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#E6F7EF] dark:bg-slate-800 text-[#00A859] text-[10px] font-bold uppercase tracking-wider border border-[#00A859]/20 flex items-center gap-1">
               TechUz Business Cloud
             </span>
           </div>
@@ -170,12 +170,12 @@ export function AdminDashboardPage() {
 
         {/* Dynamic Date & Time Display */}
         <div className="flex items-center gap-3 bg-[#F7F8FA] dark:bg-slate-800/60 border border-[#E6E8EE] dark:border-slate-700/60 px-4 py-2.5 rounded-xl text-xs font-semibold shrink-0">
-          <Calendar className="w-4 h-4 text-[#5B5BD6]" />
+          <Calendar className="w-4 h-4 text-[#00A859]" />
           <div className="text-left">
             <p className="text-[#17191F] dark:text-white capitalize leading-tight">
               {formattedLiveDate}
             </p>
-            <p className="text-[11px] text-[#5B5BD6] font-mono mt-0.5 font-bold flex items-center gap-1">
+            <p className="text-[11px] text-[#00A859] font-mono mt-0.5 font-bold flex items-center gap-1">
               <Clock className="w-3 h-3" />
               {formattedLiveTime}
             </p>
@@ -191,7 +191,7 @@ export function AdminDashboardPage() {
             <span className="text-xs font-semibold text-[#737985]">
               {t('admin.stats_total_orders')}
             </span>
-            <div className="w-10 h-10 rounded-xl bg-[#EEEEFF] dark:bg-slate-800 text-[#5B5BD6] flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl bg-[#E6F7EF] dark:bg-slate-800 text-[#00A859] flex items-center justify-center font-bold">
               <ShoppingCart className="w-5 h-5" />
             </div>
           </div>
@@ -208,7 +208,7 @@ export function AdminDashboardPage() {
             </span>
           </div>
           <div className="h-1 rounded-full bg-slate-100 dark:bg-slate-800 mt-2 overflow-hidden">
-            <div className="h-full bg-[#5B5BD6] rounded-full w-3/4" />
+            <div className="h-full bg-[#00A859] rounded-full w-3/4" />
           </div>
         </Card>
 
@@ -226,7 +226,7 @@ export function AdminDashboardPage() {
             {stats.totalProducts}
           </h3>
           <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E6E8EE] dark:border-slate-800">
-            <span className="text-[11px] font-bold text-[#5B5BD6] flex items-center gap-0.5">
+            <span className="text-[11px] font-bold text-[#00A859] flex items-center gap-0.5">
               <CheckCircle2 className="w-3 h-3" />
               {stats.totalProducts - stats.lowStockCount} {t('admin.active_label')}
             </span>
@@ -272,11 +272,11 @@ export function AdminDashboardPage() {
             <span className="text-xs font-semibold text-[#737985]">
               {t('admin.stats_revenue')}
             </span>
-            <div className="w-10 h-10 rounded-xl bg-[#EEEEFF] dark:bg-slate-800 text-[#5B5BD6] flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl bg-[#E6F7EF] dark:bg-slate-800 text-[#00A859] flex items-center justify-center font-bold">
               <DollarSign className="w-5 h-5" />
             </div>
           </div>
-          <h3 className="text-xl sm:text-2xl font-extrabold text-[#5B5BD6] mt-2 whitespace-nowrap">
+          <h3 className="text-xl sm:text-2xl font-extrabold text-[#00A859] mt-2 whitespace-nowrap">
             {formatUzbekCurrency(stats.totalRevenue, language)}
           </h3>
           <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E6E8EE] dark:border-slate-800">
@@ -289,7 +289,7 @@ export function AdminDashboardPage() {
             </span>
           </div>
           <div className="h-1 rounded-full bg-slate-100 dark:bg-slate-800 mt-2 overflow-hidden">
-            <div className="h-full bg-[#5B5BD6] rounded-full w-5/6" />
+            <div className="h-full bg-[#00A859] rounded-full w-5/6" />
           </div>
         </Card>
       </div>
@@ -308,7 +308,7 @@ export function AdminDashboardPage() {
 
           <Link
             to="/admin/orders"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5B5BD6] hover:underline transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#00A859] hover:underline transition-colors"
           >
             <span>{t('common.view_all')}</span>
             <ChevronRight className="w-4 h-4" />
@@ -385,7 +385,7 @@ export function AdminDashboardPage() {
                       </td>
 
                       {/* Summa */}
-                      <td className="py-3 px-4 font-bold text-[#5B5BD6] whitespace-nowrap">
+                      <td className="py-3 px-4 font-bold text-[#00A859] whitespace-nowrap">
                         {formatUzbekCurrency(ord.total, language)}
                       </td>
 
@@ -404,7 +404,7 @@ export function AdminDashboardPage() {
                         <Link
                           to="/admin/orders"
                           onClick={(e) => e.stopPropagation()}
-                          className="font-semibold text-xs text-[#5B5BD6] hover:underline"
+                          className="font-semibold text-xs text-[#00A859] hover:underline"
                         >
                           {t('common.view_all')}
                         </Link>

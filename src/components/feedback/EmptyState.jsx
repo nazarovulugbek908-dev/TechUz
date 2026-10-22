@@ -18,7 +18,7 @@ export function EmptyState({
         className
       )}
     >
-      <div className="w-12 h-12 rounded-xl bg-[#EEEEFF] dark:bg-[#5B5BD6]/15 text-[#5B5BD6] flex items-center justify-center mb-3.5">
+      <div className="w-12 h-12 rounded-xl bg-[#E6F7EF] dark:bg-[#00A859]/15 text-[#00A859] flex items-center justify-center mb-3.5">
         <Icon className="w-6 h-6" />
       </div>
       <h4 className="text-base font-semibold text-[#17191F] dark:text-[#F4F7FC] mb-1">

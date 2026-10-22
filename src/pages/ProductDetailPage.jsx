@@ -169,7 +169,7 @@ export function ProductDetailPage() {
                   className={clsx(
                     'w-16 h-16 rounded-xl bg-white dark:bg-slate-900 border p-1.5 shrink-0 transition-all cursor-pointer',
                     selectedImageIndex === idx
-                      ? 'border-[#5B5BD6] ring-2 ring-[#5B5BD6]/20 shadow-sm'
+                      ? 'border-[#00A859] ring-2 ring-[#00A859]/20 shadow-sm'
                       : 'border-[#E6E8EE] dark:border-slate-800 hover:border-slate-300'
                   )}
                 >
@@ -192,7 +192,7 @@ export function ProductDetailPage() {
         <div className="space-y-6">
           {/* Brand & Badges */}
           <div className="flex items-center justify-between gap-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#5B5BD6]">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#00A859]">
               {product.brand}
             </span>
             <div className="flex items-center gap-2">
@@ -224,7 +224,7 @@ export function ProductDetailPage() {
           {/* Pricing */}
           <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-[#E6E8EE] dark:border-slate-800 space-y-1 shadow-sm">
             <div className="flex items-baseline gap-3">
-              <span className="text-3xl font-extrabold text-[#5B5BD6]">
+              <span className="text-3xl font-extrabold text-[#00A859]">
                 {formatUzbekCurrency(product.price, language)}
               </span>
               {product.oldPrice && product.oldPrice > product.price && (
@@ -263,7 +263,7 @@ export function ProductDetailPage() {
           {product.colors && product.colors.length > 0 && (
             <div className="space-y-2">
               <label className="text-xs font-bold text-[#17191F] dark:text-slate-300 block">
-                {t('product.color')}: <span className="text-[#5B5BD6] font-semibold">{selectedColor}</span>
+                {t('product.color')}: <span className="text-[#00A859] font-semibold">{selectedColor}</span>
               </label>
               <div className="flex items-center gap-2 flex-wrap">
                 {product.colors.map((c, idx) => {
@@ -277,7 +277,7 @@ export function ProductDetailPage() {
                       className={clsx(
                         'px-3.5 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer',
                         isSelected
-                          ? 'bg-[#5B5BD6] text-white border-[#5B5BD6] shadow-sm'
+                          ? 'bg-[#00A859] text-white border-[#00A859] shadow-sm'
                           : 'bg-white dark:bg-slate-900 border-[#E6E8EE] dark:border-slate-800 text-[#17191F] dark:text-slate-300 hover:border-slate-400'
                       )}
                     >
@@ -293,7 +293,7 @@ export function ProductDetailPage() {
           {product.storageOptions && product.storageOptions.length > 0 && (
             <div className="space-y-2">
               <label className="text-xs font-bold text-[#17191F] dark:text-slate-300 block">
-                {t('product.storage')}: <span className="text-[#5B5BD6] font-semibold">{selectedStorage}</span>
+                {t('product.storage')}: <span className="text-[#00A859] font-semibold">{selectedStorage}</span>
               </label>
               <div className="flex items-center gap-2 flex-wrap">
                 {product.storageOptions.map((s, idx) => {
@@ -306,7 +306,7 @@ export function ProductDetailPage() {
                       className={clsx(
                         'px-3.5 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer',
                         isSelected
-                          ? 'bg-[#5B5BD6] text-white border-[#5B5BD6] shadow-sm'
+                          ? 'bg-[#00A859] text-white border-[#00A859] shadow-sm'
                           : 'bg-white dark:bg-slate-900 border-[#E6E8EE] dark:border-slate-800 text-[#17191F] dark:text-slate-300 hover:border-slate-400'
                       )}
                     >
@@ -383,7 +383,7 @@ export function ProductDetailPage() {
           {/* Value Props Strip */}
           <div className="grid grid-cols-3 gap-2 pt-4 border-t border-[#E6E8EE] dark:border-slate-800 text-[11px] text-[#737985]">
             <div className="flex items-center gap-2">
-              <Truck className="w-4 h-4 text-[#5B5BD6] shrink-0" />
+              <Truck className="w-4 h-4 text-[#00A859] shrink-0" />
               <span>{t('benefits.delivery_title')}</span>
             </div>
             <div className="flex items-center gap-2">
@@ -391,7 +391,7 @@ export function ProductDetailPage() {
               <span>{t('benefits.warranty_title')}</span>
             </div>
             <div className="flex items-center gap-2">
-              <RotateCcw className="w-4 h-4 text-[#5B5BD6] shrink-0" />
+              <RotateCcw className="w-4 h-4 text-[#00A859] shrink-0" />
               <span>{t('benefits.returns_title')}</span>
             </div>
           </div>
@@ -407,7 +407,7 @@ export function ProductDetailPage() {
             className={clsx(
               'font-semibold text-sm pb-2.5 border-b-2 -mb-3.5 transition-colors cursor-pointer',
               activeTab === 'description'
-                ? 'border-[#5B5BD6] text-[#5B5BD6]'
+                ? 'border-[#00A859] text-[#00A859]'
                 : 'border-transparent text-[#737985] hover:text-[#17191F] dark:hover:text-white'
             )}
           >
@@ -419,7 +419,7 @@ export function ProductDetailPage() {
             className={clsx(
               'font-semibold text-sm pb-2.5 border-b-2 -mb-3.5 transition-colors cursor-pointer',
               activeTab === 'specifications'
-                ? 'border-[#5B5BD6] text-[#5B5BD6]'
+                ? 'border-[#00A859] text-[#00A859]'
                 : 'border-transparent text-[#737985] hover:text-[#17191F] dark:hover:text-white'
             )}
           >

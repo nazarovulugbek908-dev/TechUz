@@ -59,7 +59,7 @@ export function DealsSection({ onQuickView, className = '' }) {
           <div className="flex items-center gap-2">
             <Link
               to="/shop?onSale=true"
-              className="text-xs font-semibold text-[#5B5BD6] hover:text-[#4949BC] flex items-center gap-1 shrink-0"
+              className="text-xs font-semibold text-[#00A859] hover:text-[#00924C] flex items-center gap-1 shrink-0"
             >
               <span>{t('home.view_all')}</span>
               <ArrowRight className="w-3.5 h-3.5" />

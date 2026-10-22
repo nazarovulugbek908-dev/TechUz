@@ -13,7 +13,7 @@ export function InfoTilesSection({ className = '' }) {
         {/* Tile 1: Blog & Knowledge Base */}
         <div className="bg-white dark:bg-[#1D2028] text-[#17191F] dark:text-[#F4F7FC] rounded-xl p-6 flex flex-col justify-between space-y-4 shadow-xs border border-[#E6E8EE] dark:border-[#2A2E3B]">
           <div className="space-y-2">
-            <div className="w-10 h-10 rounded-lg bg-[#EEEEFF] dark:bg-[#5B5BD6]/15 text-[#5B5BD6] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-[#E6F7EF] dark:bg-[#00A859]/15 text-[#00A859] flex items-center justify-center">
               <BookOpen className="w-5 h-5" />
             </div>
             <h3 className="text-base sm:text-lg font-bold tracking-tight">
@@ -26,7 +26,7 @@ export function InfoTilesSection({ className = '' }) {
 
           <Link
             to="/shop"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#5B5BD6] hover:text-[#4949BC] transition-colors pt-2"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#00A859] hover:text-[#00924C] transition-colors pt-2"
           >
             <span>{t('home.blog_tile_btn')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -49,7 +49,7 @@ export function InfoTilesSection({ className = '' }) {
 
           <Link
             to="/shop"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#5B5BD6] hover:text-[#4949BC] transition-colors pt-2"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#00A859] hover:text-[#00924C] transition-colors pt-2"
           >
             <span>{t('home.help_tile_btn')}</span>
             <ArrowRight className="w-3.5 h-3.5" />

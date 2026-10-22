@@ -139,7 +139,7 @@ export function ResetPasswordPage() {
                 type="submit"
                 variant="primary"
                 size="lg"
-                className="w-full mt-2 font-bold cursor-pointer shadow-lg shadow-[#5B5BD6]/20 transition-all"
+                className="w-full mt-2 font-bold cursor-pointer shadow-lg shadow-[#00A859]/20 transition-all"
                 disabled={loading || !password || !confirmPassword || password.length < 6 || password !== confirmPassword}
               >
                 {loading ? t('common.loading') : t('auth.reset_submit')}
@@ -149,7 +149,7 @@ export function ResetPasswordPage() {
             <div className="pt-2 text-center text-xs text-[#737985] border-t border-[#2A2E3B]">
               <Link
                 to="/login"
-                className="font-bold text-[#5B5BD6] hover:text-[#4949BC] hover:underline inline-flex items-center gap-1 transition-colors"
+                className="font-bold text-[#00A859] hover:text-[#00924C] hover:underline inline-flex items-center gap-1 transition-colors"
               >
                 <span>{t('auth.back_to_login')}</span>
               </Link>

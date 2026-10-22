@@ -35,11 +35,11 @@ export function MobileHeader({ onOpenDrawer, onOpenCart }) {
           </button>
 
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-md bg-[#5B5BD6] text-white flex items-center justify-center font-bold text-xs">
+            <div className="w-7 h-7 rounded-md bg-[#00A859] text-white flex items-center justify-center font-bold text-xs">
               T
             </div>
             <span className="text-lg font-bold tracking-tight text-[#17191F] dark:text-white">
-              Tech<span className="text-[#5B5BD6]">Uz</span>
+              Tech<span className="text-[#00A859]">Uz</span>
             </span>
           </Link>
         </div>
@@ -61,9 +61,9 @@ export function MobileHeader({ onOpenDrawer, onOpenCart }) {
             className="relative p-2 rounded-lg bg-[#F7F8FA] dark:bg-[#1D2028] border border-[#E6E8EE] dark:border-[#2A2E3B] text-[#17191F] dark:text-white transition-colors cursor-pointer"
             aria-label={t('nav.cart')}
           >
-            <ShoppingBag className="w-4 h-4 text-[#5B5BD6]" />
+            <ShoppingBag className="w-4 h-4 text-[#00A859]" />
             {totalCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#5B5BD6] text-white text-[9px] font-bold flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#00A859] text-white text-[9px] font-bold flex items-center justify-center">
                 {totalCount}
               </span>
             )}
@@ -83,11 +83,11 @@ export function MobileHeader({ onOpenDrawer, onOpenCart }) {
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t('nav.search_placeholder')}
             autoFocus
-            className="flex-1 bg-white dark:bg-[#15171D] border border-[#E6E8EE] dark:border-[#2A2E3B] rounded-lg px-3 py-1.5 text-sm text-[#17191F] dark:text-white placeholder:text-[#737985]/70 outline-none focus:border-[#5B5BD6]"
+            className="flex-1 bg-white dark:bg-[#15171D] border border-[#E6E8EE] dark:border-[#2A2E3B] rounded-lg px-3 py-1.5 text-sm text-[#17191F] dark:text-white placeholder:text-[#737985]/70 outline-none focus:border-[#00A859]"
           />
           <button
             type="submit"
-            className="px-3 py-1.5 rounded-lg bg-[#5B5BD6] text-white text-xs font-semibold cursor-pointer shrink-0"
+            className="px-3 py-1.5 rounded-lg bg-[#00A859] text-white text-xs font-semibold cursor-pointer shrink-0"
           >
             {t('catalog.search_button')}
           </button>

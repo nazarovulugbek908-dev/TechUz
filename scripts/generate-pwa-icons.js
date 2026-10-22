@@ -75,11 +75,11 @@ function standardIconShader(x, y, w, h) {
   const ny = (y / h) * 2 - 1; // -1 to 1
   const r = Math.sqrt(nx * nx + ny * ny);
 
-  // Background Gradient (Orange #FF7A00 to #FF5500)
+  // Background Gradient (Brand Green #00B862 to #00924C)
   const gradT = (ny + 1) / 2;
-  const bgR = 255;
-  const bgG = 122 - gradT * 40; // 122 to 82
-  const bgB = 0;
+  const bgR = Math.round(0 + gradT * 0);
+  const bgG = Math.round(184 - gradT * 38); // 184 to 146
+  const bgB = Math.round(98 - gradT * 22);  // 98 to 76
 
   // Squircle distance formula: (|x|^4 + |y|^4)^(1/4)
   const squircle = Math.pow(Math.pow(Math.abs(nx), 4) + Math.pow(Math.abs(ny), 4), 0.25);
@@ -118,14 +118,14 @@ function standardIconShader(x, y, w, h) {
   if (isPhoneBody) {
     if (inScreen) {
       if (isTTop || isTStem) {
-        // Vibrant Orange Glyph inside white screen
-        return [255, 122, 0, 255];
+        // Vibrant Green Glyph (#00A859) inside screen
+        return [0, 168, 89, 255];
       }
-      // Screen background: crisp white/light
-      return [255, 255, 255, 255];
+      // Screen background: sleek navy #0F172A
+      return [15, 23, 42, 255];
     }
     if (isHomeBtn || isSpeaker) {
-      return [255, 122, 0, 255];
+      return [226, 232, 240, 255];
     }
     // Phone outer bezel: Solid Crisp White
     return [255, 255, 255, 255];
@@ -146,11 +146,11 @@ function maskableIconShader(x, y, w, h) {
   const nx = (x / w) * 2 - 1;
   const ny = (y / h) * 2 - 1;
 
-  // Full bleed background: Orange gradient #FF7A00 to #FF5500
+  // Full bleed background: Brand Green gradient #00B862 to #00924C
   const gradT = (ny + 1) / 2;
-  const bgR = 255;
-  const bgG = 122 - gradT * 40;
-  const bgB = 0;
+  const bgR = 0;
+  const bgG = Math.round(184 - gradT * 38);
+  const bgB = Math.round(98 - gradT * 22);
 
   // Scale down glyph to safe zone (0.75x)
   const snx = nx / 0.72;
@@ -172,12 +172,12 @@ function maskableIconShader(x, y, w, h) {
   if (isPhoneBody) {
     if (inScreen) {
       if (isTTop || isTStem) {
-        return [255, 122, 0, 255];
+        return [0, 168, 89, 255];
       }
-      return [255, 255, 255, 255];
+      return [15, 23, 42, 255];
     }
     if (isHomeBtn || isSpeaker) {
-      return [255, 122, 0, 255];
+      return [226, 232, 240, 255];
     }
     return [255, 255, 255, 255];
   }
@@ -216,14 +216,14 @@ console.log('✅ Generated public/icons/apple-touch-icon.png');
 const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
   <defs>
     <linearGradient id="techuz-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FF7A00" />
-      <stop offset="100%" stop-color="#FF5500" />
+      <stop offset="0%" stop-color="#00B862" />
+      <stop offset="100%" stop-color="#00924C" />
     </linearGradient>
   </defs>
   <rect width="512" height="512" rx="112" fill="url(#techuz-grad)" />
   <rect x="150" y="80" width="212" height="352" rx="36" fill="#FFFFFF" />
   <rect x="168" y="130" width="176" height="248" rx="16" fill="#0F172A" />
-  <path d="M200 180 H312 V210 H272 V320 H240 V210 H200 Z" fill="#FF7A00" />
+  <path d="M200 180 H312 V210 H272 V320 H240 V210 H200 Z" fill="#00A859" />
   <rect x="236" y="100" width="40" height="8" rx="4" fill="#E2E8F0" />
   <circle cx="256" cy="405" r="12" fill="#E2E8F0" />
 </svg>`;

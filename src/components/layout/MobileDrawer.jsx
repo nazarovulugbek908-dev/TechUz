@@ -35,10 +35,9 @@ export function MobileDrawer({ isOpen, onClose }) {
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('menu'); // 'menu' | 'account'
+  const { isInstallable, installPWA } = usePWAInstall();
 
   if (!isOpen) return null;
-
-  const { isInstallable, installPWA } = usePWAInstall();
 
   const categories = [
     { to: '/shop?category=smartphones', label: t('nav.smartphones'), icon: Smartphone, count: '24+' },
@@ -62,7 +61,7 @@ export function MobileDrawer({ isOpen, onClose }) {
         {/* 1. Header with User Status */}
         <div className="p-4 bg-[#17191F] text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#5B5BD6] flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-9 h-9 rounded-lg bg-[#00A859] flex items-center justify-center text-white font-bold text-sm">
               <User className="w-4 h-4" />
             </div>
             <div>
@@ -73,11 +72,11 @@ export function MobileDrawer({ isOpen, onClose }) {
                 <p className="text-sm font-semibold text-white leading-tight">{user.fullName}</p>
               ) : (
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-white">
-                  <Link to="/login" onClick={onClose} className="hover:text-[#5B5BD6]">
+                  <Link to="/login" onClick={onClose} className="hover:text-[#00A859]">
                     {t('nav.login')}
                   </Link>
                   <span className="text-[#737985]">/</span>
-                  <Link to="/register" onClick={onClose} className="hover:text-[#5B5BD6]">
+                  <Link to="/register" onClick={onClose} className="hover:text-[#00A859]">
                     {t('nav.register')}
                   </Link>
                 </div>
@@ -128,11 +127,11 @@ export function MobileDrawer({ isOpen, onClose }) {
           {/* Phone Model compatibility */}
           <div className="p-3 bg-[#F7F8FA] dark:bg-[#1D2028] rounded-lg border border-[#E6E8EE] dark:border-[#2A2E3B]">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-semibold text-[#5B5BD6] uppercase tracking-wider">
+              <span className="text-[10px] font-semibold text-[#00A859] uppercase tracking-wider">
                 {t('phone_model.my_model')}
               </span>
               {hasSelectedModel && (
-                <span className="text-[10px] bg-[#5B5BD6] text-white px-1.5 py-0.2 rounded font-semibold">
+                <span className="text-[10px] bg-[#00A859] text-white px-1.5 py-0.2 rounded font-semibold">
                   {t('home.saved_badge')}
                 </span>
               )}
@@ -175,9 +174,9 @@ export function MobileDrawer({ isOpen, onClose }) {
               <div className="pt-3 border-t border-[#E6E8EE] dark:border-[#2A2E3B] space-y-2">
                 <div className="p-2.5 bg-[#F7F8FA] dark:bg-[#1D2028] rounded-lg space-y-1.5 text-xs">
                   <div className="flex items-center gap-2 text-[#17191F] dark:text-[#F4F7FC]">
-                    <Phone className="w-3.5 h-3.5 text-[#5B5BD6]" />
+                    <Phone className="w-3.5 h-3.5 text-[#00A859]" />
                     <span>
-                      <a href="tel:+998945876472" className="font-semibold hover:text-[#5B5BD6]">
+                      <a href="tel:+998945876472" className="font-semibold hover:text-[#00A859]">
                         +998 (94) 587-64-72
                       </a>
                     </span>
@@ -187,7 +186,7 @@ export function MobileDrawer({ isOpen, onClose }) {
                     <span>{t('announcement.fast_delivery')}</span>
                   </div>
                   <div className="flex items-center gap-2 text-[#737985] dark:text-[#9CA3AF]">
-                    <ShieldCheck className="w-3.5 h-3.5 text-[#5B5BD6]" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#00A859]" />
                     <span>{t('announcement.warranty_badge')}</span>
                   </div>
                 </div>
@@ -199,7 +198,7 @@ export function MobileDrawer({ isOpen, onClose }) {
                       installPWA();
                       onClose();
                     }}
-                    className="w-full flex items-center justify-between p-2.5 rounded-lg bg-[#5B5BD6] text-white font-semibold text-xs active:scale-[0.98] transition-all cursor-pointer"
+                    className="w-full flex items-center justify-between p-2.5 rounded-lg bg-[#00A859] text-white font-semibold text-xs active:scale-[0.98] transition-all cursor-pointer"
                   >
                     <div className="flex items-center gap-2">
                       <Download className="w-3.5 h-3.5 text-white" />
@@ -254,7 +253,7 @@ export function MobileDrawer({ isOpen, onClose }) {
                   <Link
                     to="/login"
                     onClick={onClose}
-                    className="block w-full py-2 bg-[#5B5BD6] text-white text-center text-xs font-semibold rounded-lg shadow-xs"
+                    className="block w-full py-2 bg-[#00A859] text-white text-center text-xs font-semibold rounded-lg shadow-xs"
                   >
                     {t('nav.login')}
                   </Link>
@@ -278,7 +277,7 @@ export function MobileDrawer({ isOpen, onClose }) {
             onClick={toggleLanguage}
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white dark:bg-[#15171D] border border-[#E6E8EE] dark:border-[#2A2E3B] text-xs font-semibold text-[#17191F] dark:text-[#F4F7FC] cursor-pointer"
           >
-            <Globe className="w-3.5 h-3.5 text-[#5B5BD6]" />
+            <Globe className="w-3.5 h-3.5 text-[#00A859]" />
             <span>{t('nav.lang_label')}</span>
           </button>
 

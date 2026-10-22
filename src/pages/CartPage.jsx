@@ -83,10 +83,10 @@ export function CartPage() {
         {/* Left Column: Cart Items List */}
         <div className="lg:col-span-8 space-y-4">
           {/* Free Delivery Banner */}
-          <div className="p-4 bg-[#EEEEFF] dark:bg-slate-800/60 rounded-xl border border-[#E6E8EE] dark:border-slate-800 space-y-2">
+          <div className="p-4 bg-[#E6F7EF] dark:bg-slate-800/60 rounded-xl border border-[#00A859]/20 dark:border-slate-800 space-y-2">
             <div className="flex items-center justify-between text-xs sm:text-sm font-semibold">
               <div className="flex items-center gap-2 text-[#17191F] dark:text-slate-200">
-                <Truck className="w-5 h-5 text-[#5B5BD6]" />
+                <Truck className="w-5 h-5 text-[#00A859]" />
                 <span>
                   {remainingForFreeDelivery === 0
                     ? t('cart.free_delivery_achieved')
@@ -94,7 +94,7 @@ export function CartPage() {
                 </span>
               </div>
               {remainingForFreeDelivery > 0 && (
-                <span className="text-[#5B5BD6] font-bold">
+                <span className="text-[#00A859] font-bold">
                   {formatUzbekCurrency(remainingForFreeDelivery, language)}
                 </span>
               )}
@@ -102,7 +102,7 @@ export function CartPage() {
 
             <div className="w-full h-2 bg-white/80 dark:bg-slate-700/80 rounded-full overflow-hidden">
               <div
-                className="h-full bg-[#5B5BD6] rounded-full transition-all duration-300"
+                className="h-full bg-[#00A859] rounded-full transition-all duration-300"
                 style={{ width: `${freeDeliveryPercent}%` }}
               />
             </div>
@@ -129,7 +129,7 @@ export function CartPage() {
                     <div className="min-w-0 flex-1">
                       <Link
                         to={`/product/${item.slug || item.id}`}
-                        className="text-sm sm:text-base font-semibold text-[#17191F] dark:text-white hover:text-[#5B5BD6] transition-colors line-clamp-2"
+                        className="text-sm sm:text-base font-semibold text-[#17191F] dark:text-white hover:text-[#00A859] transition-colors line-clamp-2"
                       >
                         {name}
                       </Link>
@@ -144,7 +144,7 @@ export function CartPage() {
                         </div>
                       )}
 
-                      <div className="text-sm font-bold text-[#5B5BD6] mt-1.5 sm:hidden">
+                      <div className="text-sm font-bold text-[#00A859] mt-1.5 sm:hidden">
                         {formatUzbekCurrency(item.price, language)}
                       </div>
                     </div>
@@ -200,7 +200,7 @@ export function CartPage() {
           <div className="pt-4">
             <Link
               to="/shop"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-[#5B5BD6] hover:underline"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[#00A859] hover:underline"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>{t('cart.continue_shopping')}</span>
@@ -234,7 +234,7 @@ export function CartPage() {
                 <span className="text-base font-bold text-[#17191F] dark:text-white">
                   {t('cart.total')}:
                 </span>
-                <span className="text-xl font-extrabold text-[#5B5BD6]">
+                <span className="text-xl font-extrabold text-[#00A859]">
                   {formatUzbekCurrency(total, language)}
                 </span>
               </div>
@@ -255,7 +255,7 @@ export function CartPage() {
               <span>{t('home.feature_warranty_desc')}</span>
             </div>
             <div className="flex items-center gap-3 text-xs text-[#737985] dark:text-slate-400">
-              <RotateCcw className="w-4 h-4 text-[#5B5BD6] shrink-0" />
+              <RotateCcw className="w-4 h-4 text-[#00A859] shrink-0" />
               <span>14 kun ichida almashtirish kafolati</span>
             </div>
           </div>

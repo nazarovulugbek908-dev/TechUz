@@ -49,7 +49,7 @@ export const Input = forwardRef(function Input(
             'py-2',
             error
               ? 'border-[#D64545] focus:border-[#D64545] focus:ring-[#D64545]/15'
-              : 'border-[#E6E8EE] hover:border-[#D1D5DB] focus:border-[#5B5BD6] focus:ring-[#5B5BD6]/15 dark:border-[#2A2E3B] dark:hover:border-[#3B4254] dark:focus:border-[#5B5BD6]',
+              : 'border-[#E6E8EE] hover:border-[#D1D5DB] focus:border-[#00A859] focus:ring-[#00A859]/15 dark:border-[#2A2E3B] dark:hover:border-[#3B4254] dark:focus:border-[#00A859]',
             disabled && 'opacity-60 bg-[#F7F8FA] dark:bg-[#1D2028] cursor-not-allowed',
             className
           )}

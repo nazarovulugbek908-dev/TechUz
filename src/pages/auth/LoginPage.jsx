@@ -106,12 +106,12 @@ export function LoginPage() {
         {/* Mobile Header Logo & Language Switcher */}
         <div className="lg:hidden flex items-center justify-between pb-4 border-b border-[#2A2E3B]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#5B5BD6] text-white flex items-center justify-center font-bold text-sm tracking-tight shadow-sm">
+            <div className="w-8 h-8 rounded-lg bg-[#00A859] text-white flex items-center justify-center font-bold text-sm tracking-tight shadow-sm">
               T
             </div>
             <div className="flex flex-col">
               <span className="font-extrabold text-xl text-white leading-none">
-                Tech<span className="text-[#5B5BD6]">Uz</span>
+                Tech<span className="text-[#00A859]">Uz</span>
               </span>
               <span className="text-[9px] font-semibold tracking-wider uppercase text-[#737985] mt-0.5">
                 Electronics
@@ -124,7 +124,7 @@ export function LoginPage() {
               type="button"
               onClick={() => setLanguage('uz')}
               className={`px-2 py-0.5 rounded-md transition-colors ${
-                language === 'uz' ? 'bg-[#5B5BD6] text-white' : 'text-[#737985]'
+                language === 'uz' ? 'bg-[#00A859] text-white' : 'text-[#737985]'
               }`}
             >
               UZ
@@ -133,7 +133,7 @@ export function LoginPage() {
               type="button"
               onClick={() => setLanguage('ru')}
               className={`px-2 py-0.5 rounded-md transition-colors ${
-                language === 'ru' ? 'bg-[#5B5BD6] text-white' : 'text-[#737985]'
+                language === 'ru' ? 'bg-[#00A859] text-white' : 'text-[#737985]'
               }`}
             >
               RU
@@ -182,7 +182,7 @@ export function LoginPage() {
               </label>
               <Link
                 to="/forgot-password"
-                className="text-xs font-semibold text-[#5B5BD6] hover:text-[#4949BC] hover:underline transition-colors"
+                className="text-xs font-semibold text-[#00A859] hover:text-[#00924C] hover:underline transition-colors"
               >
                 {t('auth.forgot_password_link')}
               </Link>
@@ -216,7 +216,7 @@ export function LoginPage() {
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="w-4 h-4 rounded border-[#2A2E3B] bg-[#1D2028] text-[#5B5BD6] focus:ring-[#5B5BD6] focus:ring-offset-0 cursor-pointer"
+                className="w-4 h-4 rounded border-[#2A2E3B] bg-[#1D2028] text-[#00A859] focus:ring-[#00A859] focus:ring-offset-0 cursor-pointer"
               />
               <span>{t('auth.remember_me')}</span>
             </label>
@@ -227,7 +227,7 @@ export function LoginPage() {
             type="submit"
             variant="primary"
             size="lg"
-            className="w-full font-bold cursor-pointer transition-all shadow-lg shadow-[#5B5BD6]/20"
+            className="w-full font-bold cursor-pointer transition-all shadow-lg shadow-[#00A859]/20"
             disabled={loading || !identifier.trim() || !password}
           >
             {loading ? (
@@ -246,7 +246,7 @@ export function LoginPage() {
           <span>{t('auth.no_account')} </span>
           <Link
             to="/register"
-            className="font-bold text-[#5B5BD6] hover:text-[#4949BC] hover:underline inline-flex items-center gap-1 transition-colors"
+            className="font-bold text-[#00A859] hover:text-[#00924C] hover:underline inline-flex items-center gap-1 transition-colors"
           >
             <span>{t('auth.register_submit')}</span>
             <ArrowRight className="w-3.5 h-3.5" />

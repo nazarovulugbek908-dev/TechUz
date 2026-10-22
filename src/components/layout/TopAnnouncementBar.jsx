@@ -13,7 +13,7 @@ export function TopAnnouncementBar() {
         {/* Left: Concise Service Hotline & Delivery notice */}
         <div className="flex items-center gap-5 text-[11px] sm:text-xs">
           <div className="flex items-center gap-1.5 text-[#17191F] dark:text-[#F4F7FC] font-medium">
-            <Truck className="w-3.5 h-3.5 text-[#5B5BD6]" />
+            <Truck className="w-3.5 h-3.5 text-[#00A859]" />
             <span>{t('announcement.fast_delivery')}</span>
           </div>
 
@@ -22,7 +22,7 @@ export function TopAnnouncementBar() {
             <span>{t('announcement.hotline_label')}</span>
             <a
               href="tel:+998945876472"
-              className="text-[#17191F] dark:text-[#F4F7FC] hover:text-[#5B5BD6] font-semibold transition-colors"
+              className="text-[#17191F] dark:text-[#F4F7FC] hover:text-[#00A859] font-semibold transition-colors"
             >
               +998 (94) 587-64-72
             </a>
@@ -37,7 +37,7 @@ export function TopAnnouncementBar() {
             className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold text-[#17191F] dark:text-[#F4F7FC] hover:bg-[#E6E8EE]/60 dark:hover:bg-[#2A2E3B] transition-colors cursor-pointer"
             aria-label="Tilni almashtirish"
           >
-            <Globe className="w-3 h-3 text-[#5B5BD6]" />
+            <Globe className="w-3 h-3 text-[#00A859]" />
             <span>{t('nav.lang_label')}</span>
           </button>
 

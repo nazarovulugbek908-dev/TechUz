@@ -75,7 +75,7 @@ export function AccountOrdersPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#17191F] dark:text-white flex items-center gap-3">
-            <Package className="w-8 h-8 text-[#5B5BD6]" />
+            <Package className="w-8 h-8 text-[#00A859]" />
             {t('account.my_orders')}
           </h1>
           <p className="text-xs text-[#737985] dark:text-slate-400 mt-1">
@@ -142,7 +142,7 @@ export function AccountOrdersPage() {
 
                 <div className="text-right sm:text-right">
                   <span className="text-[11px] text-[#737985] block">{t('cart.total')}</span>
-                  <span className="text-lg font-extrabold text-[#5B5BD6]">
+                  <span className="text-lg font-extrabold text-[#00A859]">
                     {formatUzbekCurrency(order.total, language)}
                   </span>
                 </div>

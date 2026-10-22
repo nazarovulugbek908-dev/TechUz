@@ -12,7 +12,7 @@ export function AboutSection({ className = '' }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           <div className="lg:col-span-8 space-y-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#5B5BD6] text-white flex items-center justify-center font-bold text-xs">
+              <div className="w-8 h-8 rounded-lg bg-[#00A859] text-white flex items-center justify-center font-bold text-xs">
                 T
               </div>
               <h3 className="text-lg sm:text-xl font-bold tracking-tight text-[#17191F] dark:text-[#F4F7FC]">

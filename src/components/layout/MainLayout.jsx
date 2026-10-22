@@ -17,7 +17,7 @@ export function MainLayout() {
   const [isModelSelectorModalOpen, setIsModelSelectorModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F8FA] dark:bg-[#15171D] text-[#17191F] dark:text-[#F4F7FC] transition-colors duration-150 relative selection:bg-[#5B5BD6] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#F7F8FA] dark:bg-[#15171D] text-[#17191F] dark:text-[#F4F7FC] transition-colors duration-150 relative selection:bg-[#00A859] selection:text-white">
       {/* 1. Top Announcement Bar */}
       <TopAnnouncementBar />
 

@@ -2,13 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useCart } from '../../context/CartContext';
-import { useFavorites } from '../../context/FavoritesContext';
-import { usePhoneModel } from '../../context/PhoneModelContext';
 import { formatUzbekCurrency } from '../../utils/currency';
-import { Badge } from '../common/Badge';
-import { RatingStars } from '../common/RatingStars';
-import { QuantityCounter } from '../common/QuantityCounter';
-import { ShoppingBag, Eye, Check, X, Bell, CheckCheck, Heart } from 'lucide-react';
+import { ShoppingBag, Eye, Check, Bell, CheckCheck } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 export function ProductCard({
@@ -18,8 +13,6 @@ export function ProductCard({
 }) {
   const { t, isUz, language } = useLanguage();
   const { addToCart } = useCart();
-  const { isFavorite, toggleFavorite } = useFavorites();
-  const { checkCompatibility, hasSelectedModel } = usePhoneModel();
 
   // Selected variant state
   const variants = product.variants || [];
@@ -33,9 +26,6 @@ export function ProductCard({
   const currentOldPrice = activeVariant?.oldPrice || product.oldPrice;
   const currentStock = activeVariant?.stock !== undefined ? activeVariant.stock : product.stock;
   const isOutOfStock = currentStock <= 0;
-
-  // Compatibility with user's selected phone model
-  const { isChecked, isCompatible } = checkCompatibility(product);
 
   const productName = isUz ? (product.nameUz || product.name_uz) : (product.nameRu || product.name_ru);
   const productImage = product.images?.[0] || 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80';
@@ -59,66 +49,22 @@ export function ProductCard({
   return (
     <div
       className={cn(
-        'group relative bg-white dark:bg-[#1D2028] border border-[#E6E8EE] dark:border-[#2A2E3B] rounded-xl p-3 sm:p-3.5 flex flex-col justify-between transition-all duration-150 hover:border-[#5B5BD6]/50 hover:shadow-xs',
+        'group relative bg-white dark:bg-[#1D2028] border border-gray-100 dark:border-[#2A2E3B] rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between transition-all duration-200 hover:border-gray-200 hover:shadow-md',
         isOutOfStock && 'opacity-85',
         className
       )}
     >
       <div>
         {/* 1. Image Container */}
-        <div className="relative w-full aspect-square bg-[#F7F8FA] dark:bg-[#15171D] rounded-lg overflow-hidden mb-3 flex items-center justify-center border border-[#E6E8EE] dark:border-[#2A2E3B]">
-          {/* Top Badges */}
-          <div className="absolute top-2 left-2 z-10 flex flex-col gap-1 items-start max-w-[80%] pointer-events-none">
-            {hasSelectedModel && isChecked && product.category !== 'smartphones' && (
-              isCompatible ? (
-                <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#16845B] bg-[#EAF6F0] px-1.5 py-0.5 rounded border border-[#CFEBDD]">
-                  <Check className="w-3 h-3 stroke-[2.5]" />
-                  <span>{t('phone_model.compatible_match')}</span>
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#D64545] bg-[#FDF2F2] px-1.5 py-0.5 rounded border border-[#FCDADA]">
-                  <X className="w-3 h-3 stroke-[2.5]" />
-                  <span>{t('phone_model.not_compatible')}</span>
-                </span>
-              )
-            )}
-
-            {product.badge === 'sale' && (
-              <Badge variant="sale">{t('common.sale')}</Badge>
-            )}
-            {product.badge === 'new' && (
-              <Badge variant="new">{t('common.new')}</Badge>
-            )}
-            {product.badge === 'premium' && (
-              <Badge variant="premium">{t('common.premium')}</Badge>
-            )}
-          </div>
-
-          {/* Top-Right Favorite button & Out-of-Stock Pill */}
-          <div className="absolute top-2 right-2 z-10 flex items-center gap-1.5">
-            {isOutOfStock && (
-              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#17191F]/80 text-white">
+        <div className="relative w-full aspect-square bg-[#F8F9FA] dark:bg-[#15171D] rounded-xl overflow-hidden mb-3 flex items-center justify-center border border-gray-100/80 dark:border-[#2A2E3B]/60">
+          {/* Out-of-Stock Pill if applicable */}
+          {isOutOfStock && (
+            <div className="absolute top-2 right-2 z-10">
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#17191F]/80 text-white">
                 {t('product.out_of_stock')}
               </span>
-            )}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleFavorite(product);
-              }}
-              className={cn(
-                'w-7 h-7 rounded-md flex items-center justify-center transition-colors cursor-pointer border',
-                isFavorite(product.id)
-                  ? 'bg-[#FDF2F2] text-[#D64545] border-[#FCDADA]'
-                  : 'bg-white/90 dark:bg-[#15171D]/90 text-[#737985] border-[#E6E8EE] dark:border-[#2A2E3B] hover:text-[#D64545] hover:bg-white'
-              )}
-              aria-label={t('favorites.add_to_favorites')}
-            >
-              <Heart className={cn('w-3.5 h-3.5', isFavorite(product.id) && 'fill-current')} />
-            </button>
-          </div>
+            </div>
+          )}
 
           {/* Product Image */}
           <Link to={`/product/${product.slug}`} className="w-full h-full flex items-center justify-center p-3">
@@ -130,7 +76,7 @@ export function ProductCard({
                 e.currentTarget.onerror = null;
                 e.currentTarget.src = 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=80';
               }}
-              className="w-full h-full object-contain group-hover:scale-102 transition-transform duration-200 select-none"
+              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 select-none"
             />
           </Link>
 
@@ -143,130 +89,91 @@ export function ProductCard({
                 e.stopPropagation();
                 onQuickView(product);
               }}
-              className="hidden lg:inline-flex items-center gap-1 absolute bottom-2.5 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-md bg-white dark:bg-[#15171D] border border-[#E6E8EE] dark:border-[#2A2E3B] text-[#17191F] dark:text-[#F4F7FC] text-xs font-medium shadow-xs hover:bg-[#F7F8FA] opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer z-10"
+              className="hidden lg:inline-flex items-center gap-1 absolute bottom-2.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white dark:bg-[#15171D] border border-gray-200 dark:border-[#2A2E3B] text-gray-800 dark:text-gray-100 text-xs font-medium shadow-xs hover:bg-gray-50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer z-10"
               aria-label={t('product.quick_view')}
             >
-              <Eye className="w-3.5 h-3.5" />
+              <Eye className="w-3.5 h-3.5 text-[#00A859]" />
               <span>{t('product.quick_view')}</span>
             </button>
           )}
         </div>
 
-        {/* 2. Color Swatches */}
-        {variants.length > 1 && (
-          <div className="flex items-center gap-1.5 mb-1.5 px-0.5">
-            {variants.map((v, idx) => (
-              <button
-                key={v.id || idx}
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setSelectedVariantIndex(idx);
-                }}
-                className={cn(
-                  'w-3.5 h-3.5 rounded-full border transition-all cursor-pointer',
-                  selectedVariantIndex === idx
-                    ? 'ring-2 ring-[#5B5BD6] ring-offset-1 border-white'
-                    : 'border-[#D1D5DB] dark:border-[#3B4254]'
-                )}
-                style={{ backgroundColor: v.color }}
-                title={isUz ? v.colorNameUz : v.colorNameRu}
-                aria-label={isUz ? v.colorNameUz : v.colorNameRu}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* 3. Brand & Rating */}
-        <div className="flex items-center justify-between gap-2 mb-1 px-0.5">
-          <span className="text-[11px] font-medium text-[#737985] dark:text-[#9CA3AF] uppercase tracking-wider">
-            {product.brand}
-          </span>
-          {product.rating && (
-            <RatingStars rating={product.rating} reviewsCount={product.reviewsCount} size="sm" />
+        {/* 3. Rating Stars (5 amber stars matching screenshot) */}
+        <div className="flex items-center gap-1 mb-1 px-0.5">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <svg
+              key={i}
+              className="w-3.5 h-3.5 text-amber-400 fill-amber-400"
+              viewBox="0 0 20 20"
+            >
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+          ))}
+          {product.reviewsCount > 0 && (
+            <span className="text-[10px] text-gray-400 ml-1">({product.reviewsCount})</span>
           )}
         </div>
 
         {/* 4. Product Title */}
         <Link
           to={`/product/${product.slug}`}
-          className="block font-medium text-xs sm:text-sm text-[#17191F] dark:text-[#F4F7FC] line-clamp-2 hover:text-[#5B5BD6] transition-colors leading-snug mb-2.5 px-0.5 min-h-[36px]"
+          className="block font-medium text-xs sm:text-sm text-gray-900 dark:text-gray-100 line-clamp-2 hover:text-[#00A859] transition-colors leading-snug mb-2 px-0.5 min-h-[36px]"
           title={productName}
         >
           {productName}
         </Link>
       </div>
 
-      {/* 5. Pricing & Actions */}
-      <div className="pt-2 border-t border-[#E6E8EE] dark:border-[#2A2E3B] space-y-2">
-        <div className="flex items-baseline gap-2 px-0.5 flex-wrap">
-          <span className="text-sm sm:text-base font-bold text-[#17191F] dark:text-white tracking-tight">
-            {formatUzbekCurrency(currentPrice, language)}
-          </span>
+      {/* 5. Pricing & Circular Add to Cart Button (Screenshot Style) */}
+      <div className="pt-2 flex items-center justify-between gap-2 border-t border-gray-100 dark:border-[#2A2E3B]/70 mt-1">
+        <div className="flex flex-col">
           {currentOldPrice && currentOldPrice > currentPrice && (
-            <span className="text-xs text-[#737985] line-through tabular-nums">
+            <span className="text-xs text-gray-400 line-through tabular-nums leading-none mb-0.5">
               {formatUzbekCurrency(currentOldPrice, language)}
             </span>
           )}
+          <span className="text-sm sm:text-base font-bold text-gray-900 dark:text-white tracking-tight leading-tight">
+            {formatUzbekCurrency(currentPrice, language)}
+          </span>
         </div>
 
+        {/* Circular Green Cart Button or Notify Button */}
         {!isOutOfStock ? (
-          <div className="flex items-center gap-1.5">
-            <QuantityCounter
-              size="sm"
-              quantity={quantity}
-              onIncrement={() => setQuantity((q) => Math.min(99, q + 1))}
-              onDecrement={() => setQuantity((q) => Math.max(1, q - 1))}
-              className="w-20 shrink-0"
-            />
-
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              className={cn(
-                'flex-1 h-7.5 px-2.5 rounded-lg font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs whitespace-nowrap overflow-hidden',
-                isAddedAnim
-                  ? 'bg-[#16845B] text-white'
-                  : 'bg-[#5B5BD6] hover:bg-[#4949BC] text-white active:bg-[#3C3CA8]'
-              )}
-              aria-label={t('product.add_to_cart')}
-            >
-              {isAddedAnim ? (
-                <>
-                  <Check className="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
-                  <span className="truncate">{t('product.added_to_cart')}</span>
-                </>
-              ) : (
-                <>
-                  <ShoppingBag className="w-3.5 h-3.5 shrink-0" />
-                  <span className="truncate">{t('product.add_to_cart')}</span>
-                </>
-              )}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            className={cn(
+              'w-9.5 h-9.5 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-white transition-all duration-200 cursor-pointer shadow-sm hover:scale-105 active:scale-95 shrink-0',
+              isAddedAnim
+                ? 'bg-emerald-600'
+                : 'bg-[#00A859] hover:bg-[#00924C] active:bg-[#007D40]'
+            )}
+            aria-label={t('product.add_to_cart')}
+            title={t('product.add_to_cart')}
+          >
+            {isAddedAnim ? (
+              <Check className="w-5 h-5 stroke-[2.5]" />
+            ) : (
+              <ShoppingBag className="w-4.5 h-4.5" />
+            )}
+          </button>
         ) : (
           <button
             type="button"
             onClick={handleNotifyMe}
             disabled={isNotified}
             className={cn(
-              'w-full h-7.5 rounded-lg font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer border',
+              'h-8 px-2.5 rounded-full font-semibold text-[11px] flex items-center justify-center gap-1 transition-colors cursor-pointer border',
               isNotified
-                ? 'bg-[#EAF6F0] text-[#16845B] border-[#CFEBDD]'
-                : 'bg-[#F7F8FA] dark:bg-[#15171D] text-[#737985] border-[#E6E8EE] dark:border-[#2A2E3B] hover:text-[#17191F]'
+                ? 'bg-[#E6F7EF] text-[#00A859] border-[#00A859]/30'
+                : 'bg-gray-50 dark:bg-[#15171D] text-gray-500 border-gray-200 dark:border-[#2A2E3B] hover:text-gray-900'
             )}
+            title={t('product.notify_me')}
           >
             {isNotified ? (
-              <>
-                <CheckCheck className="w-3.5 h-3.5 text-[#16845B]" />
-                <span>{t('product.notify_success')}</span>
-              </>
+              <CheckCheck className="w-3.5 h-3.5 text-[#00A859]" />
             ) : (
-              <>
-                <Bell className="w-3.5 h-3.5" />
-                <span>{t('product.notify_me')}</span>
-              </>
+              <Bell className="w-3.5 h-3.5" />
             )}
           </button>
         )}

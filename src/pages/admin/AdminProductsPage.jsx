@@ -131,7 +131,7 @@ export function AdminProductsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#17191F] dark:text-white flex items-center gap-3">
-            <Package className="w-8 h-8 text-[#5B5BD6]" />
+            <Package className="w-8 h-8 text-[#00A859]" />
             {t('admin.products_title')}
           </h1>
           <p className="text-xs text-[#737985] dark:text-slate-400 mt-1">
@@ -146,7 +146,7 @@ export function AdminProductsPage() {
               onClick={() => setViewMode('table')}
               className={`p-2 rounded-md transition-colors cursor-pointer ${
                 viewMode === 'table'
-                  ? 'bg-[#5B5BD6] text-white shadow-xs font-bold'
+                  ? 'bg-[#00A859] text-white shadow-xs font-bold'
                   : 'text-[#737985] hover:text-[#17191F] dark:hover:text-white'
               }`}
               title="Table"
@@ -159,7 +159,7 @@ export function AdminProductsPage() {
               onClick={() => setViewMode('grid')}
               className={`p-2 rounded-md transition-colors cursor-pointer ${
                 viewMode === 'grid'
-                  ? 'bg-[#5B5BD6] text-white shadow-xs font-bold'
+                  ? 'bg-[#00A859] text-white shadow-xs font-bold'
                   : 'text-[#737985] hover:text-[#17191F] dark:hover:text-white'
               }`}
               title="Grid"
@@ -265,7 +265,7 @@ export function AdminProductsPage() {
               return (
                 <Card
                   key={p.id}
-                  className="p-4 hover:border-[#5B5BD6] transition-all flex flex-col justify-between group bg-white dark:bg-slate-900 border border-[#E6E8EE] dark:border-slate-800"
+                  className="p-4 hover:border-[#00A859] transition-all flex flex-col justify-between group bg-white dark:bg-slate-900 border border-[#E6E8EE] dark:border-slate-800"
                 >
                   <div>
                     <div className="relative aspect-square w-full rounded-lg bg-[#F7F8FA] dark:bg-slate-800 p-3 mb-3 flex items-center justify-center overflow-hidden border border-[#E6E8EE] dark:border-slate-700/60">
@@ -299,14 +299,14 @@ export function AdminProductsPage() {
                     <div className="text-[11px] text-[#737985] font-semibold uppercase tracking-wider mb-1">
                       {p.brand} • <span className="capitalize">{p.category}</span>
                     </div>
-                    <h3 className="font-semibold text-[#17191F] dark:text-white line-clamp-2 text-sm group-hover:text-[#5B5BD6] transition-colors mb-2">
+                    <h3 className="font-semibold text-[#17191F] dark:text-white line-clamp-2 text-sm group-hover:text-[#00A859] transition-colors mb-2">
                       {language === 'ru' ? (p.name_ru || p.nameRu) : (p.name_uz || p.nameUz)}
                     </h3>
                   </div>
 
                   <div className="pt-3 border-t border-[#E6E8EE] dark:border-slate-800">
                     <div className="flex items-baseline justify-between mb-3">
-                      <div className="font-bold text-base text-[#5B5BD6]">
+                      <div className="font-bold text-base text-[#00A859]">
                         {formatUzbekCurrency(p.price, language)}
                       </div>
                       {p.oldPrice && p.oldPrice > p.price && (
@@ -321,7 +321,7 @@ export function AdminProductsPage() {
                         href={`/product/${p.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 rounded-lg text-[#737985] hover:text-[#5B5BD6] hover:bg-[#EEEEFF] dark:hover:bg-slate-800 transition-colors"
+                        className="p-2 rounded-lg text-[#737985] hover:text-[#00A859] hover:bg-[#E6F7EF] dark:hover:bg-slate-800 transition-colors"
                         title={t('admin.back_to_store')}
                       >
                         <Eye className="w-4 h-4" />
@@ -329,7 +329,7 @@ export function AdminProductsPage() {
                       <div className="flex items-center gap-1.5 ml-auto">
                         <Link
                           to={`/admin/products/${p.id}`}
-                          className="p-2 rounded-lg text-[#737985] hover:text-[#5B5BD6] hover:bg-[#EEEEFF] dark:hover:bg-slate-800 transition-colors"
+                          className="p-2 rounded-lg text-[#737985] hover:text-[#00A859] hover:bg-[#E6F7EF] dark:hover:bg-slate-800 transition-colors"
                           title={t('admin.edit_btn')}
                         >
                           <Edit2 className="w-4 h-4" />
@@ -395,7 +395,7 @@ export function AdminProductsPage() {
                               />
                             </div>
                             <div className="min-w-0 max-w-xs sm:max-w-sm">
-                              <span className="font-semibold text-[#17191F] dark:text-white group-hover:text-[#5B5BD6] truncate block transition-colors text-sm">
+                              <span className="font-semibold text-[#17191F] dark:text-white group-hover:text-[#00A859] truncate block transition-colors text-sm">
                                 {language === 'ru' ? (p.name_ru || p.nameRu) : (p.name_uz || p.nameUz)}
                               </span>
                               <div className="flex items-center gap-2 mt-0.5 text-[11px]">
@@ -408,7 +408,7 @@ export function AdminProductsPage() {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   onClick={(e) => e.stopPropagation()}
-                                  className="inline-flex items-center gap-1 font-semibold text-[#5B5BD6] hover:underline"
+                                  className="inline-flex items-center gap-1 font-semibold text-[#00A859] hover:underline"
                                   title={t('admin.back_to_store')}
                                 >
                                   <ExternalLink className="w-3 h-3" />
@@ -431,7 +431,7 @@ export function AdminProductsPage() {
 
                         {/* Price */}
                         <td className="py-3 px-4 whitespace-nowrap">
-                          <div className="font-bold text-[#5B5BD6]">
+                          <div className="font-bold text-[#00A859]">
                             {formatUzbekCurrency(p.price, language)}
                           </div>
                           {p.oldPrice && p.oldPrice > p.price && (

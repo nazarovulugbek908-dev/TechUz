@@ -1,147 +1,151 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import { ShieldCheck, Truck, CreditCard, Sparkles, ArrowRight, PhoneCall } from 'lucide-react';
 
 export function HeroCarousel() {
-  const { t } = useLanguage();
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  const slides = [
-    {
-      id: 'slide-1',
-      badge: t('home.slides.slide1_badge'),
-      title: t('home.slides.slide1_title'),
-      desc: t('home.slides.slide1_desc'),
-      btnText: t('home.slides.slide1_btn'),
-      link: '/shop',
-      image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80'
-    },
-    {
-      id: 'slide-2',
-      badge: t('home.slides.slide2_badge'),
-      title: t('home.slides.slide2_title'),
-      desc: t('home.slides.slide2_desc'),
-      btnText: t('home.slides.slide2_btn'),
-      link: '/shop?category=chargers',
-      image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=800&q=80'
-    },
-    {
-      id: 'slide-3',
-      badge: t('home.slides.slide3_badge'),
-      title: t('home.slides.slide3_title'),
-      desc: t('home.slides.slide3_desc'),
-      btnText: t('home.slides.slide3_btn'),
-      link: '/shop?category=screen_protectors',
-      image: 'https://images.unsplash.com/photo-1585060544812-6b45742d762f?auto=format&fit=crop&w=800&q=80'
-    }
-  ];
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, [slides.length]);
-
-  const handlePrev = () => {
-    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  };
+  const { language } = useLanguage();
+  const isRu = language === 'ru';
 
   return (
     <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-4">
-      <div className="relative w-full rounded-2xl overflow-hidden min-h-[300px] sm:min-h-[330px] lg:min-h-[360px] bg-white dark:bg-[#1D2028] border border-[#E6E8EE] dark:border-[#2A2E3B] shadow-xs flex items-center">
-        {slides.map((slide, index) => {
-          const isActive = index === currentSlide;
-          return (
-            <div
-              key={slide.id}
-              className={cn(
-                'absolute inset-0 w-full h-full px-6 sm:px-12 lg:px-16 py-6 sm:py-8 flex items-center transition-opacity duration-500 ease-out',
-                isActive ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'
+      <div className="relative w-full rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-50/70 via-white to-green-50/50 dark:from-[#1D2028] dark:via-[#191C24] dark:to-[#15171D] border border-[#E6E8EE] dark:border-[#2A2E3B] shadow-xs p-6 sm:p-10 lg:p-12">
+        {/* Subtle decorative background ambient glows */}
+        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-[#00A859]/10 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-[#00A859]/8 blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Left Column: Brand Welcome Text */}
+          <div className="lg:col-span-7 space-y-4">
+            {/* Top Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#E6F7EF] dark:bg-[#00A859]/15 text-[#00A859] border border-[#00A859]/20 shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-[#00A859] animate-pulse" />
+              <span>
+                {isRu
+                  ? 'Официальный магазин электроники'
+                  : 'Rasmiy elektronika va gadjetlar do‘koni'}
+              </span>
+            </div>
+
+            {/* Main Heading */}
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#17191F] dark:text-[#F4F7FC] leading-tight">
+              {isRu ? (
+                <>
+                  Добро пожаловать в <span className="text-[#00A859]">TechUz</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-[#00A859]">TechUz</span> rasmiy do‘koniga xush kelibsiz!
+                </>
               )}
-            >
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center w-full">
-                {/* Text Content */}
-                <div className="md:col-span-7 space-y-3 pr-2 z-10">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-semibold bg-[#EEEEFF] dark:bg-[#5B5BD6]/15 text-[#5B5BD6] dark:text-[#A5A5F5]">
-                    {slide.badge}
-                  </span>
+            </h1>
 
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#17191F] dark:text-[#F4F7FC] leading-tight">
-                    {slide.title}
-                  </h2>
+            {/* Description */}
+            <p className="text-xs sm:text-sm text-[#737985] dark:text-[#9CA3AF] max-w-xl leading-relaxed">
+              {isRu
+                ? 'Премиальные смартфоны, оригинальные аксессуары и современные гаджеты. Быстрая доставка по всему Узбекистану и официальная гарантия на каждый товар.'
+                : 'Eng so‘nggi smartfonlar, original aksessuarlar va zamonaviy gadjetlar. Butun O‘zbekiston bo‘ylab tezkor yetkazib berish hamda rasmiy kafolat.'}
+            </p>
 
-                  <p className="text-xs sm:text-sm text-[#737985] dark:text-[#9CA3AF] max-w-lg leading-relaxed line-clamp-2">
-                    {slide.desc}
-                  </p>
+            {/* Brand Pillars */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2">
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/90 dark:bg-[#15171D]/90 border border-gray-150 dark:border-[#2A2E3B] shadow-2xs">
+                <ShieldCheck className="w-4 h-4 text-[#00A859] shrink-0" />
+                <span className="text-[11px] font-semibold text-gray-800 dark:text-gray-200">
+                  {isRu ? '100% Оригинал' : '100% Asl mahsulot'}
+                </span>
+              </div>
 
-                  <div className="pt-2">
-                    <Link to={slide.link}>
-                      <button
-                        type="button"
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#5B5BD6] hover:bg-[#4949BC] active:bg-[#3C3CA8] text-white font-semibold text-xs sm:text-sm transition-colors cursor-pointer shadow-xs"
-                      >
-                        <span>{slide.btnText}</span>
-                        <ArrowRight className="w-4 h-4 ml-0.5" />
-                      </button>
-                    </Link>
-                  </div>
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/90 dark:bg-[#15171D]/90 border border-gray-150 dark:border-[#2A2E3B] shadow-2xs">
+                <Truck className="w-4 h-4 text-[#00A859] shrink-0" />
+                <span className="text-[11px] font-semibold text-gray-800 dark:text-gray-200">
+                  {isRu ? 'Быстрая доставка' : 'Tezkor yetkazish'}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/90 dark:bg-[#15171D]/90 border border-gray-150 dark:border-[#2A2E3B] shadow-2xs">
+                <CreditCard className="w-4 h-4 text-[#00A859] shrink-0" />
+                <span className="text-[11px] font-semibold text-gray-800 dark:text-gray-200">
+                  {isRu ? 'Удобная оплата' : 'Qulay to‘lov'}
+                </span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-3">
+              <Link
+                to="/shop"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#00A859] hover:bg-[#00924C] active:bg-[#007D40] text-white font-semibold text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md text-center"
+              >
+                <span>{isRu ? 'Перейти в каталог' : 'Katalogni ko‘rish'}</span>
+                <ArrowRight className="w-4 h-4 shrink-0" />
+              </Link>
+
+              <a
+                href="tel:+998945876472"
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white dark:bg-[#15171D] border border-gray-200 dark:border-[#2A2E3B] hover:bg-gray-50 dark:hover:bg-[#1E212B] text-gray-700 dark:text-gray-200 font-semibold text-xs sm:text-sm transition-colors cursor-pointer shadow-2xs text-center"
+              >
+                <PhoneCall className="w-4 h-4 text-[#00A859] shrink-0" />
+                <span>+998 (94) 587-64-72</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Right Column: Visual Trust Badges & Showcase Card */}
+          <div className="lg:col-span-5 flex items-center justify-center">
+            <div className="w-full max-w-sm space-y-3">
+              {/* Feature Box 1 */}
+              <div className="p-4 rounded-2xl bg-white/95 dark:bg-[#15171D]/95 border border-emerald-100 dark:border-[#2A2E3B] shadow-sm flex items-center gap-3.5 transition-transform hover:-translate-y-0.5 duration-200">
+                <div className="w-11 h-11 rounded-xl bg-[#E6F7EF] dark:bg-[#00A859]/15 text-[#00A859] flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-6 h-6" />
                 </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white">
+                    {isRu ? 'Официальная гарантия' : 'Rasmiy kafolat'}
+                  </h4>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                    {isRu
+                      ? 'Сертифицированная продукция и сервис'
+                      : 'Sertifikatlangan mahsulotlar va servis'}
+                  </p>
+                </div>
+              </div>
 
-                {/* Product Image Stage */}
-                <div className="hidden md:flex md:col-span-5 items-center justify-center">
-                  <div className="relative w-full max-w-[280px] lg:max-w-[320px] h-[200px] sm:h-[230px] rounded-xl overflow-hidden bg-[#F7F8FA] dark:bg-[#15171D] border border-[#E6E8EE] dark:border-[#2A2E3B] p-2 flex items-center justify-center shadow-xs">
-                    <img
-                      src={slide.image}
-                      alt={slide.title}
-                      className="w-full h-full object-cover object-center rounded-lg select-none"
-                    />
-                  </div>
+              {/* Feature Box 2 */}
+              <div className="p-4 rounded-2xl bg-white/95 dark:bg-[#15171D]/95 border border-emerald-100 dark:border-[#2A2E3B] shadow-sm flex items-center gap-3.5 transition-transform hover:-translate-y-0.5 duration-200">
+                <div className="w-11 h-11 rounded-xl bg-[#E6F7EF] dark:bg-[#00A859]/15 text-[#00A859] flex items-center justify-center shrink-0">
+                  <Truck className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white">
+                    {isRu ? 'Доставка по всему Узбекистану' : 'Butun O‘zbekistonga yetkazish'}
+                  </h4>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                    {isRu
+                      ? 'Быстро и надежно прямо до ваших дверей'
+                      : 'Eshigingizgacha tez va xavfsiz yetkazib beramiz'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Feature Box 3 */}
+              <div className="p-4 rounded-2xl bg-white/95 dark:bg-[#15171D]/95 border border-emerald-100 dark:border-[#2A2E3B] shadow-sm flex items-center gap-3.5 transition-transform hover:-translate-y-0.5 duration-200">
+                <div className="w-11 h-11 rounded-xl bg-[#E6F7EF] dark:bg-[#00A859]/15 text-[#00A859] flex items-center justify-center shrink-0">
+                  <Sparkles className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white">
+                    {isRu ? 'Скоро: новые поступления' : 'Tez orada yangi tovarlar'}
+                  </h4>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400">
+                    {isRu
+                      ? 'Ассортимент пополняется лучшими новинками'
+                      : 'Assortiment eng sara yangiliklar bilan to‘ldiriladi'}
+                  </p>
                 </div>
               </div>
             </div>
-          );
-        })}
-
-        {/* Carousel Navigation Arrows */}
-        <button
-          type="button"
-          onClick={handlePrev}
-          className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-lg bg-white/90 dark:bg-[#15171D]/90 border border-[#E6E8EE] dark:border-[#2A2E3B] text-[#17191F] dark:text-white flex items-center justify-center hover:bg-white dark:hover:bg-[#15171D] transition-colors cursor-pointer shadow-xs"
-          aria-label="Oldingi slayd"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-
-        <button
-          type="button"
-          onClick={handleNext}
-          className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-lg bg-white/90 dark:bg-[#15171D]/90 border border-[#E6E8EE] dark:border-[#2A2E3B] text-[#17191F] dark:text-white flex items-center justify-center hover:bg-white dark:hover:bg-[#15171D] transition-colors cursor-pointer shadow-xs"
-          aria-label="Keyingi slayd"
-        >
-          <ChevronRight className="w-4 h-4" />
-        </button>
-
-        {/* Indicators */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
-          {slides.map((_, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => setCurrentSlide(idx)}
-              className={cn(
-                'h-1.5 rounded-full transition-all cursor-pointer',
-                idx === currentSlide ? 'w-5 bg-[#5B5BD6]' : 'w-1.5 bg-[#E6E8EE] dark:bg-[#2A2E3B]'
-              )}
-              aria-label={`Slayd ${idx + 1}`}
-            />
-          ))}
+          </div>
         </div>
       </div>
     </div>

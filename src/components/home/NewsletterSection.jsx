@@ -30,7 +30,7 @@ export function NewsletterSection({ className = '' }) {
             </p>
 
             {/* Telegram Channel Link */}
-            <div className="pt-1 flex items-center gap-1.5 text-xs font-semibold text-[#5B5BD6]">
+            <div className="pt-1 flex items-center gap-1.5 text-xs font-semibold text-[#00A859]">
               <MessageCircle className="w-4 h-4" />
               <span>{t('home.telegram_channel')}: @TechUzOfficial</span>
             </div>
@@ -51,11 +51,11 @@ export function NewsletterSection({ className = '' }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t('footer.newsletter_placeholder')}
-                  className="flex-1 px-3 py-2 bg-[#F7F8FA] dark:bg-[#15171D] border border-[#E6E8EE] dark:border-[#2A2E3B] rounded-lg text-xs sm:text-sm text-[#17191F] dark:text-white placeholder:text-[#737985]/60 outline-none focus:border-[#5B5BD6] transition-colors"
+                  className="flex-1 px-3 py-2 bg-[#F7F8FA] dark:bg-[#15171D] border border-[#E6E8EE] dark:border-[#2A2E3B] rounded-lg text-xs sm:text-sm text-[#17191F] dark:text-white placeholder:text-[#737985]/60 outline-none focus:border-[#00A859] transition-colors"
                 />
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#5B5BD6] hover:bg-[#4949BC] active:bg-[#3C3CA8] text-white font-semibold text-xs sm:text-sm rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer shrink-0 shadow-xs"
+                  className="px-4 py-2 bg-[#00A859] hover:bg-[#00924C] active:bg-[#007D40] text-white font-semibold text-xs sm:text-sm rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer shrink-0 shadow-xs"
                 >
                   <Send className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">{t('home.newsletter_btn')}</span>

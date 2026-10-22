@@ -47,12 +47,12 @@ export function ForgotPasswordPage() {
         {/* Mobile Header Logo & Language Switcher */}
         <div className="lg:hidden flex items-center justify-between pb-4 border-b border-[#2A2E3B]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#5B5BD6] text-white flex items-center justify-center font-bold text-sm tracking-tight shadow-sm">
+            <div className="w-8 h-8 rounded-lg bg-[#00A859] text-white flex items-center justify-center font-bold text-sm tracking-tight shadow-sm">
               T
             </div>
             <div className="flex flex-col">
               <span className="font-extrabold text-xl text-white leading-none">
-                Tech<span className="text-[#5B5BD6]">Uz</span>
+                Tech<span className="text-[#00A859]">Uz</span>
               </span>
               <span className="text-[9px] font-semibold tracking-wider uppercase text-[#737985] mt-0.5">
                 Electronics
@@ -65,7 +65,7 @@ export function ForgotPasswordPage() {
               type="button"
               onClick={() => setLanguage('uz')}
               className={`px-2 py-0.5 rounded-md transition-colors ${
-                language === 'uz' ? 'bg-[#5B5BD6] text-white' : 'text-[#737985]'
+                language === 'uz' ? 'bg-[#00A859] text-white' : 'text-[#737985]'
               }`}
             >
               UZ
@@ -74,7 +74,7 @@ export function ForgotPasswordPage() {
               type="button"
               onClick={() => setLanguage('ru')}
               className={`px-2 py-0.5 rounded-md transition-colors ${
-                language === 'ru' ? 'bg-[#5B5BD6] text-white' : 'text-[#737985]'
+                language === 'ru' ? 'bg-[#00A859] text-white' : 'text-[#737985]'
               }`}
             >
               RU
@@ -139,7 +139,7 @@ export function ForgotPasswordPage() {
                 type="submit"
                 variant="primary"
                 size="lg"
-                className="w-full font-bold cursor-pointer shadow-lg shadow-[#5B5BD6]/20 transition-all"
+                className="w-full font-bold cursor-pointer shadow-lg shadow-[#00A859]/20 transition-all"
                 disabled={loading || !identifier.trim()}
               >
                 {loading ? (
@@ -156,7 +156,7 @@ export function ForgotPasswordPage() {
             <div className="pt-2 text-center text-xs text-[#737985] border-t border-[#2A2E3B]">
               <Link
                 to="/login"
-                className="font-bold text-[#5B5BD6] hover:text-[#4949BC] hover:underline inline-flex items-center gap-1.5 transition-colors"
+                className="font-bold text-[#00A859] hover:text-[#00924C] hover:underline inline-flex items-center gap-1.5 transition-colors"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>{t('auth.back_to_login')}</span>

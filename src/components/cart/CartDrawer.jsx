@@ -47,10 +47,10 @@ export function CartDrawer({
         <div className="flex flex-col h-full justify-between">
           <div className="space-y-4 overflow-y-auto pr-1">
             {/* 1. Free Delivery Progress Bar */}
-            <div className="p-3.5 bg-[#EEEEFF] dark:bg-slate-800/60 rounded-xl border border-[#E6E8EE] dark:border-slate-800 space-y-2">
+            <div className="p-3.5 bg-[#E6F7EF] dark:bg-slate-800/60 rounded-xl border border-[#00A859]/20 dark:border-slate-800 space-y-2">
               <div className="flex items-center justify-between text-xs font-semibold">
                 <div className="flex items-center gap-1.5 text-[#17191F] dark:text-slate-200">
-                  <Truck className="w-4 h-4 text-[#5B5BD6]" />
+                  <Truck className="w-4 h-4 text-[#00A859]" />
                   <span>
                     {remainingForFreeDelivery === 0
                       ? t('cart.free_delivery_achieved')
@@ -58,7 +58,7 @@ export function CartDrawer({
                   </span>
                 </div>
                 {remainingForFreeDelivery > 0 && (
-                  <span className="text-[#5B5BD6] font-bold">
+                  <span className="text-[#00A859] font-bold">
                     {formatUzbekCurrency(remainingForFreeDelivery, language)}
                   </span>
                 )}
@@ -67,7 +67,7 @@ export function CartDrawer({
               {/* Progress bar */}
               <div className="w-full h-2 bg-white/80 dark:bg-slate-700 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[#5B5BD6] rounded-full transition-all duration-300"
+                  className="h-full bg-[#00A859] rounded-full transition-all duration-300"
                   style={{ width: `${freeDeliveryPercent}%` }}
                 />
               </div>
@@ -105,7 +105,7 @@ export function CartDrawer({
                         </div>
                       )}
 
-                      <span className="text-xs font-extrabold text-[#5B5BD6] block mt-1">
+                      <span className="text-xs font-extrabold text-[#00A859] block mt-1">
                         {formatUzbekCurrency(item.price, language)}
                       </span>
 
@@ -115,7 +115,7 @@ export function CartDrawer({
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.id, item.selectedColor, item.quantity - 1)}
-                            className="px-2 py-0.5 text-xs text-[#17191F] hover:text-[#5B5BD6] dark:text-slate-300 cursor-pointer font-bold"
+                            className="px-2 py-0.5 text-xs text-[#17191F] hover:text-[#00A859] dark:text-slate-300 cursor-pointer font-bold"
                           >
                             -
                           </button>
@@ -125,7 +125,7 @@ export function CartDrawer({
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.id, item.selectedColor, item.quantity + 1)}
-                            className="px-2 py-0.5 text-xs text-[#17191F] hover:text-[#5B5BD6] dark:text-slate-300 cursor-pointer font-bold"
+                            className="px-2 py-0.5 text-xs text-[#17191F] hover:text-[#00A859] dark:text-slate-300 cursor-pointer font-bold"
                           >
                             +
                           </button>
@@ -165,7 +165,7 @@ export function CartDrawer({
 
             <div className="flex justify-between text-sm font-bold pt-2 border-t border-[#E6E8EE] dark:border-slate-800">
               <span className="text-[#17191F] dark:text-white">{t('cart.total')}:</span>
-              <span className="text-[#5B5BD6] font-extrabold text-base">
+              <span className="text-[#00A859] font-extrabold text-base">
                 {formatUzbekCurrency(total, language)}
               </span>
             </div>

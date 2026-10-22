@@ -23,7 +23,7 @@ export function MobileBottomNav({ onOpenCart, onOpenModelSelector }) {
             cn(
               'flex flex-col items-center justify-center gap-1 transition-colors cursor-pointer',
               isActive
-                ? 'text-[#5B5BD6] font-semibold'
+                ? 'text-[#00A859] font-semibold'
                 : 'text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-white'
             )
           }
@@ -39,7 +39,7 @@ export function MobileBottomNav({ onOpenCart, onOpenModelSelector }) {
             cn(
               'flex flex-col items-center justify-center gap-1 transition-colors cursor-pointer',
               isActive
-                ? 'text-[#5B5BD6] font-semibold'
+                ? 'text-[#00A859] font-semibold'
                 : 'text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-white'
             )
           }
@@ -52,13 +52,13 @@ export function MobileBottomNav({ onOpenCart, onOpenModelSelector }) {
         <button
           type="button"
           onClick={onOpenModelSelector}
-          className="flex flex-col items-center justify-center gap-1 text-[#737985] dark:text-[#9CA3AF] hover:text-[#5B5BD6] transition-colors cursor-pointer relative"
+          className="flex flex-col items-center justify-center gap-1 text-[#737985] dark:text-[#9CA3AF] hover:text-[#00A859] transition-colors cursor-pointer relative"
         >
           <div
             className={cn(
               'w-7 h-7 rounded-md flex items-center justify-center transition-all',
               hasSelectedModel
-                ? 'bg-[#5B5BD6] text-white shadow-xs'
+                ? 'bg-[#00A859] text-white shadow-xs'
                 : 'bg-[#F7F8FA] dark:bg-[#1D2028] border border-[#E6E8EE] dark:border-[#2A2E3B] text-[#737985] dark:text-[#9CA3AF]'
             )}
           >
@@ -76,7 +76,7 @@ export function MobileBottomNav({ onOpenCart, onOpenModelSelector }) {
           <div className="relative">
             <ShoppingBag className="w-5 h-5" />
             {totalCount > 0 && (
-              <span className="absolute -top-1 -right-2 w-3.5 h-3.5 rounded-full bg-[#5B5BD6] text-white text-[9px] font-bold flex items-center justify-center">
+              <span className="absolute -top-1 -right-2 w-3.5 h-3.5 rounded-full bg-[#00A859] text-white text-[9px] font-bold flex items-center justify-center">
                 {totalCount}
               </span>
             )}
@@ -91,7 +91,7 @@ export function MobileBottomNav({ onOpenCart, onOpenModelSelector }) {
             cn(
               'flex flex-col items-center justify-center gap-1 transition-colors cursor-pointer',
               isActive
-                ? 'text-[#5B5BD6] font-semibold'
+                ? 'text-[#00A859] font-semibold'
                 : 'text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-white'
             )
           }

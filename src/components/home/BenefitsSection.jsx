@@ -31,16 +31,16 @@ export function BenefitsSection({ className = '' }) {
 
   return (
     <section className={cn('max-w-7xl mx-auto px-4 sm:px-6', className)}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {benefits.map((item, idx) => {
           const Icon = item.icon;
           return (
             <div
               key={idx}
-              className="bg-white dark:bg-[#1D2028] border border-[#E6E8EE] dark:border-[#2A2E3B] rounded-xl p-4 flex items-start gap-3 shadow-xs"
+              className="bg-white dark:bg-[#1D2028] border border-[#E6E8EE] dark:border-[#2A2E3B] rounded-2xl p-3.5 sm:p-4 flex items-center sm:items-start gap-3 shadow-2xs transition-transform hover:-translate-y-0.5"
             >
-              <div className="w-9 h-9 rounded-lg bg-[#EEEEFF] dark:bg-[#5B5BD6]/15 text-[#5B5BD6] flex items-center justify-center shrink-0">
-                <Icon className="w-4.5 h-4.5" />
+              <div className="w-10 h-10 rounded-xl bg-[#E6F7EF] dark:bg-[#00A859]/15 text-[#00A859] flex items-center justify-center shrink-0">
+                <Icon className="w-5 h-5" />
               </div>
               <div className="space-y-0.5">
                 <h4 className="text-xs sm:text-sm font-semibold text-[#17191F] dark:text-[#F4F7FC]">

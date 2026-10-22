@@ -1,82 +1,74 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { useLanguage } from '../../hooks/useLanguage';
-import {
-  Menu,
-  Smartphone,
-  Shield,
-  Zap,
-  Headphones,
-  SmartphoneNfc,
-  Percent
-} from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 export function CategoryNav() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const navItems = [
-    { to: '/shop?category=smartphones', label: t('nav.smartphones'), icon: Smartphone },
-    { to: '/shop?category=cases', label: t('nav.cases'), icon: Shield },
-    { to: '/shop?category=chargers', label: t('nav.chargers'), icon: Zap },
-    { to: '/shop?category=headphones', label: t('nav.headphones'), icon: Headphones },
-    { to: '/shop?category=screen_protectors', label: t('nav.screen_protectors'), icon: SmartphoneNfc },
-    {
-      to: '/shop?onSale=true',
-      label: t('nav.sales_deals'),
-      icon: Percent,
-      highlight: true
-    }
+    { to: '/', label: t('nav.home') || 'Home' },
+    { to: '/shop', label: t('nav.shop') || 'Shop' },
+    { to: '/shop?category=smartphones', label: t('nav.smartphones') || 'Smartphones' },
+    { to: '/shop?category=cases', label: t('nav.cases') || 'Cases' },
+    { to: '/shop?category=chargers', label: t('nav.chargers') || 'Chargers' },
+    { to: '/shop?category=headphones', label: t('nav.headphones') || 'Headphones' },
+    { to: '/shop?category=screen_protectors', label: t('nav.screen_protectors') || 'Screen Protectors' },
+    { to: '/shop?onSale=true', label: t('nav.sales_deals') || 'Deals' }
+  ];
+
+  const rightItems = [
+    { to: '/#about', label: language === 'ru' ? 'О нас' : 'Biz haqimizda' },
+    { to: '/#help', label: language === 'ru' ? 'Блог' : 'Blog' },
+    { to: 'tel:+998945876472', label: language === 'ru' ? 'Контакты' : 'Bog‘lanish', isExternal: true }
   ];
 
   return (
-    <nav className="hidden lg:block bg-white dark:bg-[#15171D] border-b border-[#E6E8EE] dark:border-[#2A2E3B] transition-colors relative z-20">
+    <nav className="hidden lg:block bg-[#00A859] text-white shadow-xs relative z-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 py-2">
-            {/* All Categories Button */}
-            <NavLink
-              to="/shop"
-              className={({ isActive }) =>
-                cn(
-                  'flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors select-none cursor-pointer border',
-                  isActive
-                    ? 'bg-[#5B5BD6] text-white border-[#5B5BD6]'
-                    : 'bg-[#F7F8FA] dark:bg-[#1D2028] text-[#17191F] dark:text-[#F4F7FC] border-[#E6E8EE] dark:border-[#2A2E3B] hover:border-[#D1D5DB]'
-                )
-              }
-            >
-              <Menu className="w-3.5 h-3.5" />
-              <span>{t('nav.all_categories')}</span>
-            </NavLink>
+        <div className="flex items-center justify-between h-11">
+          {/* Left Category & Main Links */}
+          <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-1">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.to === '/'}
+                className={({ isActive }) =>
+                  cn(
+                    'px-3.5 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all whitespace-nowrap cursor-pointer select-none',
+                    isActive
+                      ? 'bg-black/15 text-white shadow-inner font-bold'
+                      : 'text-white/90 hover:text-white hover:bg-white/15'
+                  )
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </div>
 
-            <div className="h-4 w-px bg-[#E6E8EE] dark:bg-[#2A2E3B] mx-2" />
-
-            {/* Category Nav Links */}
-            <div className="flex items-center gap-1">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    className={({ isActive }) =>
-                      cn(
-                        'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors select-none cursor-pointer',
-                        item.highlight
-                          ? 'text-[#D64545] hover:bg-[#FDF2F2] dark:hover:bg-[#D64545]/10 font-semibold'
-                          : isActive
-                          ? 'text-[#5B5BD6] bg-[#EEEEFF] dark:bg-[#5B5BD6]/15 font-semibold'
-                          : 'text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-[#F4F7FC] hover:bg-[#F7F8FA] dark:hover:bg-[#1D2028]'
-                      )
-                    }
-                  >
-                    <Icon className="w-3.5 h-3.5 opacity-80" />
-                    <span>{item.label}</span>
-                  </NavLink>
-                );
-              })}
-            </div>
+          {/* Right Secondary Links (Blog, About, Contact) */}
+          <div className="flex items-center gap-1 shrink-0 pl-4 border-l border-white/20">
+            {rightItems.map((item) => (
+              item.isExternal ? (
+                <a
+                  key={item.label}
+                  href={item.to}
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium text-white/90 hover:text-white hover:bg-white/15 transition-all whitespace-nowrap"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.label}
+                  to={item.to}
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium text-white/90 hover:text-white hover:bg-white/15 transition-all whitespace-nowrap"
+                >
+                  {item.label}
+                </Link>
+              )
+            ))}
           </div>
         </div>
       </div>

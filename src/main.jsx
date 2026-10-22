@@ -13,21 +13,25 @@ import { AuthProvider } from './context/AuthContext';
 
 import { registerServiceWorker } from './serviceWorkerRegistration';
 
+import { ErrorBoundary } from './components/common/ErrorBoundary';
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <LanguageProvider>
-      <ThemeProvider>
-        <PhoneModelProvider>
-          <AuthProvider>
-            <FavoritesProvider>
-              <CartProvider>
-                <App />
-              </CartProvider>
-            </FavoritesProvider>
-          </AuthProvider>
-        </PhoneModelProvider>
-      </ThemeProvider>
-    </LanguageProvider>
+    <ErrorBoundary>
+      <LanguageProvider>
+        <ThemeProvider>
+          <PhoneModelProvider>
+            <AuthProvider>
+              <FavoritesProvider>
+                <CartProvider>
+                  <App />
+                </CartProvider>
+              </FavoritesProvider>
+            </AuthProvider>
+          </PhoneModelProvider>
+        </ThemeProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );
 

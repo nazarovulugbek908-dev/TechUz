@@ -145,87 +145,8 @@ export function initializeDatabase() {
     db.prepare("UPDATE users SET password_hash = ? WHERE role = 'admin'").run(adminPassHash);
   }
 
-  // 2. Seed Categories if empty
-  const catCount = db.prepare('SELECT COUNT(*) as count FROM categories').get().count;
-  if (catCount === 0) {
-    const insertCat = db.prepare(`
-      INSERT OR IGNORE INTO categories (id, slug, name_uz, name_ru, icon, badge, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `);
-    const now = new Date().toISOString();
-    for (const cat of mockCategories) {
-      insertCat.run(cat.id, cat.slug, cat.name_uz, cat.name_ru, cat.icon || '', cat.badge || '', now);
-    }
-    console.log(`✓ Seeded ${mockCategories.length} categories`);
-  }
-
-  // 3. Seed Brands if empty
-  const brandCount = db.prepare('SELECT COUNT(*) as count FROM brands').get().count;
-  if (brandCount === 0) {
-    const insertBrand = db.prepare(`
-      INSERT OR IGNORE INTO brands (id, slug, name, active, created_at)
-      VALUES (?, ?, ?, ?, ?)
-    `);
-    const now = new Date().toISOString();
-    for (const b of mockBrands) {
-      insertBrand.run(b.id, b.slug, b.name, b.active ? 1 : 0, now);
-    }
-    console.log(`✓ Seeded ${mockBrands.length} brands`);
-  }
-
-  // 4. Seed Phone Models if empty
-  const phoneModelCount = db.prepare('SELECT COUNT(*) as count FROM phone_models').get().count;
-  if (phoneModelCount === 0) {
-    const insertModel = db.prepare(`
-      INSERT OR IGNORE INTO phone_models (id, name, brand, release_year, popular, created_at)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `);
-    const now = new Date().toISOString();
-    for (const pm of mockPhoneModels) {
-      insertModel.run(pm.id, pm.name, pm.brand, pm.releaseYear || 2024, pm.popular ? 1 : 0, now);
-    }
-    console.log(`✓ Seeded ${mockPhoneModels.length} phone models`);
-  }
-
-  // 5. Seed Products if empty
-  const prodCount = db.prepare('SELECT COUNT(*) as count FROM products').get().count;
-  if (prodCount === 0) {
-    const insertProduct = db.prepare(`
-      INSERT OR IGNORE INTO products (
-        id, slug, category, brand, name_uz, name_ru, desc_uz, desc_ru,
-        price, old_price, stock, warranty_months, badge, rating, reviews_count,
-        is_featured, compatible_models, images, variants, specs, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    const now = new Date().toISOString();
-    for (const p of mockProducts) {
-      insertProduct.run(
-        p.id,
-        p.slug,
-        p.category,
-        p.brand,
-        p.nameUz,
-        p.nameRu,
-        p.descUz || '',
-        p.descRu || '',
-        Math.round(p.price),
-        p.oldPrice ? Math.round(p.oldPrice) : null,
-        p.stock !== undefined ? p.stock : 10,
-        p.warrantyMonths || 12,
-        p.badge || '',
-        p.rating || 5.0,
-        p.reviewsCount || 0,
-        p.isFeatured ? 1 : 0,
-        JSON.stringify(p.compatibleModels || []),
-        JSON.stringify(p.images || []),
-        JSON.stringify(p.variants || []),
-        JSON.stringify(p.specs || {}),
-        now,
-        now
-      );
-    }
-    console.log(`✓ Seeded ${mockProducts.length} persistent products in SQLite database`);
-  }
+  // 2. Categories, Brands, Phone Models & Products - start clean for admin to manage
+  // Auto-seeding of mock data disabled.
 
   // 6. Seed store settings if empty
   const settingsCount = db.prepare('SELECT COUNT(*) as count FROM settings').get().count;

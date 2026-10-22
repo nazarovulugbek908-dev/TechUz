@@ -7,24 +7,27 @@ import { categoryService } from '../services/categoryService';
 import { brandService } from '../services/brandService';
 import { ProductCard } from '../components/product/ProductCard';
 import { QuickViewModal } from '../components/product/QuickViewModal';
-import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
-import { Input } from '../components/common/Input';
-import { Select } from '../components/common/Select';
 import { Drawer } from '../components/common/Drawer';
 import { EmptyState } from '../components/feedback/EmptyState';
 import { SkeletonCard } from '../components/feedback/LoadingSpinner';
 import {
-  Filter,
   SlidersHorizontal,
   X,
   Search,
   Grid,
   List,
   Smartphone,
+  Shield,
+  Zap,
+  Headphones,
+  Sparkles,
+  Layers,
+  ShoppingBag,
+  Plus,
   Check,
-  RefreshCw,
-  ShoppingBag
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
 import { cn } from '../utils/cn';
 
@@ -37,7 +40,7 @@ export function ShopPage() {
   const categoryParam = searchParams.get('category') || 'all';
   const brandParam = searchParams.get('brand') || 'all';
   const searchParam = searchParams.get('search') || searchParams.get('q') || '';
-  const sortParam = searchParams.get('sort') || 'popular';
+  const sortParam = searchParams.get('sort') || 'newest';
   const inStockParam = searchParams.get('inStock') === 'true';
   const onSaleParam = searchParams.get('onSale') === 'true';
   const compatibleOnlyParam = searchParams.get('compatibleOnly') === 'true';
@@ -54,10 +57,6 @@ export function ShopPage() {
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
   const [quickViewProduct, setQuickViewProduct] = useState(null);
-
-  // Local price input state
-  const [minPriceInput, setMinPriceInput] = useState(minPriceParam);
-  const [maxPriceInput, setMaxPriceInput] = useState(maxPriceParam);
 
   // Load Categories & Brands
   useEffect(() => {
@@ -139,20 +138,7 @@ export function ShopPage() {
     setSearchParams(newParams);
   };
 
-  const handleApplyPrice = () => {
-    const newParams = new URLSearchParams(searchParams);
-    if (minPriceInput) newParams.set('minPrice', minPriceInput);
-    else newParams.delete('minPrice');
-
-    if (maxPriceInput) newParams.set('maxPrice', maxPriceInput);
-    else newParams.delete('maxPrice');
-
-    setSearchParams(newParams);
-  };
-
   const handleResetFilters = () => {
-    setMinPriceInput('');
-    setMaxPriceInput('');
     setSearchParams(new URLSearchParams());
   };
 
@@ -177,77 +163,54 @@ export function ShopPage() {
     maxPriceParam
   ]);
 
-  const currentCategoryName = useMemo(() => {
-    if (categoryParam === 'all') return t('nav.shop');
-    const matched = categories.find((c) => c.slug === categoryParam || c.id === categoryParam);
-    if (matched) return language === 'ru' ? matched.name_ru : matched.name_uz;
-    return categoryParam;
-  }, [categoryParam, categories, language, t]);
+  const getCategoryIcon = (slug) => {
+    switch (slug) {
+      case 'smartphones':
+        return <Smartphone className="w-4 h-4" />;
+      case 'cases':
+        return <Shield className="w-4 h-4" />;
+      case 'chargers':
+        return <Zap className="w-4 h-4" />;
+      case 'headphones':
+        return <Headphones className="w-4 h-4" />;
+      case 'screen_protectors':
+        return <Sparkles className="w-4 h-4" />;
+      default:
+        return <Layers className="w-4 h-4" />;
+    }
+  };
 
-  const FilterContent = (
-    <div className="space-y-5 text-xs">
-      {/* Search Input inside filter */}
+  // Sidebar Categories Component (matches Image 1)
+  const CategorySidebar = (
+    <div className="space-y-6">
+      {/* Product Categories Card */}
       <div>
-        <label className="block text-xs font-semibold text-[#17191F] dark:text-[#F4F7FC] mb-1.5">
-          {t('catalog.filter_by')}
-        </label>
-        <Input
-          placeholder={t('nav.search_placeholder')}
-          value={searchParam}
-          onChange={(e) => updateFilter('search', e.target.value)}
-          icon={Search}
-        />
-      </div>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
+          {language === 'ru' ? 'Категории товаров' : 'Mahsulot toifalari'}
+        </h2>
 
-      {/* Phone model compatibility filter */}
-      {hasSelectedModel && (
-        <div className="p-3 rounded-lg bg-[#F7F8FA] dark:bg-[#15171D] border border-[#E6E8EE] dark:border-[#2A2E3B] space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <Smartphone className="w-3.5 h-3.5 text-[#5B5BD6]" />
-              <span className="font-semibold text-[#17191F] dark:text-white">
-                {selectedModel?.name}
-              </span>
-            </div>
-            <span className="text-[10px] font-semibold text-[#16845B] bg-[#EAF6F0] px-1.5 py-0.5 rounded border border-[#CFEBDD]">
-              {t('phone_model.compatible_match')}
-            </span>
-          </div>
-
-          <label className="flex items-center gap-2 pt-1 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={compatibleOnlyParam}
-              onChange={(e) => updateFilter('compatibleOnly', e.target.checked)}
-              className="rounded border-[#E6E8EE] text-[#5B5BD6] focus:ring-[#5B5BD6]"
-            />
-            <span className="font-medium text-[#17191F] dark:text-[#9CA3AF]">
-              {t('phone_model.compatible_only')}
-            </span>
-          </label>
-        </div>
-      )}
-
-      {/* Categories Filter */}
-      <div className="space-y-2">
-        <h3 className="font-semibold text-xs text-[#17191F] dark:text-[#F4F7FC] uppercase tracking-wider">
-          {t('catalog.category')}
-        </h3>
-        <div className="space-y-0.5 max-h-52 overflow-y-auto pr-1">
+        <div className="bg-white dark:bg-[#1D2028] rounded-2xl border border-gray-150 dark:border-[#2A2E3B] p-2 shadow-2xs divide-y divide-gray-100 dark:divide-[#2A2E3B]/60">
+          {/* All Categories Option */}
           <button
             type="button"
             onClick={() => updateFilter('category', 'all')}
             className={cn(
-              'w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-left transition-colors text-xs cursor-pointer',
+              'w-full flex items-center justify-between px-3.5 py-3 text-xs font-semibold rounded-xl transition-all cursor-pointer group',
               categoryParam === 'all'
-                ? 'bg-[#5B5BD6] text-white font-semibold'
-                : 'text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-white hover:bg-[#F7F8FA] dark:hover:bg-[#15171D]'
+                ? 'bg-[#E6F7EF] dark:bg-[#00A859]/15 text-[#00A859]'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#15171D]'
             )}
           >
-            <span>{t('placeholder.all_categories_label')}</span>
-            {categoryParam === 'all' && <Check className="w-3.5 h-3.5 text-white" />}
+            <div className="flex items-center gap-2.5">
+              <Layers className={cn('w-4 h-4', categoryParam === 'all' ? 'text-[#00A859]' : 'text-gray-400 group-hover:text-gray-600')} />
+              <span>{language === 'ru' ? 'Все категории' : 'Barcha toifalar'}</span>
+            </div>
+            <span className={cn('w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs', categoryParam === 'all' ? 'text-[#00A859]' : 'text-[#00A859]/70 group-hover:text-[#00A859]')}>
+              +
+            </span>
           </button>
 
+          {/* Dynamic Categories */}
           {categories.map((cat) => {
             const isSelected = categoryParam === (cat.slug || cat.id);
             const label = language === 'ru' ? cat.name_ru : cat.name_uz;
@@ -255,318 +218,149 @@ export function ShopPage() {
               <button
                 type="button"
                 key={cat.id || cat.slug}
-                onClick={() => updateFilter('category', cat.slug || cat.id)}
+                onClick={() => updateFilter('category', isSelected ? 'all' : (cat.slug || cat.id))}
                 className={cn(
-                  'w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-left transition-colors text-xs cursor-pointer',
+                  'w-full flex items-center justify-between px-3.5 py-3 text-xs font-semibold rounded-xl transition-all cursor-pointer group',
                   isSelected
-                    ? 'bg-[#5B5BD6] text-white font-semibold'
-                    : 'text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-white hover:bg-[#F7F8FA] dark:hover:bg-[#15171D]'
+                    ? 'bg-[#E6F7EF] dark:bg-[#00A859]/15 text-[#00A859]'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#15171D]'
                 )}
               >
-                <span>{label}</span>
-                {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
+                <div className="flex items-center gap-2.5 truncate">
+                  <span className={cn('shrink-0', isSelected ? 'text-[#00A859]' : 'text-gray-400 group-hover:text-gray-600')}>
+                    {getCategoryIcon(cat.slug)}
+                  </span>
+                  <span className="truncate">{label}</span>
+                </div>
+                <span className={cn('w-5 h-5 rounded-full flex items-center justify-center font-bold text-xs shrink-0', isSelected ? 'text-[#00A859]' : 'text-[#00A859]/70 group-hover:text-[#00A859]')}>
+                  +
+                </span>
               </button>
             );
           })}
         </div>
       </div>
-
-      {/* Brands Filter */}
-      <div className="space-y-2 pt-2 border-t border-[#E6E8EE] dark:border-[#2A2E3B]">
-        <h3 className="font-semibold text-xs text-[#17191F] dark:text-[#F4F7FC] uppercase tracking-wider">
-          {t('catalog.brand')}
-        </h3>
-        <div className="space-y-0.5 max-h-44 overflow-y-auto pr-1">
-          <button
-            type="button"
-            onClick={() => updateFilter('brand', 'all')}
-            className={cn(
-              'w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-left transition-colors text-xs cursor-pointer',
-              brandParam === 'all'
-                ? 'bg-[#5B5BD6] text-white font-semibold'
-                : 'text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-white hover:bg-[#F7F8FA] dark:hover:bg-[#15171D]'
-            )}
-          >
-            <span>{t('admin.all_brands_filter')}</span>
-            {brandParam === 'all' && <Check className="w-3.5 h-3.5 text-white" />}
-          </button>
-
-          {brands.map((b) => {
-            const isSelected = brandParam.toLowerCase() === b.name.toLowerCase();
-            return (
-              <button
-                type="button"
-                key={b.id || b.name}
-                onClick={() => updateFilter('brand', isSelected ? 'all' : b.name)}
-                className={cn(
-                  'w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-left transition-colors text-xs cursor-pointer',
-                  isSelected
-                    ? 'bg-[#5B5BD6] text-white font-semibold'
-                    : 'text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-white hover:bg-[#F7F8FA] dark:hover:bg-[#15171D]'
-                )}
-              >
-                <span>{b.name}</span>
-                {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Price Range */}
-      <div className="space-y-2.5 pt-2 border-t border-[#E6E8EE] dark:border-[#2A2E3B]">
-        <h3 className="font-semibold text-xs text-[#17191F] dark:text-[#F4F7FC] uppercase tracking-wider">
-          {t('catalog.price_range')} (UZS)
-        </h3>
-        <div className="grid grid-cols-2 gap-2">
-          <Input
-            type="number"
-            placeholder="Min"
-            value={minPriceInput}
-            onChange={(e) => setMinPriceInput(e.target.value)}
-          />
-          <Input
-            type="number"
-            placeholder="Max"
-            value={maxPriceInput}
-            onChange={(e) => setMaxPriceInput(e.target.value)}
-          />
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleApplyPrice}
-          className="w-full text-xs font-semibold"
-        >
-          {t('common.save')}
-        </Button>
-      </div>
-
-      {/* Toggles (In Stock & On Sale) */}
-      <div className="space-y-2 pt-2 border-t border-[#E6E8EE] dark:border-[#2A2E3B]">
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={inStockParam}
-            onChange={(e) => updateFilter('inStock', e.target.checked)}
-            className="rounded border-[#E6E8EE] text-[#5B5BD6] focus:ring-[#5B5BD6]"
-          />
-          <span className="font-medium text-[#17191F] dark:text-[#9CA3AF]">
-            {t('catalog.in_stock')}
-          </span>
-        </label>
-
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={onSaleParam}
-            onChange={(e) => updateFilter('onSale', e.target.checked)}
-            className="rounded border-[#E6E8EE] text-[#5B5BD6] focus:ring-[#5B5BD6]"
-          />
-          <span className="font-medium text-[#17191F] dark:text-[#9CA3AF]">
-            {t('nav.sales_deals')}
-          </span>
-        </label>
-      </div>
-
-      {/* Reset button */}
-      {activeFiltersCount > 0 && (
-        <div className="pt-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleResetFilters}
-            icon={RefreshCw}
-            className="w-full text-[#737985] hover:text-[#5B5BD6]"
-          >
-            {t('catalog.clear_filters')} ({activeFiltersCount})
-          </Button>
-        </div>
-      )}
     </div>
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-7 space-y-5">
-      {/* Breadcrumb & Header Bar */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-2 text-xs text-[#737985] dark:text-[#9CA3AF]">
-          <Link to="/" className="hover:text-[#17191F] dark:hover:text-[#F4F7FC] transition-colors">
-            {t('nav.home')}
-          </Link>
-          <span>/</span>
-          {searchParam ? (
-            <>
-              <Link to="/shop" className="hover:text-[#17191F] dark:hover:text-[#F4F7FC] transition-colors">
-                {t('nav.shop')}
-              </Link>
-              <span>/</span>
-              <span className="text-[#17191F] dark:text-[#F4F7FC] font-semibold truncate max-w-xs">
-                "{searchParam}"
-              </span>
-            </>
-          ) : (
-            <span className="text-[#17191F] dark:text-[#F4F7FC] font-semibold">
-              {currentCategoryName}
-            </span>
-          )}
-        </div>
-
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#17191F] dark:text-[#F4F7FC]">
-              {searchParam ? (
-                <>
-                  {t('catalog.search_results_title')}: <span className="text-[#5B5BD6]">"{searchParam}"</span>
-                </>
-              ) : (
-                currentCategoryName
-              )}
-            </h1>
-            <p className="text-xs text-[#737985] dark:text-[#9CA3AF] mt-0.5">
-              <span>{products.length}</span> {t('catalog.products_found')}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {/* Mobile Filter Button */}
-            <div className="lg:hidden">
-              <Button
-                variant="outline"
-                size="sm"
-                icon={Filter}
-                onClick={() => setMobileFilterOpen(true)}
-                className="font-semibold text-xs"
-              >
-                {t('catalog.filter_by')} {activeFiltersCount > 0 && `(${activeFiltersCount})`}
-              </Button>
-            </div>
-
-            {/* Sort Select */}
-            <Select
-              value={sortParam}
-              onChange={(e) => updateFilter('sort', e.target.value)}
-              options={[
-                { value: 'popular', label: t('catalog.sort_popular') },
-                { value: 'newest', label: t('catalog.sort_newest') },
-                { value: 'price_asc', label: t('catalog.sort_price_asc') },
-                { value: 'price_desc', label: t('catalog.sort_price_desc') }
-              ]}
-              className="text-xs font-semibold py-1.5"
-            />
-          </div>
-        </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+      {/* 1. Breadcrumb */}
+      <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium">
+        <Link to="/" className="hover:text-gray-900 dark:hover:text-white transition-colors">
+          {language === 'ru' ? 'Главная' : 'Bosh sahifa'}
+        </Link>
+        <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+        <span className="text-gray-900 dark:text-white font-semibold">
+          {language === 'ru' ? 'Каталог' : "Do'kon"}
+        </span>
       </div>
 
-      {/* Active Filter Chips */}
-      {activeFiltersCount > 0 && (
-        <div className="flex items-center gap-2 flex-wrap text-xs">
-          <span className="text-[#737985] font-medium">{t('catalog.filter_by')}:</span>
-          {categoryParam !== 'all' && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#EEEEFF] text-[#5B5BD6] border border-[#DCDCFB] font-semibold">
-              {currentCategoryName}
-              <button
-                type="button"
-                onClick={() => updateFilter('category', 'all')}
-                className="hover:text-[#3C3CA8] cursor-pointer"
-                aria-label="Remove category"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </span>
-          )}
-          {brandParam !== 'all' && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#EEEEFF] text-[#5B5BD6] border border-[#DCDCFB] font-semibold">
-              {brandParam}
-              <button
-                type="button"
-                onClick={() => updateFilter('brand', 'all')}
-                className="hover:text-[#3C3CA8] cursor-pointer"
-                aria-label="Remove brand"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </span>
-          )}
-          {searchParam && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#EEEEFF] text-[#5B5BD6] border border-[#DCDCFB] font-semibold">
-              "{searchParam}"
-              <button
-                type="button"
-                onClick={() => updateFilter('search', '')}
-                className="hover:text-[#3C3CA8] cursor-pointer"
-                aria-label="Remove search"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </span>
-          )}
-          {inStockParam && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#EEEEFF] text-[#5B5BD6] border border-[#DCDCFB] font-semibold">
-              {t('catalog.in_stock')}
-              <button
-                type="button"
-                onClick={() => updateFilter('inStock', false)}
-                className="hover:text-[#3C3CA8] cursor-pointer"
-                aria-label="Remove inStock"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </span>
-          )}
-          {onSaleParam && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#EEEEFF] text-[#5B5BD6] border border-[#DCDCFB] font-semibold">
-              {t('nav.sales_deals')}
-              <button
-                type="button"
-                onClick={() => updateFilter('onSale', false)}
-                className="hover:text-[#3C3CA8] cursor-pointer"
-                aria-label="Remove onSale"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </span>
-          )}
-          <button
-            type="button"
-            onClick={handleResetFilters}
-            className="text-xs text-[#737985] hover:text-[#5B5BD6] font-semibold ml-1 cursor-pointer transition-colors"
-          >
-            {t('catalog.clear_filters')}
-          </button>
-        </div>
-      )}
+      {/* 2. Page Title */}
+      <div>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#17191F] dark:text-white tracking-tight">
+          {language === 'ru' ? 'Каталог товаров' : 'Mahsulotlar katalogi'}
+        </h1>
+      </div>
 
-      {/* Main Grid Layout (Sidebar + Products Grid) */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-        {/* Desktop Sidebar */}
-        <div className="hidden lg:block lg:col-span-1">
-          <Card className="p-4 bg-white dark:bg-[#1D2028] border-[#E6E8EE] dark:border-[#2A2E3B] sticky top-20 rounded-xl">
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#E6E8EE] dark:border-[#2A2E3B]">
-              <h2 className="text-sm font-semibold text-[#17191F] dark:text-[#F4F7FC] flex items-center gap-1.5">
-                <SlidersHorizontal className="w-4 h-4 text-[#5B5BD6]" />
-                {t('catalog.filter_by')}
-              </h2>
-              {activeFiltersCount > 0 && (
-                <span className="w-4.5 h-4.5 rounded-full bg-[#5B5BD6] text-white text-[10px] font-bold flex items-center justify-center">
-                  {activeFiltersCount}
-                </span>
-              )}
+      {/* 3. Main Content: Left Categories Sidebar + Right Products Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+        {/* Left Column (Desktop Categories Sidebar) */}
+        <div className="hidden lg:block lg:col-span-1 sticky top-24">
+          {CategorySidebar}
+        </div>
+
+        {/* Right Column (Controls Bar + Product Cards) */}
+        <div className="lg:col-span-3 space-y-5">
+          {/* Top Control Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+            <div className="flex items-center gap-4">
+              {/* Grid / List View Toggle */}
+              <div className="flex items-center gap-1 text-gray-500">
+                <button
+                  type="button"
+                  onClick={() => setViewMode('grid')}
+                  className={cn(
+                    'p-1.5 rounded-lg border transition-colors cursor-pointer',
+                    viewMode === 'grid'
+                      ? 'border-[#00A859] text-[#00A859] bg-[#E6F7EF]'
+                      : 'border-gray-200 dark:border-[#2A2E3B] hover:text-gray-900'
+                  )}
+                  aria-label="Grid view"
+                >
+                  <Grid className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('list')}
+                  className={cn(
+                    'p-1.5 rounded-lg border transition-colors cursor-pointer',
+                    viewMode === 'list'
+                      ? 'border-[#00A859] text-[#00A859] bg-[#E6F7EF]'
+                      : 'border-gray-200 dark:border-[#2A2E3B] hover:text-gray-900'
+                  )}
+                  aria-label="List view"
+                >
+                  <List className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Dynamic Results Counter */}
+              <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                {products.length > 0 ? (
+                  <span>
+                    {language === 'ru'
+                      ? `Показано 1-${products.length} из ${products.length} товаров`
+                      : `1-${products.length} dan ${products.length} ta mahsulot`}
+                  </span>
+                ) : (
+                  <span>
+                    {language === 'ru' ? '0 товаров' : '0 ta mahsulot'}
+                  </span>
+                )}
+              </div>
             </div>
-            {FilterContent}
-          </Card>
-        </div>
 
-        {/* Product Grid Area */}
-        <div className="lg:col-span-3">
+            <div className="flex items-center gap-3">
+              {/* Mobile Filter Trigger Button */}
+              <div className="lg:hidden">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  icon={SlidersHorizontal}
+                  onClick={() => setMobileFilterOpen(true)}
+                  className="font-semibold text-xs rounded-full"
+                >
+                  {t('catalog.filter_by')} {activeFiltersCount > 0 && `(${activeFiltersCount})`}
+                </Button>
+              </div>
+
+              {/* Sort Pill Dropdown */}
+              <div className="relative">
+                <select
+                  value={sortParam}
+                  onChange={(e) => updateFilter('sort', e.target.value)}
+                  className="appearance-none bg-white dark:bg-[#1D2028] border border-gray-200 dark:border-[#2A2E3B] rounded-full px-4 py-2 pr-8 text-xs font-semibold text-gray-700 dark:text-gray-200 focus:outline-none focus:border-[#00A859] cursor-pointer shadow-2xs"
+                >
+                  <option value="newest">{language === 'ru' ? 'Сначала новые' : 'Avval yangilar'}</option>
+                  <option value="popular">{language === 'ru' ? 'Сначала популярные' : 'Avval ommabop'}</option>
+                  <option value="price_asc">{language === 'ru' ? 'Сначала дешевле' : 'Avval arzonlari'}</option>
+                  <option value="price_desc">{language === 'ru' ? 'Сначала дороже' : 'Avval qimmatlari'}</option>
+                </select>
+                <ChevronDown className="w-3.5 h-3.5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+            </div>
+          </div>
+
+          {/* Product Grid / List */}
           {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {Array.from({ length: 6 }).map((_, idx) => (
                 <SkeletonCard key={idx} />
               ))}
             </div>
           ) : products.length === 0 ? (
-            <div className="py-12">
+            <div className="py-16 bg-white dark:bg-[#1D2028] rounded-2xl border border-gray-150 dark:border-[#2A2E3B]">
               <EmptyState
                 icon={ShoppingBag}
                 title={searchParam ? t('catalog.no_search_results') : t('catalog.no_products')}
@@ -580,7 +374,11 @@ export function ShopPage() {
               />
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-4">
+            <div className={cn(
+              viewMode === 'grid'
+                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'
+                : 'space-y-4'
+            )}>
               {products.map((product) => (
                 <ProductCard
                   key={product.id}
@@ -593,14 +391,14 @@ export function ShopPage() {
         </div>
       </div>
 
-      {/* Mobile Filter Drawer */}
+      {/* Mobile Drawer Filter */}
       <Drawer
         isOpen={mobileFilterOpen}
         onClose={() => setMobileFilterOpen(false)}
-        title={t('catalog.filter_by')}
+        title={language === 'ru' ? 'Фильтры' : 'Filtrlar'}
       >
-        <div className="py-2">
-          {FilterContent}
+        <div className="p-4">
+          {CategorySidebar}
         </div>
       </Drawer>
 

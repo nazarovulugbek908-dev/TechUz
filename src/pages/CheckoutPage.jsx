@@ -139,7 +139,7 @@ export function CheckoutPage() {
 
             <div>
               <span className="text-[#737985] block text-xs">{t('cart.total')}:</span>
-              <span className="font-extrabold text-[#5B5BD6]">
+              <span className="font-extrabold text-[#00A859]">
                 {formatUzbekCurrency(completedOrder.total, language)}
               </span>
             </div>
@@ -268,7 +268,7 @@ export function CheckoutPage() {
             {/* 1. Recipient Info */}
             <Card className="p-6 space-y-4">
               <div className="flex items-center gap-3 border-b border-[#E6E8EE] dark:border-slate-800 pb-3">
-                <div className="w-7 h-7 rounded-lg bg-[#5B5BD6]/10 text-[#5B5BD6] border border-[#5B5BD6]/20 flex items-center justify-center font-bold text-xs">
+                <div className="w-7 h-7 rounded-lg bg-[#00A859]/10 text-[#00A859] border border-[#00A859]/20 flex items-center justify-center font-bold text-xs">
                   1
                 </div>
                 <h2 className="text-base font-bold text-[#17191F] dark:text-white">
@@ -308,7 +308,7 @@ export function CheckoutPage() {
             {/* 2. Delivery Address */}
             <Card className="p-6 space-y-4">
               <div className="flex items-center gap-3 border-b border-[#E6E8EE] dark:border-slate-800 pb-3">
-                <div className="w-7 h-7 rounded-lg bg-[#5B5BD6]/10 text-[#5B5BD6] border border-[#5B5BD6]/20 flex items-center justify-center font-bold text-xs">
+                <div className="w-7 h-7 rounded-lg bg-[#00A859]/10 text-[#00A859] border border-[#00A859]/20 flex items-center justify-center font-bold text-xs">
                   2
                 </div>
                 <h2 className="text-base font-bold text-[#17191F] dark:text-white">
@@ -370,7 +370,7 @@ export function CheckoutPage() {
             {/* 3. Payment Method */}
             <Card className="p-6 space-y-4">
               <div className="flex items-center gap-3 border-b border-[#E6E8EE] dark:border-slate-800 pb-3">
-                <div className="w-7 h-7 rounded-lg bg-[#5B5BD6]/10 text-[#5B5BD6] border border-[#5B5BD6]/20 flex items-center justify-center font-bold text-xs">
+                <div className="w-7 h-7 rounded-lg bg-[#00A859]/10 text-[#00A859] border border-[#00A859]/20 flex items-center justify-center font-bold text-xs">
                   3
                 </div>
                 <h2 className="text-base font-bold text-[#17191F] dark:text-white">
@@ -385,14 +385,14 @@ export function CheckoutPage() {
                   onClick={() => setPaymentMethod('cash')}
                   className={`p-4 rounded-xl border text-left cursor-pointer transition-all flex flex-col justify-between ${
                     paymentMethod === 'cash'
-                      ? 'border-[#5B5BD6] bg-[#EEEEFF]/40 dark:bg-slate-800 shadow-xs'
+                      ? 'border-[#00A859] bg-[#E6F7EF]/60 dark:bg-slate-800 shadow-xs'
                       : 'border-[#E6E8EE] dark:border-slate-800 hover:border-slate-300 bg-white dark:bg-slate-900'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <Banknote className="w-6 h-6 text-[#5B5BD6]" />
+                    <Banknote className="w-6 h-6 text-[#00A859]" />
                     {paymentMethod === 'cash' && (
-                      <div className="w-5 h-5 rounded-full bg-[#5B5BD6] text-white flex items-center justify-center text-xs">
+                      <div className="w-5 h-5 rounded-full bg-[#00A859] text-white flex items-center justify-center text-xs">
                         ✓
                       </div>
                     )}
@@ -501,7 +501,7 @@ export function CheckoutPage() {
                   <span className="text-base font-bold text-[#17191F] dark:text-white">
                     {t('cart.total')}:
                   </span>
-                  <span className="text-xl font-extrabold text-[#5B5BD6]">
+                  <span className="text-xl font-extrabold text-[#00A859]">
                     {formatUzbekCurrency(total, language)}
                   </span>
                 </div>

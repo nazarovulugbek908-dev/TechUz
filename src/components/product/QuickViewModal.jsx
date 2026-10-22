@@ -106,7 +106,7 @@ export function QuickViewModal({
                   className={cn(
                     'w-14 h-14 rounded-md border p-1 bg-white dark:bg-[#1D2028] shrink-0 cursor-pointer transition-colors',
                     selectedImageIndex === idx
-                      ? 'border-[#5B5BD6] ring-1 ring-[#5B5BD6]'
+                      ? 'border-[#00A859] ring-1 ring-[#00A859]'
                       : 'border-[#E6E8EE] dark:border-[#2A2E3B] opacity-60 hover:opacity-100'
                   )}
                 >
@@ -130,7 +130,7 @@ export function QuickViewModal({
           <div className="space-y-2.5">
             {/* Brand & Stock */}
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-[#5B5BD6] uppercase tracking-wider">
+              <span className="text-xs font-semibold text-[#00A859] uppercase tracking-wider">
                 {product.brand}
               </span>
               <span
@@ -192,7 +192,7 @@ export function QuickViewModal({
                       className={cn(
                         'w-6 h-6 rounded-full border transition-all cursor-pointer',
                         selectedVariantIndex === idx
-                          ? 'ring-2 ring-[#5B5BD6] ring-offset-2 border-white'
+                          ? 'ring-2 ring-[#00A859] ring-offset-2 border-white'
                           : 'border-[#D1D5DB] dark:border-[#3B4254]'
                       )}
                       style={{ backgroundColor: v.color }}
@@ -222,7 +222,7 @@ export function QuickViewModal({
                     'flex-1 h-9 px-4 rounded-lg font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-xs',
                     isAdded
                       ? 'bg-[#16845B] text-white'
-                      : 'bg-[#5B5BD6] hover:bg-[#4949BC] text-white active:bg-[#3C3CA8]'
+                      : 'bg-[#00A859] hover:bg-[#00924C] text-white active:bg-[#007D40]'
                   )}
                 >
                   {isAdded ? (
@@ -247,7 +247,7 @@ export function QuickViewModal({
             <Link
               to={`/product/${product.slug}`}
               onClick={onClose}
-              className="flex items-center justify-center gap-1.5 text-xs font-semibold text-[#5B5BD6] hover:text-[#4949BC] transition-colors py-1"
+              className="flex items-center justify-center gap-1.5 text-xs font-semibold text-[#00A859] hover:text-[#00924C] transition-colors py-1"
             >
               <span>{t('product.view_full_details')}</span>
               <ExternalLink className="w-3.5 h-3.5" />

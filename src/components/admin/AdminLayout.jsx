@@ -214,7 +214,7 @@ export function AdminLayout() {
         <div className="p-5 border-b border-[#242731] flex items-center justify-between">
           <Link to="/admin" className="flex items-center gap-3">
             <span className="font-extrabold text-xl text-white tracking-tight">
-              Tech<span className="text-[#5B5BD6]">Uz</span>
+              Tech<span className="text-[#00A859]">Uz</span>
             </span>
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#737985] bg-white/5 px-2 py-0.5 rounded border border-white/10">
               Admin
@@ -243,7 +243,7 @@ export function AdminLayout() {
                   clsx(
                     'flex items-center justify-between px-3.5 py-2.5 rounded-lg font-semibold text-xs transition-colors group',
                     isActive || isItemActive
-                      ? 'bg-[#5B5BD6] text-white shadow-xs'
+                      ? 'bg-[#00A859] text-white shadow-xs'
                       : 'text-[#737985] hover:text-white hover:bg-white/5'
                   )
                 }
@@ -272,7 +272,7 @@ export function AdminLayout() {
             className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg font-semibold text-[#737985] hover:text-white hover:bg-white/5 transition-colors"
             title={t('admin.back_to_store')}
           >
-            <Store className="w-3.5 h-3.5 text-[#5B5BD6]" />
+            <Store className="w-3.5 h-3.5 text-[#00A859]" />
             <span className="text-[11px]">{t('admin.back_to_store')}</span>
           </Link>
 
@@ -303,7 +303,7 @@ export function AdminLayout() {
         <div className="p-5 border-b border-[#242731] flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-extrabold text-lg text-white">
-              Tech<span className="text-[#5B5BD6]">Uz</span>
+              Tech<span className="text-[#00A859]">Uz</span>
             </span>
             <span className="text-[10px] font-bold text-[#737985] bg-white/5 px-1.5 py-0.5 rounded">
               Admin
@@ -330,7 +330,7 @@ export function AdminLayout() {
                   clsx(
                     'flex items-center justify-between px-3.5 py-2.5 rounded-lg font-semibold text-xs transition-all',
                     isActive || (item.to === '/admin/catalog' && location.pathname.startsWith('/admin/catalog'))
-                      ? 'bg-[#5B5BD6] text-white'
+                      ? 'bg-[#00A859] text-white'
                       : 'text-[#737985] hover:text-white hover:bg-white/5'
                   )
                 }
@@ -381,7 +381,7 @@ export function AdminLayout() {
               <button
                 type="submit"
                 aria-label={t('catalog.search_button')}
-                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#737985] hover:text-[#5B5BD6] transition-colors cursor-pointer p-0 bg-transparent border-none flex items-center justify-center"
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#737985] hover:text-[#00A859] transition-colors cursor-pointer p-0 bg-transparent border-none flex items-center justify-center"
               >
                 <Search className="w-4 h-4" />
               </button>
@@ -390,7 +390,7 @@ export function AdminLayout() {
                 placeholder={t('catalog.search_placeholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-8 py-2 rounded-lg bg-[#F7F8FA] dark:bg-slate-900 border border-[#E6E8EE] dark:border-slate-800 text-xs font-semibold text-[#17191F] dark:text-white placeholder-[#737985] focus:outline-none focus:border-[#5B5BD6] focus:ring-1 focus:ring-[#5B5BD6] transition-colors"
+                className="w-full pl-9 pr-8 py-2 rounded-lg bg-[#F7F8FA] dark:bg-slate-900 border border-[#E6E8EE] dark:border-slate-800 text-xs font-semibold text-[#17191F] dark:text-white placeholder-[#737985] focus:outline-none focus:border-[#00A859] focus:ring-1 focus:ring-[#00A859] transition-colors"
               />
               {searchQuery && (
                 <button
@@ -416,12 +416,12 @@ export function AdminLayout() {
             <div className="relative" ref={notifRef}>
               <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="p-2 rounded-lg bg-[#F7F8FA] dark:bg-slate-900 border border-[#E6E8EE] dark:border-slate-800 text-[#17191F] dark:text-slate-300 hover:text-[#5B5BD6] transition-colors relative cursor-pointer"
+                className="p-2 rounded-lg bg-[#F7F8FA] dark:bg-slate-900 border border-[#E6E8EE] dark:border-slate-800 text-[#17191F] dark:text-slate-300 hover:text-[#00A859] transition-colors relative cursor-pointer"
                 aria-label="Notifications"
               >
                 <Bell className="w-4 h-4" />
                 {pendingOrdersCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#5B5BD6] text-white text-[9px] font-bold flex items-center justify-center animate-pulse">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#00A859] text-white text-[9px] font-bold flex items-center justify-center animate-pulse">
                     {pendingOrdersCount}
                   </span>
                 )}
@@ -435,7 +435,7 @@ export function AdminLayout() {
                         {t('admin.nav_orders')}
                       </span>
                       {pendingOrdersCount > 0 && (
-                        <span className="px-2 py-0.5 rounded-full bg-[#EEEEFF] dark:bg-slate-800 text-[#5B5BD6] font-bold text-[10px]">
+                        <span className="px-2 py-0.5 rounded-full bg-[#E6F7EF] dark:bg-slate-800 text-[#00A859] font-bold text-[10px]">
                           {pendingOrdersCount}
                         </span>
                       )}
@@ -443,7 +443,7 @@ export function AdminLayout() {
                     <button
                       type="button"
                       onClick={markAllAsRead}
-                      className="text-[11px] font-semibold text-[#5B5BD6] hover:underline cursor-pointer flex items-center gap-1"
+                      className="text-[11px] font-semibold text-[#00A859] hover:underline cursor-pointer flex items-center gap-1"
                     >
                       <CheckCheck className="w-3.5 h-3.5" />
                       <span>OK</span>
@@ -466,7 +466,7 @@ export function AdminLayout() {
                             <Link
                               to="/admin/orders"
                               onClick={() => setNotificationsOpen(false)}
-                              className="w-8 h-8 rounded-lg bg-[#EEEEFF] dark:bg-slate-800 text-[#5B5BD6] flex items-center justify-center shrink-0"
+                              className="w-8 h-8 rounded-lg bg-[#E6F7EF] dark:bg-slate-800 text-[#00A859] flex items-center justify-center shrink-0"
                             >
                               <ShoppingCart className="w-4 h-4" />
                             </Link>
@@ -494,7 +494,7 @@ export function AdminLayout() {
                                 <button
                                   type="button"
                                   onClick={(e) => markOneAsRead(ord.id || ord.orderNumber, e)}
-                                  className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#5B5BD6] hover:text-white bg-[#EEEEFF] dark:bg-slate-800 hover:bg-[#5B5BD6] dark:hover:bg-[#5B5BD6] px-2.5 py-0.5 rounded-full border border-[#5B5BD6]/20 transition-colors cursor-pointer"
+                                  className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#00A859] hover:text-white bg-[#E6F7EF] dark:bg-slate-800 hover:bg-[#00A859] dark:hover:bg-[#00A859] px-2.5 py-0.5 rounded-full border border-[#00A859]/20 transition-colors cursor-pointer"
                                   title="Mark as read"
                                 >
                                   <CheckCheck className="w-3 h-3" />
@@ -510,7 +510,7 @@ export function AdminLayout() {
                   <Link
                     to="/admin/orders"
                     onClick={() => setNotificationsOpen(false)}
-                    className="block text-center pt-2 border-t border-[#E6E8EE] dark:border-slate-800 text-[11px] font-semibold text-[#5B5BD6] hover:underline"
+                    className="block text-center pt-2 border-t border-[#E6E8EE] dark:border-slate-800 text-[11px] font-semibold text-[#00A859] hover:underline"
                   >
                     {t('admin.view_orders_btn')}
                   </Link>
@@ -525,7 +525,7 @@ export function AdminLayout() {
                 className={clsx(
                   'px-2 py-1 rounded-md transition-colors cursor-pointer',
                   language === 'uz'
-                    ? 'bg-[#5B5BD6] text-white shadow-xs'
+                    ? 'bg-[#00A859] text-white shadow-xs'
                     : 'text-[#737985] hover:text-[#17191F] dark:hover:text-white'
                 )}
               >
@@ -536,7 +536,7 @@ export function AdminLayout() {
                 className={clsx(
                   'px-2 py-1 rounded-md transition-colors cursor-pointer',
                   language === 'ru'
-                    ? 'bg-[#5B5BD6] text-white shadow-xs'
+                    ? 'bg-[#00A859] text-white shadow-xs'
                     : 'text-[#737985] hover:text-[#17191F] dark:hover:text-white'
                 )}
               >
@@ -547,7 +547,7 @@ export function AdminLayout() {
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg bg-[#F7F8FA] dark:bg-slate-900 border border-[#E6E8EE] dark:border-slate-800 text-[#17191F] dark:text-slate-300 hover:text-[#5B5BD6] transition-colors cursor-pointer"
+              className="p-2 rounded-lg bg-[#F7F8FA] dark:bg-slate-900 border border-[#E6E8EE] dark:border-slate-800 text-[#17191F] dark:text-slate-300 hover:text-[#00A859] transition-colors cursor-pointer"
               aria-label="Toggle theme"
             >
               {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
@@ -559,7 +559,7 @@ export function AdminLayout() {
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                 className="flex items-center gap-2.5 p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 border border-transparent hover:border-[#E6E8EE] dark:hover:border-slate-800 transition-all cursor-pointer group"
               >
-                <div className="w-8 h-8 rounded-lg bg-[#5B5BD6] text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                <div className="w-8 h-8 rounded-lg bg-[#00A859] text-white flex items-center justify-center font-bold text-xs shadow-xs">
                   {adminInitials}
                 </div>
                 <div className="hidden sm:block text-left">
@@ -588,7 +588,7 @@ export function AdminLayout() {
                       }}
                       className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#17191F] dark:text-slate-300 hover:bg-[#F7F8FA] dark:hover:bg-slate-800 text-left transition-colors cursor-pointer"
                     >
-                      <User className="w-3.5 h-3.5 text-[#5B5BD6]" />
+                      <User className="w-3.5 h-3.5 text-[#00A859]" />
                       <span>{t('admin.nav_my_profile')}</span>
                     </button>
 
@@ -597,7 +597,7 @@ export function AdminLayout() {
                       onClick={() => setUserDropdownOpen(false)}
                       className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#17191F] dark:text-slate-300 hover:bg-[#F7F8FA] dark:hover:bg-slate-800 text-left transition-colors"
                     >
-                      <Settings className="w-3.5 h-3.5 text-[#5B5BD6]" />
+                      <Settings className="w-3.5 h-3.5 text-[#00A859]" />
                       <span>{t('admin.nav_settings')}</span>
                     </Link>
                   </div>

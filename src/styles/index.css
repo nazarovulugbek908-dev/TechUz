@@ -7,14 +7,14 @@
   --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   
-  /* Primary Redesign Brand Palette */
-  --color-brand: #5B5BD6;
-  --color-brand-hover: #4949BC;
-  --color-brand-active: #3C3CA8;
-  --color-brand-soft: #EEEEFF;
-  --color-brand-subtle: #F6F6FD;
+  /* Primary Redesign Brand Palette (Medical / Clean E-commerce Green) */
+  --color-brand: #00A859;
+  --color-brand-hover: #00924C;
+  --color-brand-active: #007D40;
+  --color-brand-soft: #E6F7EF;
+  --color-brand-subtle: #F2FAF6;
 
-  --color-bg-primary: #F7F8FA;
+  --color-bg-primary: #F8F9FA;
   --color-surface: #FFFFFF;
   --color-surface-subtle: #FAFBFC;
   
@@ -25,8 +25,8 @@
   --color-border-subtle: #E6E8EE;
   --color-border-strong: #D1D5DB;
 
-  --color-state-success: #16845B;
-  --color-state-success-bg: #EAF6F0;
+  --color-state-success: #00A859;
+  --color-state-success-bg: #E6F7EF;
   --color-state-error: #D64545;
   --color-state-error-bg: #FDF2F2;
   --color-state-warning: #D97706;
@@ -37,13 +37,13 @@
   --color-dashboard-border: #2A2E3B;
 
   /* Backwards-compatibility Bridge Tokens */
-  --color-primary-orange: #5B5BD6;
-  --color-primary-orange-hover: #4949BC;
-  --color-primary-orange-active: #3C3CA8;
-  --color-primary-orange-light: #EEEEFF;
-  --color-primary-orange-subtle: #F6F6FD;
+  --color-primary-orange: #00A859;
+  --color-primary-orange-hover: #00924C;
+  --color-primary-orange-active: #007D40;
+  --color-primary-orange-light: #E6F7EF;
+  --color-primary-orange-subtle: #F2FAF6;
 
-  --color-main-bg: #F7F8FA;
+  --color-main-bg: #F8F9FA;
   --color-nav-surface: #FFFFFF;
   --color-card-surface: #FFFFFF;
   --color-text-primary: #17191F;
@@ -54,12 +54,12 @@
   --color-midnight-card: #1D2028;
   --color-midnight-elevated: #191C24;
   --color-midnight-border: #2A2E3B;
-  --color-tech-bg: #F7F8FA;
+  --color-tech-bg: #F8F9FA;
   --color-tech-card: #FFFFFF;
   --color-tech-text-primary: #17191F;
   --color-tech-text-secondary: #737985;
   --color-tech-border: #E6E8EE;
-  --color-tech-success: #16845B;
+  --color-tech-success: #00A859;
   
   --color-tech-dark: #15171D;
   --color-tech-muted: #737985;
@@ -134,4 +134,16 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .dark .glass-panel {
   background: #1D2028;
   border: 1px solid #2A2E3B;
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }

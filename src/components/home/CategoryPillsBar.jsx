@@ -40,7 +40,7 @@ export function CategoryPillsBar({ className = '' }) {
                 cn(
                   'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors border cursor-pointer select-none',
                   isActive && cat.id !== 'all'
-                    ? 'bg-[#5B5BD6] text-white border-[#5B5BD6] shadow-xs'
+                    ? 'bg-[#00A859] text-white border-[#00A859] shadow-xs'
                     : 'bg-white dark:bg-[#1D2028] border-[#E6E8EE] dark:border-[#2A2E3B] text-[#737985] dark:text-[#9CA3AF] hover:text-[#17191F] dark:hover:text-[#F4F7FC] hover:border-[#D1D5DB]'
                 )
               }
